@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -11,6 +11,17 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "@angular/*": [
+        "node_modules/@angular/*"
+      ],
+      "@root": [
+        "@root/"
+      ],
+      "@app/env": [
+        "environments/environment"
+      ]
+    },
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"

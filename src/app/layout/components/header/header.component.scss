@@ -1,0 +1,49 @@
+@import "src/@root/scss/root";
+
+:host {
+    font-size: .8125rem;
+    font-weight: 600;
+
+    .nav-cart {
+        display: inline-block;
+        height: 38px;
+        width: 40px;
+        position: relative;
+        margin: 0 0 30px 20px;
+        box-sizing: content-box;
+
+        .cart-button {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 2em;
+
+            &:focus,
+            &:hover {
+                color: rgba(255, 255, 255, 0.75);
+            }
+        }
+
+        .cart-badge {
+            position: absolute;
+            background: #f36e36;
+            color: #fff;
+            top: -4px;
+            font-weight: 400;
+            right: -4px;
+            text-align: center;
+            border: 3px solid #f36e36;
+            font-size: 13px;
+            min-width: 20px;
+            line-height: 15px;
+            border-radius: 50%;
+        }
+    }
+
+
+    .search-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 750px;
+        position: relative;
+    }
+}
