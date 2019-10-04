@@ -1,0 +1,26 @@
+h6 {
+    margin: 0 !important;
+}
+
+.products-controller {
+    padding: 1rem 0 1rem 0;
+}
+
+.import-wrapper {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .control-item {
+        display: flex;
+        align-items: flex-start;
+        margin: 0px 16px 16px 0px;
+    }
+}
+
+.import-group {
+    margin-top: 1rem;    
+}

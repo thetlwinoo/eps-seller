@@ -1,11 +1,17 @@
 :host {
 
+    .group-title {
+        >span {
+            padding-left: 10px;
+        }
+    }
+
     .folded:not(.unfolded) & {
 
-        > .group-title {
+        >.group-title {
             align-items: center;
 
-            > span {
+            >span {
                 opacity: 0;
                 transition: opacity 200ms ease;
             }

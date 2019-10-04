@@ -11,6 +11,14 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "paths": {
       "@angular/*": [
         "node_modules/@angular/*"
@@ -21,14 +29,11 @@
       "@app/env": [
         "environments/environment"
       ]
-    },
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": false,
+    "strictInjectionParameters": false,
+    "enableIvy": false
   }
 }

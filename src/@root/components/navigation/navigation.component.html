@@ -1,4 +1,5 @@
-<section class="sidenav-content" [ngClass]="{'horizontal':layout === 'horizontal', 'vertical':layout === 'vertical'}">
+<clr-vertical-nav id="vertical-nav" [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed"
+    [ngClass]="{'horizontal':layout === 'horizontal', 'vertical':layout === 'vertical'}" class="nav-trigger--bottom" [clr-nav-level]="1">
     <ng-container *ngIf="layout === 'vertical'">
 
         <ng-container *ngFor="let item of navigation">
@@ -11,7 +12,7 @@
         </ng-container>
 
     </ng-container>
-</section>
+</clr-vertical-nav>
 <!-- <div class="nav" [ngClass]="{'horizontal':layout === 'horizontal', 'vertical':layout === 'vertical'}">
 
     <ng-container *ngIf="layout === 'vertical'">

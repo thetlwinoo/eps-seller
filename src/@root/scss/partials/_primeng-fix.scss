@@ -1,0 +1,12 @@
+body {
+    .ui-panel .ui-panel-titlebar, .ui-panel .ui-panel-content {
+        border: none !important;
+        border-radius: unset !important;
+    }
+}
+
+.category-tree {
+    .ui-tree {
+        width: 100% !important;
+    }
+}

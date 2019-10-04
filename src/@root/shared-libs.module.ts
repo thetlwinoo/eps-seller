@@ -6,13 +6,31 @@ import { NgJhipsterModule } from 'ng-jhipster';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CookieModule } from 'ngx-cookie';
 import { ClarityModule } from '@clr/angular';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { PaginatorModule } from 'primeng/paginator';
+import { MessageModule } from 'primeng/message';
+import { PanelModule } from 'primeng/panel';
+import { DropdownModule } from 'primeng/dropdown';
+import { NgxPicaModule } from '@digitalascetic/ngx-pica';
+import { EditorModule } from 'primeng/editor';
+import { TreeModule } from 'primeng/tree';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
     imports: [
         CookieModule.forRoot(),
         FontAwesomeModule,
         ClarityModule,
-        NgbModule
+        NgbModule,
+        BreadcrumbModule,
+        PaginatorModule,
+        MessageModule,
+        PanelModule,
+        DropdownModule,
+        NgxPicaModule,
+        EditorModule,
+        TreeModule,
+        FileUploadModule
     ],
     exports: [
         FormsModule,
@@ -21,7 +39,16 @@ import { ClarityModule } from '@clr/angular';
         NgJhipsterModule,
         FontAwesomeModule,
         ClarityModule,
-        NgbModule
+        NgbModule,
+        BreadcrumbModule,
+        PaginatorModule,
+        MessageModule,
+        PanelModule,
+        DropdownModule,
+        NgxPicaModule,
+        EditorModule,
+        TreeModule,
+        FileUploadModule
     ],
     providers: [
     ]

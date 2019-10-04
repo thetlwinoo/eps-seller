@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import './vendor.ts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,6 +28,9 @@ import { RouterEffects } from 'app/ngrx/core/effects';
 
 import { RootProgressBarModule } from '@root/components/progress-bar/progress-bar.module';
 import { LayoutModule } from 'app/layout/layout.module';
+import { NgrxAuthModule } from 'app/ngrx/auth';
+import { NgrxProductsModule } from 'app/ngrx/products';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -66,7 +69,9 @@ import { LayoutModule } from 'app/layout/layout.module';
     EffectsModule.forRoot([RouterEffects]),
     NgrxCoreModule,
     RootSharedModule,
-    RootProgressBarModule
+    RootProgressBarModule,
+    NgrxAuthModule,
+    NgrxProductsModule
   ],
   providers: [
     {

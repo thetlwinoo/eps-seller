@@ -1,0 +1,142 @@
+<form id="products-form" clrForm clrLayout="horizontal" name="productsForm" [formGroup]="productsForm">
+    <div class="clr-form-control clr-row">
+        <label for="product-name" class="clr-control-label clr-col-12 clr-col-md-2">Product Name</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #productName type="text" id="product-name" placeholder="Product Name"
+                    class="clr-input full-width" formControlName="productName">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{productName.value?.length || 0}}/255</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="product-category" class="clr-control-label clr-col-12 clr-col-md-2">Product Category</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #productCategory type="text" id="product-category" placeholder="Product Category"
+                    class="clr-input w-50-p" formControlName="productCategoryName" (focus)="showModel = true;">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+                <button class="btn btn-link" disabled>History</button>
+            </div>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="product-brand" class="clr-control-label clr-col-12 clr-col-md-2">Product Brand</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-select-wrapper full-width">
+                <select #brandSelect name="product-brand" formControlName="productBrand" class="w-100-p" required>
+                    <option value="">No Brand</option>
+                    <option *ngFor="let brand of (productBrands$ | async)" [value]="brand">{{brand.productBrandName}}
+                    </option>
+                </select>
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="product-model" class="clr-control-label clr-col-12 clr-col-md-2">Product Model</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-select-wrapper full-width">
+                <select #modelSelect name="product-model" formControlName="productModel" class="w-100-p" required>
+                    <option value="">No Model</option>
+                    <option *ngFor="let model of (productModels$ | async)" [value]="model">{{model.productModelName}}
+                    </option>
+                </select>
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="warranty-type" class="clr-control-label clr-col-12 clr-col-md-2">Warranty Types</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-select-wrapper full-width">
+                <select #modelSelect name="warranty-type" formControlName="warrantyType" class="w-100-p" required>
+                    <option *ngFor="let warrantyType of (warrantyTypes$ | async)" [value]="warrantyType">
+                        {{warrantyType.warrantyTypeName}}
+                    </option>
+                </select>
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="warranty-period" class="clr-control-label clr-col-12 clr-col-md-2">Warranty Period</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #warrantyPeriod type="text" id="warranty-period" placeholder="Warranty Period"
+                    class="clr-input full-width" formControlName="warrantyPeriod">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{warrantyPeriod.value?.length || 0}}/50</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="warranty-policy" class="clr-control-label clr-col-12 clr-col-md-2">Warranty Policy</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #warrantyPolicy type="text" id="warranty-policy" placeholder="Warranty Policy"
+                    class="clr-input full-width" formControlName="warrantyPolicy">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{warrantyPolicy.value?.length || 0}}/500</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="what-in-the-box" class="clr-control-label clr-col-12 clr-col-md-2">What's In The Box</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #whatInTheBox type="text" id="what-in-the-box" placeholder="What's In The Box"
+                    class="clr-input full-width" formControlName="whatInTheBox">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{whatInTheBox.value?.length || 0}}/500</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="dangerous-goods" class="clr-control-label clr-col-12 clr-col-md-2">Dangerous Goods</label>
+        <div id="dangerous-goods" class="clr-control-container clr-control-inline clr-col-12 clr-col-md-10">
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="battery" required value="battery" />
+                <label>Battery</label>
+            </clr-checkbox-wrapper>
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="liquid" required value="liquid" />
+                <label>Liquid</label>
+            </clr-checkbox-wrapper>
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="none" required value="" />
+                <label>None</label>
+            </clr-checkbox-wrapper>
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="flammable" required value="flammable" />
+                <label>Flammable</label>
+            </clr-checkbox-wrapper>
+        </div>
+    </div>
+</form>
+<!-- <button class="btn btn-primary" (click)="basic = true">Show modal</button> -->
+<clr-modal [(clrModalOpen)]="showModel">
+    <h3 class="modal-title">Select Category</h3>
+    <div class="modal-body category-tree">
+        <input clrInput [(ngModel)]="searchTerm" #category (keyup)='onkeyup(category.value)'
+            placeholder="Filter Categories" class="w-100-p"/>
+        <clr-tree [clrLazy]="true">
+            <clr-tree-node *ngFor="let directory of parsedData" [(clrExpanded)]="directory.expanded">
+                <clr-icon [attr.shape]="directory.expanded?directory.expandedIcon:directory.collapsedIcon"></clr-icon>
+                {{directory.label}}
+                <clr-tree-node *ngFor="let file of directory.children">
+                    <button (click)="nodeSelect(file)" class="clr-treenode-link" [class.active]="file.active">
+                        <clr-icon [attr.shape]="file.childIcon"></clr-icon>
+                        {{file.label}}
+                    </button>
+                </clr-tree-node>
+            </clr-tree-node>
+        </clr-tree>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="showModel = false">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="selectCategory(selectedNode)"
+            [disabled]="!selectedNode?.data.parentId">Confirm</button>
+    </div>
+</clr-modal>

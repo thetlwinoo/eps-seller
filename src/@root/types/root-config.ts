@@ -5,6 +5,12 @@ export interface RootConfig
     layout: {
         style: string,
         width: 'fullwidth' | 'boxed',
+        alert: {
+            customBackgroundColor: boolean,
+            hidden: boolean,
+            position: 'top' | 'top-fixed',
+            background: string
+        },
         header: {
             hidden: boolean,
             position: 'top' | 'top-fixed',
@@ -12,7 +18,15 @@ export interface RootConfig
             secondaryBackground: string,
             variant: string,
         },
-        navbar: {
+        subnav: {
+            primaryBackground: string,
+            secondaryBackground: string,
+            hidden: boolean,
+            folded: boolean,
+            position: 'left' | 'right' | 'top',
+            variant: string
+        },
+        sidenav: {
             primaryBackground: string,
             secondaryBackground: string,
             hidden: boolean,

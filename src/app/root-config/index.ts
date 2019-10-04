@@ -7,6 +7,12 @@ export const rootConfig: RootConfig = {
     layout: {
         style: 'layout-1',
         width: 'fullwidth',
+        alert: {
+            customBackgroundColor: true,
+            hidden: true,
+            position: 'top',
+            background: 'root-navy-700'
+        },
         header: {
             hidden: false,
             position: 'top',
@@ -14,13 +20,21 @@ export const rootConfig: RootConfig = {
             secondaryBackground: 'root-navy-900',
             variant: 'header header-6'
         },
-        navbar: {
+        subnav: {
             primaryBackground: 'root-navy-700',
             secondaryBackground: 'root-navy-900',
             folded: false,
             hidden: true,
-            position: 'top',
-            variant: 'navbar1'
+            position: 'left',
+            variant: 'vertical-style-1'
+        },
+        sidenav: {
+            primaryBackground: 'root-navy-700',
+            secondaryBackground: 'root-navy-900',
+            folded: false,
+            hidden: false,
+            position: 'left',
+            variant: 'vertical-style-1'
         },
         toolbar: {
             customBackgroundColor: true,
@@ -31,7 +45,7 @@ export const rootConfig: RootConfig = {
         footer: {
             customBackgroundColor: true,
             background: 'root-navy-900',
-            hidden: false,
+            hidden: true,
             position: 'above-fixed'
         },
         contentBelow: {

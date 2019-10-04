@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 // import { MatRippleModule } from '@angular/material/core';
 // import { MatIconModule } from '@angular/material/icon';
-
+import { RootSharedModule } from '@root/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { RootNavigationComponent } from './navigation.component';
@@ -17,7 +17,7 @@ import { RootNavHorizontalCollapsableComponent } from './horizontal/collapsable/
     imports     : [
         CommonModule,
         RouterModule,
-
+        RootSharedModule,
         // MatIconModule,
         // MatRippleModule,
 

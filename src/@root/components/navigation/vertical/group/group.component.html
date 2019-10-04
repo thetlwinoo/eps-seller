@@ -1,5 +1,4 @@
 <ng-container *ngIf="!item.hidden">
-
     <div class="group-title" [ngClass]="item.classes">
         <span class="hint-text" [translate]="item.translate">{{ item.title }}</span>
     </div>
@@ -7,10 +6,11 @@
     <div class="group-items">
         <ng-container *ngFor="let item of item.children">
             <root-nav-vertical-group *ngIf="item.type=='group'" [item]="item"></root-nav-vertical-group>
-            <root-nav-vertical-collapsable *ngIf="item.type=='collapsable'"
-                                           [item]="item"></root-nav-vertical-collapsable>
+            <root-nav-vertical-collapsable *ngIf="item.type=='collapsable'" [item]="item">
+            </root-nav-vertical-collapsable>
             <root-nav-vertical-item *ngIf="item.type=='item'" [item]="item"></root-nav-vertical-item>
         </ng-container>
+        <div class="nav-divider"></div>
     </div>
 
 </ng-container>

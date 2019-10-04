@@ -7,16 +7,16 @@ const customAnimation = animation([
     }),
     animate('{{duration}} {{delay}} cubic-bezier(0.0, 0.0, 0.2, 1)', style('*'))
 ], {
-        params: {
-            duration: '200ms',
-            delay: '0ms',
-            opacity: '0',
-            scale: '1',
-            x: '0',
-            y: '0',
-            z: '0'
-        }
-    });
+    params: {
+        duration: '200ms',
+        delay: '0ms',
+        opacity: '0',
+        scale: '1',
+        x: '0',
+        y: '0',
+        z: '0'
+    }
+});
 
 export const rootAnimations = [
 
@@ -440,5 +440,17 @@ export const rootAnimations = [
             style({ opacity: 0.1 }),
             animate(1000, style({ opacity: 0.1 }))
         ])
+    ]),
+
+    trigger('rowExpansionTrigger', [
+        state('void', style({
+            transform: 'translateX(-10%)',
+            opacity: 0
+        })),
+        state('active', style({
+            transform: 'translateX(0)',
+            opacity: 1
+        })),
+        transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
     ])
 ];

@@ -1,0 +1,63 @@
+<div>
+    <h6>Products Update</h6>
+    <div class="clr-row">
+        <div class="clr-col-12">
+            <div class="card">
+                <div class="card-header">
+                    Basic Information
+                </div>
+                <div class="card-block">                    
+                    <basic-form [productsForm]="productsForm"></basic-form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clr-row">
+        <div class="clr-col-12">
+            <div class="card">
+                <div class="card-header">
+                    SKU Information
+                </div>
+                <div class="card-block">
+                    <sku-form [productsForm]="productsForm" [products]="products"></sku-form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clr-row">
+        <div class="clr-col-12">
+            <div class="card">
+                <div class="card-header">
+                    Product Decoration
+                </div>
+                <div class="card-block">
+                    <decoration-form [productsForm]="productsForm"></decoration-form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions-wrapper sticky-bottom">
+        <button class="btn btn-primary">Publish</button>
+    </div>
+</div>
+
+<!-- <clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="link1">Basic Information</button>
+        <clr-tab-content id="content1" *clrIfActive>
+            <basic-form [productsForm]="productsForm"></basic-form>
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>SKU Information</button>
+        <clr-tab-content *clrIfActive="true">
+            ...
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>Product Decoration</button>
+        <clr-tab-content *clrIfActive="true">
+            ...
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs> -->

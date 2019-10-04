@@ -1,6 +1,6 @@
 export * from './request-util';
 
-export class BoxUtils {
+export class RootUtils {
     /**
      * Filter array by string
      *
@@ -133,4 +133,32 @@ export class BoxUtils {
             .replace(/^-+/, '')             // Trim - from start of text
             .replace(/-+$/, '');            // Trim - from end of text
     }
-}
+
+    public static notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+        return value !== null && value !== undefined;
+    }
+
+    public static getUnique(arr, comp) {
+
+        const unique = arr
+            .map(e => e[comp])
+
+            // store the keys of the unique objects
+            .map((e, i, final) => final.indexOf(e) === i && i)
+
+            // eliminate the dead keys & store unique objects
+            .filter(e => arr[e]).map(e => arr[e]);
+
+        return unique;
+    }
+
+    // public static createImageFromBlob(image: Blob) {
+    //     let reader = new FileReader();
+    //     reader.addEventListener("load", () => {
+    //         this.imageBlobUrl = reader.result;
+    //     }, false);
+    //     if (image) {
+    //         reader.readAsDataURL(image);
+    //     }
+    // }    
+}   

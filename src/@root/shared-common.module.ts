@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ResourceSharedLibsModule } from './shared-libs.module';
-
+import { BreadcrumbGuard } from '@root/services';
 
 @NgModule({
     imports: [
@@ -11,6 +11,8 @@ import { ResourceSharedLibsModule } from './shared-libs.module';
     exports: [
         ResourceSharedLibsModule
     ],
-    providers: []
+    providers: [
+        BreadcrumbGuard
+    ]
 })
 export class ResourceSharedCommonModule { }

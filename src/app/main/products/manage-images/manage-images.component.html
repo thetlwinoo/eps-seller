@@ -1,0 +1,92 @@
+<div>
+    <h6>Manage Images</h6>
+    <div class="images-controller">
+        <div class="btn-group">
+            <clr-dropdown>
+                <button type="button" class="btn btn-sm btn-secondary" clrDropdownTrigger>
+                    Export
+                    <clr-icon shape="caret down"></clr-icon>
+                </button>
+                <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                    <button type="button" (click)="onExportAll()" clrDropdownItem>Export All</button>
+                    <button type="button" (click)="onExportSelected()" clrDropdownItem>Export Selected Items</button>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+        </div>
+    </div>
+    <div>
+        <nav class="subnav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link active"><span
+                            class="nav-text">All({{totalItems}})</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link"><span class="nav-text">Image Missing</span></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div>
+        <clr-datagrid>
+            <clr-dg-column class="product-col">Product</clr-dg-column>
+            <clr-dg-column class="sku-col">SKU</clr-dg-column>
+            <clr-dg-column>All Images</clr-dg-column>
+
+            <clr-dg-row *ngFor="let stockItem of stockItems" [clrDgItem]="stockItem">
+                <clr-dg-cell>{{stockItem.stockItemName}}</clr-dg-cell>
+                <clr-dg-cell>{{stockItem.sellerSKU}}</clr-dg-cell>
+                <clr-dg-cell>
+                    <div class="upload-wrapper">
+
+                        <div class="upload-item" *ngFor="let photo of stockItem.photoLists; let i = index">
+
+                            <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob
+                                [style.display]="'none'"
+                                (change)="setFileData($event, photo, 'originalPhotoBlob', true);" />
+
+                            <div class="upload-control" *ngIf="!photo.originalPhotoBlob;else preview">
+                                <span>
+                                    <div class="image-upload-btn" (click)="originalBlob.click()">
+                                        <!-- <mat-icon class="next-icon next-icon-add next-icon-medium upload-btn-icon">
+                                            add_a_photo</mat-icon> -->
+                                        <clr-icon shape="image"
+                                            class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
+                                        <p class="upload-text">Upload Image</p>
+                                    </div>
+                                </span>
+                            </div>
+                            <ng-template #preview>
+                                <div *ngIf="photo.thumbnailPhotoBlob">
+                                    <a (click)="clearInputImage(photo)" class="close-image" matTooltip="Clear Image">
+                                        <clr-icon shape="window-close"></clr-icon>
+                                    </a>
+                                </div>
+                                <div class="image-preview" *ngIf="photo.thumbnailPhotoBlob">
+                                    <img [src]="'data:' + photo.thumbnailPhotoBlobContentType + ';base64,' + photo.thumbnailPhotoBlob"
+                                        style="max-height: 100px;" alt="stock item image" draggable="false"
+                                        (mouseenter)="op.toggle($event)" (mouseleave)="op.toggle($event)" />
+                                </div>
+                                <!-- <p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"
+                                    [dismissable]="true" [appendTo]="'body'">
+                                    <img class="overlay-image"
+                                        [src]="'data:' + photo.originalPhotoBlobContentType + ';base64,' + photo.originalPhotoBlob"
+                                        alt="original image" draggable="false" *ngIf="photo.originalPhotoBlob" />
+                                </p-overlayPanel> -->
+                            </ng-template>
+                        </div>
+                    </div>
+                </clr-dg-cell>
+            </clr-dg-row>
+
+            <clr-dg-footer>
+                <clr-dg-pagination #pagination [clrDgPageSize]="itemsPerPage">
+                    <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Items per page</clr-dg-page-size>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    of {{totalItems}} items
+                </clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+        <!-- <p-paginator [rows]="itemsPerPage" [totalRecords]="totalItems" (onPageChange)="loadPage(page)"></p-paginator> -->
+    </div>
+</div>

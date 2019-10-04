@@ -1,0 +1,24 @@
+<form name="productsForm" id="product-decoration" [formGroup]="productsForm" class="product-decoration-form w-100-p">
+    <h6 class="first">Long Description</h6>
+    <p-editor [(ngModel)]="description" [style]="{'height':'400px'}"></p-editor>
+    <h6 class="first">Video URL</h6>
+    <input id="input" type="text" pInputText [(ngModel)]="videoUrl">
+    <h6 class="first">Highlights</h6>
+    <p-editor [(ngModel)]="highlights" [style]="{'height':'300px'}">
+        <p-header>
+            <span class="ql-formats">
+                <select class="ql-size">
+                    <option value="small"></option>
+                    <option selected></option>
+                    <option value="large"></option>
+                    <option value="huge"></option>
+                </select>
+                <button class="ql-bold" aria-label="Bold"></button>
+                <button class="ql-italic" aria-label="Italic"></button>
+                <button class="ql-underline" aria-label="Underline"></button>
+                <button class="ql-script" value="sub"></button>
+                <button class="ql-script" value="super"></button>
+            </span>
+        </p-header>
+    </p-editor>
+</form>

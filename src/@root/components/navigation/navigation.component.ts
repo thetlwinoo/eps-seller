@@ -19,6 +19,7 @@ export class RootNavigationComponent implements OnInit
     @Input()
     navigation: any;
 
+    collapsed: boolean = false;
     // Private
     private _unsubscribeAll: Subject<any>;
 
