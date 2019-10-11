@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from '@root/constants';
@@ -12,8 +12,9 @@ type EntityArrayResponseType = HttpResponse<IProductOption[]>;
 @Injectable({ providedIn: 'root' })
 export class ProductOptionService {
     public resourceUrl = SERVER_API_URL + 'api/product-options';
+    public extendUrl = SERVER_API_URL + 'api/product-option-extend';
 
-    constructor(protected http: HttpClient) {}
+    constructor(protected http: HttpClient) { }
 
     create(productOption: IProductOption): Observable<EntityResponseType> {
         return this.http.post<IProductOption>(this.resourceUrl, productOption, { observe: 'response' });
@@ -34,5 +35,16 @@ export class ProductOptionService {
 
     delete(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    }
+
+    getAllProductOptions(optionSetId): Observable<EntityArrayResponseType> {
+        let params = new HttpParams();
+
+        if (optionSetId) {
+            params = params.append('optionSetId', optionSetId);
+        }
+
+
+        return this.http.get<IProductOption[]>(this.extendUrl, { params: params, observe: 'response' });
     }
 }

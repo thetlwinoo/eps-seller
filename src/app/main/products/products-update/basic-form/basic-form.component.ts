@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IProducts, IProductCategory, Products, IProductModel, IMerchants, IProductBrand, IWarrantyTypes } from '@root/models';
+import { IProducts, IProductCategory, Products, IProductModel, ISuppliers, IProductBrand, IWarrantyTypes } from '@root/models';
 import { locale as english } from '../i18n/en';
 import { locale as myanmar } from '../i18n/mm';
 import { rootAnimations } from '@root/animations';
@@ -37,7 +37,7 @@ export class BasicFormComponent implements OnInit {
   productBrands$: Observable<IProductBrand[]>;
   warrantyTypes$: Observable<IWarrantyTypes[]>;
 
-  merchant$: Observable<IMerchants>;
+  supplier$: Observable<ISuppliers>;
 
   private _unsubscribeAll: Subject<any>;
   selectedNode: any;
@@ -55,19 +55,19 @@ export class BasicFormComponent implements OnInit {
     this.productModels$ = store.pipe(select(fromProducts.getFetchModels)) as Observable<IProductModel[]>;
     this.productBrands$ = store.pipe(select(fromProducts.getFetchBrands)) as Observable<IProductBrand[]>;
     this.warrantyTypes$ = store.pipe(select(fromProducts.getFetchWarrantyTypes)) as Observable<IWarrantyTypes[]>;
-    this.merchant$ = this.authStore.pipe(select(fromAuth.getMerchantFetched)) as Observable<IMerchants>;
+    this.supplier$ = this.authStore.pipe(select(fromAuth.getSupplierFetched)) as Observable<ISuppliers>;
     this.categories$ = store.pipe(select(fromProducts.getFetchCategoriesTree)) as Observable<any[]>;
     this.productModels$.subscribe(models => this.productModelsFiltered = models.slice())
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
-    this.merchant$
+    this.supplier$
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(merchant => {
-        if (merchant) {
-          this.store.dispatch(FetchActions.fetchModels({ id: merchant.id }));
-          this.store.dispatch(FetchActions.fetchBrands({ id: merchant.id }));
+      .subscribe(supplier => {
+        if (supplier) {
+          this.store.dispatch(FetchActions.fetchModels({ id: supplier.id }));
+          this.store.dispatch(FetchActions.fetchBrands({ id: supplier.id }));
           this.store.dispatch(FetchActions.fetchWarrantyType());
         }
       });
@@ -79,6 +79,7 @@ export class BasicFormComponent implements OnInit {
   }
 
   selectCategory(event): void {
+    this.store.dispatch(CategoryActions.selectCategory({ id: this.selectedNode.data.id }));
     this.showModel = false;
     this.productsForm.patchValue({
       // productCategoryId: response.data.id,

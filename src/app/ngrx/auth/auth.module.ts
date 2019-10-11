@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { MerchantEffects } from 'app/ngrx/auth/effects';
+import { SupplierEffects } from 'app/ngrx/auth/effects';
 import * as fromAuth from 'app/ngrx/auth/reducers';
 
 export const COMPONENTS = [
@@ -15,7 +15,7 @@ export const CONTAINERS = [
   imports: [
     CommonModule,
     StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducers),
-    EffectsModule.forFeature([MerchantEffects])
+    EffectsModule.forFeature([SupplierEffects])
   ],
   declarations: [COMPONENTS, CONTAINERS],
 })

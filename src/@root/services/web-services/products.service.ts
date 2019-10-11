@@ -18,7 +18,8 @@ type EntityArrayResponseType = HttpResponse<IProducts[]>;
 export class ProductsService {
     public resourceUrl = SERVER_API_URL + 'api/products';
     public extendUrl = SERVER_API_URL + 'api/products-extend';
-    public uploadUrl = SERVER_API_URL + 'api/batchupload';
+    public uploadUrl = SERVER_API_URL + 'api/excelupload';
+    public importUrl = SERVER_API_URL + 'api/importtosystem';
 
     constructor(
         protected http: HttpClient,
@@ -77,7 +78,19 @@ export class ProductsService {
         console.log('upload path', file);
         const formData = new FormData();
         formData.append('file', file);
-        return this.http.post<any>(this.uploadUrl, formData, { observe: 'response' }).pipe(map((res: any) => res));
+        return this.http.post<any>(this.uploadUrl, formData, { observe: 'response' }).pipe(
+            filter((res: HttpResponse<any>) => res.ok),
+            map((res: HttpResponse<any>) => res.body)
+        );
+    }
+
+    importToSystem(transactionId): Observable<any> {
+        let params = new HttpParams();
+        params = params.append('id', transactionId);
+        return this.http.post<any>(this.importUrl, params, { observe: 'response' }).pipe(
+            filter((res: HttpResponse<any>) => res.ok),
+            map((res: HttpResponse<any>) => res.body)
+        );
     }
     // saveProduct(product: IProducts): void {
     //     this.create(product)

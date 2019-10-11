@@ -35,6 +35,17 @@
         </div>
     </div>
     <div class="clr-form-control clr-row">
+        <label for="model-name" class="clr-control-label clr-col-12 clr-col-md-2">Model Name</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #modelName type="text" id="model-name" placeholder="Model Name"
+                    class="clr-input full-width" formControlName="modelName">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{modelName.value?.length || 0}}/255</span>
+        </div>
+    </div>
+    <!-- <div class="clr-form-control clr-row">
         <label for="product-model" class="clr-control-label clr-col-12 clr-col-md-2">Product Model</label>
         <div class="clr-control-container clr-col-12 clr-col-md-10">
             <div class="clr-select-wrapper full-width">
@@ -46,7 +57,7 @@
                 <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="clr-form-control clr-row">
         <label for="warranty-type" class="clr-control-label clr-col-12 clr-col-md-2">Warranty Types</label>
         <div class="clr-control-container clr-col-12 clr-col-md-10">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, OnDestroy, ElementRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { rootAnimations } from '@root/animations';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IProductCategory, IProductChoice, IProductAttribute, IProductOption, IStockItems, StockItems, IProducts, Products } from '@root/models';
@@ -27,7 +27,7 @@ export class SkuFormComponent implements OnInit, OnDestroy {
   category$: Observable<IProductCategory>;
   productChoice$: Observable<IProductChoice[]>;
   productAttributeList$: Observable<IProductAttribute[]>;
-  productOptionList$: Observable<IProductOption[]>;  
+  productOptionList$: Observable<IProductOption[]>;
   productChoice: IProductChoice;
   categoryId$: Observable<number>;
 
@@ -37,7 +37,9 @@ export class SkuFormComponent implements OnInit, OnDestroy {
   optionList: IProductOption[];
   stockItemsColumns: any[];
   frozenCols: any[];
-
+  noChoiceInd: boolean = false;
+  attributeInd: boolean = false;
+  optionInd: boolean = false;
   // productSku: ProductSku;
   private _unsubscribeAll: Subject<any>;
   private productAttributeListCombo: any[] = [];
@@ -53,12 +55,12 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     this.categoryId$ = store.pipe(select(fromProducts.getSelectedCategoryId)) as Observable<number>;
     this.productChoice$ = store.pipe(select(fromProducts.getFetchProductChoice)) as Observable<IProductChoice[]>;
     this.productAttributeList$ = store.pipe(select(fromProducts.getFetchProductAttributeList)) as Observable<IProductAttribute[]>;
-    this.productOptionList$ = store.pipe(select(fromProducts.getFetchProductOptionList)) as Observable<IProductOption[]>;    
+    this.productOptionList$ = store.pipe(select(fromProducts.getFetchProductOptionList)) as Observable<IProductOption[]>;
 
     this.productAttributeList$.subscribe(data => {
       data.map(item => {
         this.productAttributeListCombo.push({
-          label: item.value,
+          label: item.productAttributeValue,
           value: item
         })
       });
@@ -67,7 +69,7 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     this.productOptionList$.subscribe(data => {
       data.map(item => {
         this.productOptionListCombo.push({
-          label: item.value,
+          label: item.productOptionValue,
           value: item
         })
       });
@@ -94,14 +96,25 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     this.categoryId$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(categoryId => {
+        console.log('selected category id', categoryId);
         this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
       });
 
     this.productChoice$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(data => {
-        if (data.length) {
-          this.productChoice = data[0];
+        this.productChoice = data.length ? data[0] : null;
+        this.resetChoice();
+
+        if (this.productChoice) {
+          this.noChoiceInd = false;
+          this.attributeInd = this.productChoice.productAttributeSetId ? true : false;
+          this.optionInd = this.productChoice.productOptionSetId ? true : false;
+        } else {
+          this.noChoiceInd = true;
+          this.attributeInd = false;
+          this.optionInd = false;
+          this.products.addNewStockItem();
         }
       });
 
@@ -144,20 +157,27 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  resetChoice() {
+    this.productsForm.patchValue({
+      productAttribute: null,
+      productOption: null
+    });
+    this.products.resetChoice();
+  }
   addAttribute(event) {
     const attribute = this.productsForm.getRawValue().productAttribute;
     // console.log('this.products',this.products)
-    this.products.addAttribute(attribute);
+    this.products.addAttribute(attribute, this.noChoiceInd, this.attributeInd, this.optionInd);
   }
 
   addOption(event) {
     const option = this.productsForm.getRawValue().productOption;
-    this.products.addOption(option);
+    this.products.addOption(option, this.noChoiceInd, this.attributeInd, this.optionInd);
   }
 
   compareObjects(c1: any, c2: any): boolean {
     return c1 && c2 ? c1.id === c2.id : c1 === c2;
-  }  
+  }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();

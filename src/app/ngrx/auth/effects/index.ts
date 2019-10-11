@@ -1,1 +1,1 @@
-export * from './merchants.effects';
+export * from './supplier.effects';

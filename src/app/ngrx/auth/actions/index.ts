@@ -1,5 +1,5 @@
-import * as MerchantActions from './merchant.actions';
+import * as SupplierActions from './supplier.actions';
 
 export {
-    MerchantActions
+    SupplierActions
 };

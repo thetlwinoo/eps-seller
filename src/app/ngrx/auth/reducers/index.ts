@@ -1,4 +1,4 @@
-import { IMerchants } from '@root/models';
+import { ISuppliers } from '@root/models';
 import {
     createSelector,
     createFeatureSelector,
@@ -6,13 +6,13 @@ import {
     Action,
 } from '@ngrx/store';
 
-import * as fromMerchant from 'app/ngrx/auth/reducers/merchants.reducer';
+import * as fromSupplier from 'app/ngrx/auth/reducers/supplier.reducer';
 import * as fromRoot from 'app/ngrx';
 
 export const authFeatureKey = 'auth';
 
 export interface AuthState {
-    [fromMerchant.merchantFeatureKey]: fromMerchant.State;
+    [fromSupplier.supplierFeatureKey]: fromSupplier.State;
 }
 
 export interface State extends fromRoot.State {
@@ -21,7 +21,7 @@ export interface State extends fromRoot.State {
 
 export function reducers(state: AuthState | undefined, action: Action) {
     return combineReducers({
-        [fromMerchant.merchantFeatureKey]: fromMerchant.reducer
+        [fromSupplier.supplierFeatureKey]: fromSupplier.reducer
     })(state, action);
 }
 
@@ -29,28 +29,28 @@ export const getAuthState = createFeatureSelector<State, AuthState>(
     authFeatureKey
 );
 
-//Merchant State
-export const getMerchantState = createSelector(
+//Supplier State
+export const getSupplierState = createSelector(
     getAuthState,
-    (state: AuthState) => state.merchant
+    (state: AuthState) => state.supplier
 );
 
-export const getMerchantError = createSelector(
-    getMerchantState,
-    fromMerchant.getError
+export const getSupplierError = createSelector(
+    getSupplierState,
+    fromSupplier.getError
 );
 
-export const getMerchantFetched = createSelector(
-    getMerchantState,
-    fromMerchant.getMerchant
+export const getSupplierFetched = createSelector(
+    getSupplierState,
+    fromSupplier.getSupplier
 );
 
-export const getMerchantLoading = createSelector(
-    getMerchantState,
-    fromMerchant.getLoading
+export const getSupplierLoading = createSelector(
+    getSupplierState,
+    fromSupplier.getLoading
 );
 
-export const getMerchantLoaded = createSelector(
-    getMerchantState,
-    fromMerchant.getLoaded
+export const getSupplierLoaded = createSelector(
+    getSupplierState,
+    fromSupplier.getLoaded
 );

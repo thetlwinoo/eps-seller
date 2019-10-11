@@ -1,5 +1,6 @@
 export * from './account';
 export * from './merchants.model';
+export * from './suppliers.model';
 export * from './products.model';
 export * from './stock-items.model';
 export * from './product-category.model';
@@ -14,6 +15,8 @@ export * from './warranty-types.model';
 export * from './orders.model';
 export * from './order-lines.model';
 export * from './special-deals.model';
-export * from './stock-items.model';
+export * from './stock-item-temp.model';
 export * from './shopping-carts.model';
 export * from './shopping-cart-items.model';
+export * from './supplier-imported-document.model';
+export * from './upload-transactions.model';

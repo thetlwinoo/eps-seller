@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { rootAnimations } from '@root/animations';
 import { RootUtils } from '@root/utils';
 
-import { IMerchants } from '@root/models';
+import { ISuppliers } from '@root/models';
 
 import { locale as english } from './i18n/en';
 import { locale as myanmar } from './i18n/mm';
@@ -36,8 +36,8 @@ export class ProductsUpdateComponent implements OnInit {
   pageType: string;
   productsForm: FormGroup;
   selectedTab: number = 0;
-  merchant$: Observable<IMerchants>;
-  merchant: IMerchants;
+  supplier$: Observable<ISuppliers>;
+  supplier: ISuppliers;
   // Private
   private _unsubscribeAll: Subject<any>;
 
@@ -52,8 +52,8 @@ export class ProductsUpdateComponent implements OnInit {
   ) {
     // this.products = new Products();
     this._unsubscribeAll = new Subject();
-    this.merchant$ = this.storeAuth.pipe(select(fromAuth.getMerchantFetched)) as Observable<IMerchants>;
-    this.merchant$.pipe(takeUntil(this._unsubscribeAll)).subscribe(merchant => this.merchant = merchant);
+    this.supplier$ = this.storeAuth.pipe(select(fromAuth.getSupplierFetched)) as Observable<ISuppliers>;
+    this.supplier$.pipe(takeUntil(this._unsubscribeAll)).subscribe(supplier => this.supplier = supplier);
 
     this.actionsSubscription = route.params
       .pipe(map(params => ProductActions.selectProduct({ id: params.id })))
@@ -81,7 +81,7 @@ export class ProductsUpdateComponent implements OnInit {
   createProductForm(): FormGroup {
     return this._formBuilder.group({
       id: [this.products.id],
-      merchantId: [this.products.merchant ? this.products.merchant.id : ''],
+      supplierId: [this.products.supplier ? this.products.supplier.id : ''],
       productName: [this.products.productName],
       productNumber: [this.products.productNumber],
       searchDetails: [this.products.searchDetails],
@@ -90,14 +90,14 @@ export class ProductsUpdateComponent implements OnInit {
       whatInTheBox: [this.products.whatInTheBox],
       stockItemLists: [this.products.stockItemLists],
       warrantyType: [this.products.warrantyType],
-      productModel: [this.products.productModel],
+      modelName: [],
       productBrand: [this.products.productBrand],
       productCategory: [this.products.productCategory],
       productCategoryName: [this.products.productCategory ? this.products.productCategory.parent.name + " / " + this.products.productCategory.name : ''],
       productAttributeList: [this.products.productAttributeList],
       productOptionList: [this.products.productOptionList],
-      productAttribute: [],
-      productOption: []
+      productAttribute: null,
+      productOption: null
     });
   }
 
@@ -105,7 +105,7 @@ export class ProductsUpdateComponent implements OnInit {
     const data = this.productsForm.getRawValue();
     data.stockItemLists = this.products.stockItemLists;
     data.searchDetails = data.productName ? data.productName : '';
-    data.merchant = this.merchant ? this.merchant : null;
+    data.supplier = this.supplier ? this.supplier : null;
     data.productCategory.createdDate = null;
     data.productCategory.lastModifiedDate = null;
     data.handle = data.productName ? RootUtils.handleize(data.productName) : null;

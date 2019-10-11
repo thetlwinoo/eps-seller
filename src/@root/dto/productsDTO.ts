@@ -62,29 +62,22 @@ export class ProductsDTO {
         const tempStockItemList: StockItemsDTO[] = [];
         this.stockItemLists.forEach(stockItem => {
             tempStockItemList.push(new StockItemsDTO(stockItem));
-            // stockItem.guid = stockItem.id || RootUtils.generateGUID();
-            // if (stockItem.photoLists.length) {
-            //     const _length = stockItem.photoLists.length;
-            //     for (var _i = 0; _i < (8 - _length); _i++) {
-            //         stockItem.photoLists.push(new Photos());
-            //     }
-            // } else {
-            //     for (var _i = 0; _i < 8; _i++) {
-            //         const _photos = new Photos();
-            //         stockItem.photoLists.push(_photos);
-            //     }
-            // }
         });
         this.stockItemLists = tempStockItemList;
     }
 
-    public addAttribute(attribute: any): void {
-        console.log('attribute',attribute);
+    public resetChoice() {
+        this.stockItemLists = this.stockItemLists.filter(x => x.id > 0);
+        this.productAttributeList = [];
+        this.productOptionList = [];
+    }
+
+    public addAttribute(attribute: any, noChoiceInd: boolean, attributeInd: boolean, optionInd: boolean): void {
         const index = this.productAttributeList.indexOf(attribute);
 
         if (index < 0) {
             this.productAttributeList.push(attribute);
-            this.addSync();
+            this.addSync(noChoiceInd, attributeInd, optionInd);
         }
     }
 
@@ -97,11 +90,11 @@ export class ProductsDTO {
         }
     }
 
-    addOption(option: any): void {
+    addOption(option: any, noChoiceInd: boolean, attributeInd: boolean, optionInd: boolean): void {
         const index = this.productOptionList.indexOf(option);
         if (index < 0) {
             this.productOptionList.push(option);
-            this.addSync();
+            this.addSync(noChoiceInd, attributeInd, optionInd);
         }
     }
 
@@ -114,23 +107,42 @@ export class ProductsDTO {
         }
     }
 
-    addSync() {
-        this.productAttributeList.forEach(attribute => {
-            this.productOptionList.forEach(option => {
-                if (attribute && option) {
-                    const stockItem = new StockItemsDTO();
-                    stockItem.productAttribute = attribute;
-                    stockItem.productOption = option;
+    addSync(noChoiceInd: boolean, attributeInd: boolean, optionInd: boolean) {
+        if (attributeInd && optionInd) {
+            this.productAttributeList.forEach(attribute => {
+                this.productOptionList.forEach(option => {
+                    if (attribute && option) {
+                        const stockItem = new StockItemsDTO();
+                        stockItem.productAttribute = attribute;
+                        stockItem.productOption = option;
 
-                    const item = this.stockItemLists ? this.stockItemLists.find(x => x.productAttribute.id == attribute.id && x.productOption.id == option.id) : null;
+                        const item = this.stockItemLists ? this.stockItemLists.find(x => x.productAttribute.id == attribute.id && x.productOption.id == option.id) : null;
 
-                    if (!item) {
-                        this.stockItemLists.push(stockItem);
+                        if (!item) {
+                            this.stockItemLists.push(stockItem);
+                        }
                     }
+                })
+            });
+        }
+        else if (attributeInd && !optionInd) {
+            this.productAttributeList.forEach(attribute => {
+                const stockItem = new StockItemsDTO();
+                stockItem.productAttribute = attribute;
+
+                const item = this.stockItemLists ? this.stockItemLists.find(x => x.productAttribute.id == attribute.id) : null;
+
+                if (!item) {
+                    this.stockItemLists.push(stockItem);
                 }
 
-            })
-        });
+            });
+        }
+    }
 
+    addNewStockItem() {
+        this.stockItemLists = [];
+        const stockItem = new StockItemsDTO();
+        this.stockItemLists.push(stockItem);
     }
 }

@@ -5,7 +5,7 @@ import { AccountService } from '@root/services/core';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { Store, select } from "@ngrx/store";
 import * as fromAuth from 'app/ngrx/auth/reducers';
-import { MerchantActions } from 'app/ngrx/auth/actions';
+import { SupplierActions } from 'app/ngrx/auth/actions';
 
 @Component({
     selector: 'navbar-vertical-style-1',
@@ -35,7 +35,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
         this.accountService.identity().then((account: Account) => {
             this.account = account;
             console.log('accountttt', account)
-            this.store.dispatch(MerchantActions.getLoginMerchant());
+            this.store.dispatch(SupplierActions.getLoginSupplier());
         });
     }
 

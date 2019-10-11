@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
-import { IStockItems } from '@root/models';
-import { AccountService, StockItemsService, ProductsService } from '@root/services';
+import { IStockItems, IStockItemTemp } from '@root/models';
+import { AccountService, StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@root/services';
 import { ITEMS_PER_PAGE } from '@root/constants';
+import { ClrDatagridStateInterface } from "@clr/angular";
 
 @Component({
   selector: 'app-manage-products',
@@ -30,14 +31,22 @@ export class ManageProductsComponent implements OnInit {
   showImportModal: boolean = false;
   selectedMode: number = 0;
   uploadedFiles: any[] = [];
+  stockItemTempList: IStockItemTemp[] = [];
+  uploadedTransactionid: number;
   isUploaded = false;
+  isImported = false;
+  total: number = 0;
+  stockItemTempLinks: any;
+  loading: boolean = true;
 
   constructor(
     protected stockItemsService: StockItemsService,
+    protected stockItemTempService: StockItemTempService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected accountService: AccountService,
     protected productsService: ProductsService,
+    protected uploadTransactionsService: UploadTransactionsService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
     protected eventManager: JhiEventManager
@@ -102,6 +111,23 @@ export class ManageProductsComponent implements OnInit {
     this.registerChangeInStockItems();
   }
 
+  confirmDeleteStockItemTemp(id: number) {
+    this.uploadTransactionsService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'uploadTransactionsListModification',
+        content: 'Deleted an uploadTransactions'
+      });
+      this.uploadedTransactionid = null;
+      this.refresh({
+        page: {
+          from: 0,
+          size: 5
+        }
+      });
+
+    });
+  }
+
   ngOnDestroy() {
     this.eventManager.destroy(this.eventSubscriber);
   }
@@ -129,6 +155,7 @@ export class ManageProductsComponent implements OnInit {
   }
 
   protected onError(errorMessage: string) {
+    console.log('errorMessage', errorMessage);
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
@@ -140,17 +167,78 @@ export class ManageProductsComponent implements OnInit {
     this.subscribeToUploadResponse(this.productsService.upload(this.uploadedFiles[0]));
   }
 
+  onImportToSystem(event: any) {
+    this.subscribeToUploadResponse(this.productsService.importToSystem(this.uploadedTransactionid));
+  }
+
   protected subscribeToUploadResponse(result: Observable<HttpResponse<any>>) {
-    result.subscribe((res: HttpResponse<any>) => this.onUploadSuccess(res), (res: HttpErrorResponse) => this.onUploadError());
+    result.subscribe((res: HttpResponse<any>) => this.onUploadSuccess(res), (err: HttpErrorResponse) => this.onUploadError(err));
+  }
+
+  protected subscribeToImportResponse(result: Observable<HttpResponse<any>>) {
+    result.subscribe((res: HttpResponse<any>) => this.onImportSuccess(res), (err: HttpErrorResponse) => this.onImportError(err));
   }
 
   protected onUploadSuccess(res) {
     console.log('upload success', res);
+    this.uploadedTransactionid = res.id;
+
+    this.refresh({
+      page: {
+        from: 0,
+        size: 5
+      }
+    });
     this.isUploaded = true;
   }
 
-  protected onUploadError() {
+  protected onUploadError(err) {
     console.log('upload failed');
     this.isUploaded = false;
+  }
+
+  protected onImportSuccess(res) {
+    console.log('import success', res);
+    this.isImported = true;
+  }
+
+  protected onImportError(err) {
+    console.log('import failed');
+    this.isImported = false;
+  }
+
+  refresh(state: ClrDatagridStateInterface) {
+    this.loading = true;
+    // We convert the filters from an array to a map,
+    // because that's what our backend-calling service is expecting
+    // let filters: { [prop: string]: any[] } = {};
+    // if (state.filters) {
+    //   for (let filter of state.filters) {
+    //     let { property, value } = <{ property: string, value: string }>filter;
+    //     filters[property] = [value];
+    //   }
+    // }
+
+    if (!this.uploadedTransactionid) {
+      this.stockItemTempList = [];
+      this.total = 0;
+      this.loading = false;
+      return;
+    }
+
+    console.log('refresh', this.uploadedTransactionid)
+    this.stockItemTempService.getAllByTransactionId(state.page.from, state.page.size, this.uploadedTransactionid)
+      .pipe(
+        filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
+        map((res: HttpResponse<IStockItemTemp[]>) => res)
+      )
+      .subscribe(result => {
+
+        this.stockItemTempList = result.body;
+        this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
+        this.total = parseInt(result.headers.get('X-Total-Count'), 10);
+        console.log('result', result.body)
+        this.loading = false;
+      });
   }
 }
