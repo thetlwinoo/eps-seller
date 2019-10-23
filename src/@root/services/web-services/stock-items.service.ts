@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 import { SERVER_API_URL, DATE_FORMAT } from '@root/constants';
 import { createRequestOption } from '@root/utils';
@@ -56,6 +56,17 @@ export class StockItemsService {
 
     updatePhoto(photos: IPhotos): Observable<EntityResponseType> {
         return this.http.put<IPhotos>(this.extendUrl + '/photos', photos, { observe: 'response' });
+    }
+
+    findAll(req?: any): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(req);
+        return this.http
+            .get<IStockItems[]>(this.extendUrl + '/filter/vendor', { params: options, observe: 'response' })
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+    }
+
+    loadCount(): Observable<HttpResponse<any>> {
+        return this.http.get<any>(this.extendUrl + '/count', { observe: 'response' });
     }
 
     protected convertDateFromClient(stockItems: IStockItems): IStockItems {

@@ -1,10 +1,10 @@
 export const environment = {
   production: true,
   serverApi: {
-    baseUrl: 'http://dev.testing.com:3000'
+    baseUrl: 'https://ecp-resource.herokuapp.com/'
   },
   socketConfig: {
-    url: 'http://dev.testing.com:3000',
+    url: 'https://ecp-resource.herokuapp.com/',
     opts: {
       transports: ['websocket']
     }

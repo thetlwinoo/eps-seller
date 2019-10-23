@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, ElementRef } from '@angular/core';
 import { RootTranslationLoaderService } from '@root/services';
 import { rootAnimations } from '@root/animations';
 
@@ -9,10 +9,12 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/ht
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 import { IStockItems, IPhotos, Photos } from '@root/models';
 import { AccountService, StockItemsService, PhotosService } from '@root/services';
 import { ITEMS_PER_PAGE } from '@root/constants';
+import { ClrDatagridStateInterface } from "@clr/angular";
+import { ImageUtils } from '@root/services';
 
 @Component({
   selector: 'app-manage-images',
@@ -35,7 +37,9 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
   predicate: any;
   previousPage: any;
   reverse: any;
-
+  loading: boolean = true;
+  selectedRows:any;
+  
   constructor(
     private _rootTranslationLoaderService: RootTranslationLoaderService,
     protected stockItemsService: StockItemsService,
@@ -45,9 +49,12 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     protected accountService: AccountService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected eventManager: JhiEventManager
+    protected eventManager: JhiEventManager,
+    protected elementRef: ElementRef,
+    protected dataUtils: JhiDataUtils,
+    protected imageUtils: ImageUtils,
   ) {
-    this.itemsPerPage = ITEMS_PER_PAGE;
+    this.itemsPerPage = 10;
     this.routeData = this.activatedRoute.data.subscribe(data => {
       this.page = data.pagingParams.page;
       this.previousPage = data.pagingParams.page;
@@ -63,6 +70,14 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     });
     this.registerChangeInStockItems();
     this._rootTranslationLoaderService.loadTranslations(english, myanmar);
+  }
+
+  refresh(state: ClrDatagridStateInterface) {
+    this.loading = true;
+
+    this.itemsPerPage = state.page.size;
+    this.page = state.page.current;
+    this.loadPage(this.page);
   }
 
   loadAll() {
@@ -86,7 +101,7 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
   }
 
   transition() {
-    this.router.navigate(['/products/manage-products'], {
+    this.router.navigate(['/products/manage-images'], {
       queryParams: {
         page: this.page,
         size: this.itemsPerPage,
@@ -131,7 +146,7 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
   protected paginateStockItems(data: IStockItems[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-    
+
     data.forEach(stockItem => {
       this.photosService
         .query({
@@ -163,8 +178,37 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     });
 
     this.stockItems = data;
-    
+
+    this.loading = false;
     console.log('image data', data)
+  }
+
+  setFileData(event, entity, field, isImage) {
+    return new Promise((resolve, reject) => {
+      Promise.all([
+        this.imageUtils.handleFiles(event, entity, 'thumbnailPhotoBlob', isImage),
+        this.dataUtils.setFileData(event, entity, field, isImage)
+      ]).then(
+        () => {
+          resolve();
+        },
+        reject
+      );
+    });
+  }
+
+  clearInputImage(entity) {
+    return new Promise((resolve, reject) => {
+      Promise.all([
+        this.dataUtils.clearInputImage(entity, this.elementRef, 'thumbnailPhotoBlob', 'thumbnailPhotoBlobContentType', 'fileImage'),
+        this.dataUtils.clearInputImage(entity, this.elementRef, 'originalPhotoBlob', 'originalPhotoBlobContentType', 'fileImage')
+      ]).then(
+        () => {
+          resolve();
+        },
+        reject
+      );
+    });
   }
 
   protected onError(errorMessage: string) {

@@ -14,7 +14,7 @@
         align-items: flex-start;
         // padding: 24px 24px 48px 24px;
         // margin-bottom: 20px;
-        margin: 0px 16px 16px 0px;
+        margin: 0px 5px 5px 0px;
 
         .upload-preview {
             display: flex;
@@ -113,9 +113,12 @@
 }
 
 .stockitem-table {
-    input {
-        width: 3rem;
+    input,select {
+        width: 100%;
     }    
+    .min-col-width{
+        // min-width: 130px;
+    }
 }
 
 .datagrid-row:hover{

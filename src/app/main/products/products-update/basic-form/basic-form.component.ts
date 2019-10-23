@@ -14,6 +14,7 @@ import * as fromProducts from 'app/ngrx/products/reducers';
 import * as fromAuth from 'app/ngrx/auth/reducers';
 import { FetchActions, CategoryActions } from 'app/ngrx/products/actions';
 import { RootTranslationLoaderService } from '@root/services';
+import { ProductsDTO } from '@root/dto';
 
 @Component({
   selector: 'basic-form',
@@ -24,6 +25,8 @@ import { RootTranslationLoaderService } from '@root/services';
 })
 export class BasicFormComponent implements OnInit {
   @Input() productsForm: FormGroup;
+  @Input() products: ProductsDTO;
+
   productcategories: IProductCategory[];
   pageType: string;
   dialogRef: any;
@@ -35,7 +38,6 @@ export class BasicFormComponent implements OnInit {
   categories$: Observable<any[]>;
   categories: any[];
   productBrands$: Observable<IProductBrand[]>;
-  warrantyTypes$: Observable<IWarrantyTypes[]>;
 
   supplier$: Observable<ISuppliers>;
 
@@ -53,8 +55,7 @@ export class BasicFormComponent implements OnInit {
     private authStore: Store<fromAuth.State>
   ) {
     this.productModels$ = store.pipe(select(fromProducts.getFetchModels)) as Observable<IProductModel[]>;
-    this.productBrands$ = store.pipe(select(fromProducts.getFetchBrands)) as Observable<IProductBrand[]>;
-    this.warrantyTypes$ = store.pipe(select(fromProducts.getFetchWarrantyTypes)) as Observable<IWarrantyTypes[]>;
+    this.productBrands$ = store.pipe(select(fromProducts.getFetchBrands)) as Observable<IProductBrand[]>;    
     this.supplier$ = this.authStore.pipe(select(fromAuth.getSupplierFetched)) as Observable<ISuppliers>;
     this.categories$ = store.pipe(select(fromProducts.getFetchCategoriesTree)) as Observable<any[]>;
     this.productModels$.subscribe(models => this.productModelsFiltered = models.slice())
@@ -81,11 +82,15 @@ export class BasicFormComponent implements OnInit {
   selectCategory(event): void {
     this.store.dispatch(CategoryActions.selectCategory({ id: this.selectedNode.data.id }));
     this.showModel = false;
+    this.products.stockItemLists = [];
     this.productsForm.patchValue({
       // productCategoryId: response.data.id,
       productCategoryName: this.selectedText,
-      productCategory: this.selectedNode.data
+      productCategory: this.selectedNode.data,
+      productAttribute: null,
+      productOption: null
     });
+    this.products.resetChoice();
   }
 
   nodeSelect(event) {

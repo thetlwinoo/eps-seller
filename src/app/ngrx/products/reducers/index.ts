@@ -167,6 +167,10 @@ export const getFetchProductChoice = createSelector(
     getFetchState,
     fromFetch.getProductChoice
 );
+export const getFetchIsProductChoiceFetched = createSelector(
+    getFetchState,
+    fromFetch.getIsProductChoiceFetched
+);
 export const getFetchProductAttributeList = createSelector(
     getFetchState,
     fromFetch.getProductAttributeList
@@ -178,6 +182,10 @@ export const getFetchProductOptionList = createSelector(
 export const getFetchWarrantyTypes = createSelector(
     getFetchState,
     fromFetch.getWarrantyTypes
+);
+export const getFetchBarcodeTypes = createSelector(
+    getFetchState,
+    fromFetch.getBarcodeTypes
 );
 
 //Category State

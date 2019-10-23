@@ -92,6 +92,13 @@ export class ProductsService {
             map((res: HttpResponse<any>) => res.body)
         );
     }
+
+    updateStockItemActive(stockItemId, isActive): Observable<EntityResponseType> {
+        let params = new HttpParams();
+        params = params.append('stockItemId', stockItemId);
+        params = params.append('isActive', isActive);
+        return this.http.put<Products>(this.extendUrl + '/products/stock-item', params, { observe: 'response' });
+    }
     // saveProduct(product: IProducts): void {
     //     this.create(product)
     //         .pipe(

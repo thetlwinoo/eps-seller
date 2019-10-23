@@ -8,16 +8,18 @@ export class StockItemsDTO {
     id: number;
     guid: string;
     stockItemName: string;
-    sellerSKU: string;
+    vendorCode: string;
+    vendorSKU: string;
     generatedSKU: string;
     barcode: string;
+    barcodeType: any;
     unitPrice: number;
     recommendedRetailPrice: number;
-    quantityPerOuter: number;
-    typicalWeightPerUnit: number;
-    typicalLengthPerUnit: number;
-    typicalWidthPerUnit: number;
-    typicalHeightPerUnit: number;
+    quantityOnHand: number;
+    itemWeight: number;
+    itemLength: number;
+    itemWidth: number;
+    itemHeight: number;
     marketingComments: string;
     internalComments: string;
     sellStartDate: Moment;
@@ -25,6 +27,7 @@ export class StockItemsDTO {
     sellCount: number;
     customFields: string;
     thumbnailUrl: string;
+    activeInd: boolean;
     photoLists?: Photos[];
     specialDiscounts: SpecialDeals[];
     lengthUnitMeasureCode: any;
@@ -41,16 +44,18 @@ export class StockItemsDTO {
         this.id = stockItem.id || null;
         this.guid = stockItem.id || RootUtils.generateGUID();
         this.stockItemName = stockItem.stockItemName || '';
-        this.sellerSKU = stockItem.sellerSKU || '';
+        this.vendorCode = stockItem.vendorCode || '';
+        this.vendorSKU = stockItem.vendorSKU || '';
         this.generatedSKU = stockItem.generatedSKU || '';
         this.barcode = stockItem.barcode || '';
+        this.barcodeType = stockItem.barcodeType || null;
         this.unitPrice = stockItem.unitPrice || '';
         this.recommendedRetailPrice = stockItem.recommendedRetailPrice || '';
-        this.quantityPerOuter = stockItem.quantityPerOuter || '';
-        this.typicalWeightPerUnit = stockItem.typicalWeightPerUnit || '';
-        this.typicalLengthPerUnit = stockItem.typicalLengthPerUnit || '';
-        this.typicalWidthPerUnit = stockItem.typicalWidthPerUnit || '';
-        this.typicalHeightPerUnit = stockItem.typicalHeightPerUnit || '';
+        this.quantityOnHand = stockItem.quantityOnHand || '';
+        this.itemWeight = stockItem.itemWeight || '';
+        this.itemLength = stockItem.itemLength || '';
+        this.itemWidth = stockItem.itemWidth || '';
+        this.itemHeight = stockItem.itemHeight || '';
         this.marketingComments = stockItem.marketingComments || '';
         this.internalComments = stockItem.internalComments || '';
         this.sellStartDate = stockItem.sellStartDate || null;
@@ -58,6 +63,7 @@ export class StockItemsDTO {
         this.sellCount = stockItem.sellCount || 0;
         this.customFields = stockItem.customFields || '';
         this.thumbnailUrl = stockItem.thumbnailUrl || '';
+        this.activeInd = stockItem.activeInd || false;
         this.photoLists = stockItem.photoLists || [];
         this.specialDiscounts = stockItem.specialDiscounts || null;
         this.lengthUnitMeasureCode = stockItem.lengthUnitMeasureCode || null;
@@ -69,7 +75,6 @@ export class StockItemsDTO {
         this.stockItemHolding = stockItem.stockItemHolding || null;
         this.product = stockItem.product || null;
 
-        console.log('stockItem.photoLists',stockItem.photoLists)
         if (this.photoLists.length) {
             const tempPhotoList: PhotosDTO[] = [];
             this.photoLists.map(photo => {

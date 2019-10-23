@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes } from '@root/models';
+import { IBarcodeTypes, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes } from '@root/models';
 
 export const fetchCategories = createAction('[Products/API] Fetch Categories');
 
@@ -64,6 +64,13 @@ export const fetchProductOption = createAction(
 export const fetchProductOptionSuccess = createAction(
     '[Products/API] Fetch Product Option Success',
     props<{ productOptionList: IProductOption[] }>()
+);
+
+export const fetchBarcodeType = createAction('[Products/API] Fetch Barcode Type');
+
+export const fetchBarcodeTypeSuccess = createAction(
+    '[Products/API] Fetch Barcode Type Success',
+    props<{ barcodeTypes: IBarcodeTypes[] }>()
 );
 
 export const fetchFailure = createAction(

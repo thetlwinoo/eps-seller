@@ -41,9 +41,12 @@
     </div>
 </form>
 <clr-datagrid class="stockitem-table">
-    <clr-dg-column *ngIf="attributeInd">Attribute</clr-dg-column>
+    <clr-dg-column *ngIf="attributeInd" class="min-col-width">Attribute</clr-dg-column>
     <clr-dg-column *ngIf="optionInd">Option</clr-dg-column>
-    <clr-dg-column>SellerSKU</clr-dg-column>
+    <clr-dg-column class="min-col-width">Vendor Code</clr-dg-column>
+    <clr-dg-column class="min-col-width">Vendor SKU</clr-dg-column>
+    <clr-dg-column class="min-col-width">Barcode</clr-dg-column>
+    <clr-dg-column class="min-col-width">Barcode Type</clr-dg-column>
     <clr-dg-column>Quantity</clr-dg-column>
     <clr-dg-column>RetailPrice</clr-dg-column>
     <clr-dg-column>UnitPrice</clr-dg-column>
@@ -53,7 +56,7 @@
     <clr-dg-column>Height(cm)</clr-dg-column>
 
     <clr-dg-row *ngFor="let stockItem of products.stockItemLists" [clrDgItem]="stockItem">
-        <clr-dg-cell *ngIf="attributeInd"> 
+        <clr-dg-cell *ngIf="attributeInd" class="min-col-width">
             <select name="attribute-select" [(ngModel)]="stockItem.productAttribute" [compareWith]="compareObjects"
                 disabled>
                 <option *ngFor="let item of (productAttributeList$|async)" [ngValue]="item">
@@ -68,14 +71,23 @@
                 </option>
             </select>
         </clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.sellerSKU"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.quantityPerOuter"></clr-dg-cell>
+        <clr-dg-cell class="min-col-width"><input type="text" [(ngModel)]="stockItem.vendorCode"></clr-dg-cell>
+        <clr-dg-cell class="min-col-width"><input type="text" [(ngModel)]="stockItem.vendorSKU"></clr-dg-cell>
+        <clr-dg-cell class="min-col-width"><input type="text" [(ngModel)]="stockItem.barcode"></clr-dg-cell>
+        <clr-dg-cell>
+            <select name="option-select" [(ngModel)]="stockItem.barcodeType" [compareWith]="compareObjects">
+                <option *ngFor="let item of (barcodeTypes$|async)" [ngValue]="item">
+                    {{item.barcodeTypeName}}
+                </option>
+            </select>
+        </clr-dg-cell>
+        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.quantityOnHand"></clr-dg-cell>
         <clr-dg-cell><input type="text" [(ngModel)]="stockItem.recommendedRetailPrice"></clr-dg-cell>
         <clr-dg-cell><input type="text" [(ngModel)]="stockItem.unitPrice"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.typicalWeightPerUnit"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.typicalLengthPerUnit"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.typicalWidthPerUnit"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.typicalHeightPerUnit"></clr-dg-cell>
+        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemWeight"></clr-dg-cell>
+        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemLength"></clr-dg-cell>
+        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemWidth"></clr-dg-cell>
+        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemHeight"></clr-dg-cell>
         <clr-dg-row-detail>
             <div class="upload-wrapper">
                 <div class="upload-item" *ngFor="let photo of stockItem.photoLists; let i = index">

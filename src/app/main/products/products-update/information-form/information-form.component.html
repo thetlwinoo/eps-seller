@@ -1,0 +1,104 @@
+<form name="productInformationForm" id="product-information" [formGroup]="productInformationForm"
+    class="product-information-form w-100-p">
+    <div class="clr-form-control clr-row">
+        <label for="warranty-type" class="clr-control-label clr-col-12 clr-col-md-2">Warranty Types</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-select-wrapper full-width">
+                <select #modelSelect name="warranty-type" [compareWith]="compareObjects" formControlName="warrantyType"
+                    class="w-100-p" required>
+                    <option *ngFor="let warrantyType of (warrantyTypes$ | async)" [ngValue]="warrantyType">
+                        {{warrantyType.warrantyTypeName}}
+                    </option>
+                </select>
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="warranty-period" class="clr-control-label clr-col-12 clr-col-md-2">Warranty
+            Period</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #warrantyPeriod type="text" id="warranty-period" placeholder="Warranty Period"
+                    class="clr-input full-width" formControlName="warrantyPeriod">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{warrantyPeriod.value?.length || 0}}/50</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="warranty-policy" class="clr-control-label clr-col-12 clr-col-md-2">Warranty
+            Policy</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #warrantyPolicy type="text" id="warranty-policy" placeholder="Warranty Policy"
+                    class="clr-input full-width" formControlName="warrantyPolicy">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{warrantyPolicy.value?.length || 0}}/500</span>
+        </div>
+    </div>   
+    <div class="clr-form-control clr-row">
+        <label for="model-name" class="clr-control-label clr-col-12 clr-col-md-2">Model Name</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #modelName type="text" id="model-name" placeholder="Model Name" class="clr-input full-width"
+                    formControlName="modelName">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{modelName.value?.length || 0}}/255</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="model-number" class="clr-control-label clr-col-12 clr-col-md-2">Model Number</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #modelNumber type="text" id="model-number" placeholder="Model Number"
+                    class="clr-input full-width" formControlName="modelNumber">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{modelNumber.value?.length || 0}}/255</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="country-of-origin" class="clr-control-label clr-col-12 clr-col-md-2">Country Of
+            Origin</label>
+        <div class="clr-control-container clr-col-12 clr-col-md-10">
+            <div class="clr-input-wrapper">
+                <input #countryOfOrigin type="text" id="country-of-origin" placeholder="Country Of Origin"
+                    class="clr-input full-width" formControlName="countryOfOrigin">
+                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+            </div>
+            <span class="clr-subtext">{{countryOfOrigin.value?.length || 0}}/255</span>
+        </div>
+    </div>
+    <div class="clr-form-control clr-row">
+        <label for="dangerous-goods" class="clr-control-label clr-col-12 clr-col-md-2">Dangerous
+            Goods</label>
+        <div id="dangerous-goods" class="clr-control-container clr-control-inline clr-col-12 clr-col-md-10">
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="battery" required value="battery" />
+                <label>Battery</label>
+            </clr-checkbox-wrapper>
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="liquid" required value="liquid" />
+                <label>Liquid</label>
+            </clr-checkbox-wrapper>
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="none" required value="" />
+                <label>None</label>
+            </clr-checkbox-wrapper>
+            <clr-checkbox-wrapper>
+                <input type="checkbox" clrCheckbox name="flammable" required value="flammable" />
+                <label>Flammable</label>
+            </clr-checkbox-wrapper>
+        </div>
+    </div>
+</form>
+<!-- <clr-accordion>
+    <clr-accordion-panel>
+        <clr-accordion-title>Warranty Information</clr-accordion-title>
+        <clr-accordion-content *clrIfExpanded>            
+        </clr-accordion-content>
+    </clr-accordion-panel>
+</clr-accordion> -->

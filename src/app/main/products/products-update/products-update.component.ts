@@ -72,7 +72,6 @@ export class ProductsUpdateComponent implements OnInit {
           this.pageType = 'new';
         }
         this.productsForm = this.createProductForm();
-        console.log('this.productsForm',this.productsForm.getRawValue())
       });
 
     this._rootTranslationLoaderService.loadTranslations(english, myanmar);
@@ -85,19 +84,35 @@ export class ProductsUpdateComponent implements OnInit {
       productName: [this.products.productName],
       productNumber: [this.products.productNumber],
       searchDetails: [this.products.searchDetails],
-      warrantyPeriod: [this.products.warrantyPeriod],
-      warrantyPolicy: [this.products.warrantyPolicy],
-      whatInTheBox: [this.products.whatInTheBox],
       stockItemLists: [this.products.stockItemLists],
-      warrantyType: [this.products.warrantyType],
-      modelName: [],
       productBrand: [this.products.productBrand],
       productCategory: [this.products.productCategory],
       productCategoryName: [this.products.productCategory ? this.products.productCategory.parent.name + " / " + this.products.productCategory.name : ''],
       productAttributeList: [this.products.productAttributeList],
       productOptionList: [this.products.productOptionList],
       productAttribute: null,
-      productOption: null
+      productOption: null,
+      document: this._formBuilder.group({
+        videoUrl: [this.products.document ? this.products.document.videoUrl : ''],
+        highlights: [this.products.document ? this.products.document.highlights : ''],
+        longDescription: [this.products.document ? this.products.document.longDescription : ''],
+        shortDescription: [this.products.document ? this.products.document.shortDescription : ''],
+        description: [this.products.document ? this.products.document.description : ''],
+        careInstructions: [this.products.document ? this.products.document.careInstructions : ''],
+        productType: [this.products.document ? this.products.document.productType : ''],
+        modelName: [this.products.document ? this.products.document.modelName : ''],
+        modelNumber: [this.products.document ? this.products.document.modelNumber : ''],
+        fabricType: [this.products.document ? this.products.document.fabricType : ''],
+        specialFeatures: [this.products.document ? this.products.document.specialFeatures : ''],
+        productComplianceCertificate: [this.products.document ? this.products.document.productComplianceCertificate : ''],
+        genuineAndLegal: [this.products.document ? this.products.document.genuineAndLegal : false],
+        countryOfOrigin: [this.products.document ? this.products.document.countryOfOrigin : ''],
+        usageAndSideEffects: [this.products.document ? this.products.document.usageAndSideEffects : ''],
+        safetyWarnning: [this.products.document ? this.products.document.safetyWarnning : ''],
+        warrantyType: [this.products.document ? this.products.document.warrantyType : ''],
+        warrantyPeriod: [this.products.document ? this.products.document.warrantyPeriod : ''],
+        warrantyPolicy: [this.products.document ? this.products.document.warrantyPolicy : ''],
+      })
     });
   }
 
@@ -106,9 +121,10 @@ export class ProductsUpdateComponent implements OnInit {
     data.stockItemLists = this.products.stockItemLists;
     data.searchDetails = data.productName ? data.productName : '';
     data.supplier = this.supplier ? this.supplier : null;
-    data.productCategory.createdDate = null;
-    data.productCategory.lastModifiedDate = null;
+    this.cleanAuditDate(data.productCategory);
+    this.cleanAuditDate(data.productBrand);
     data.handle = data.productName ? RootUtils.handleize(data.productName) : null;
+    console.log('this.productsForm', this.productsForm.getRawValue())
     if (this.pageType == 'new') {
       this.store.dispatch(ProductActions.createProduct({ product: data }));
     } else {
@@ -121,6 +137,12 @@ export class ProductsUpdateComponent implements OnInit {
     // });
   }
 
+  cleanAuditDate(object) {
+    object.createdBy = null;
+    object.createdDate = null;
+    object.lastModifiedBy = null;
+    object.lastModifiedDate = null;
+  }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next();

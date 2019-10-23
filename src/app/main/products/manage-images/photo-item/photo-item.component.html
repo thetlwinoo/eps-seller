@@ -1,0 +1,43 @@
+<input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob [style.display]="'none'"
+    (change)="setFileData($event, photo, 'originalPhotoBlob', true);" />
+
+<div class="upload-container">
+    <div class="upload-control" *ngIf="!photo.originalPhotoBlob;else preview">
+        <span>
+            <div class="image-upload-btn" (click)="originalBlob.click()">
+                <clr-icon shape="image" class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
+                <p class="upload-text">Upload Image</p>
+            </div>
+        </span>
+    </div>
+    <ng-template #preview>
+        <div class="image-preview" @slideInOut *ngIf="photo.thumbnailPhotoBlob">
+            <img [src]="'data:' + photo.thumbnailPhotoBlobContentType + ';base64,' + photo.thumbnailPhotoBlob"
+                style="max-height: 100px;" alt="stock item image" draggable="false" />
+            <div class="product-badge-wrapper" *ngIf="photo.defaultInd">
+                <clr-icon shape="star" class="is-solid"></clr-icon>
+            </div>
+            <div class="image-tools">
+                <clr-icon shape="star" class="tools-icon" pTooltip="Set Default" tooltipPosition="bottom"></clr-icon>
+                <clr-icon shape="search" class="tools-icon" pTooltip="View" tooltipPosition="bottom"
+                    (click)="viewOriginal = true"></clr-icon>
+                <clr-icon shape="trash" class="tools-icon" pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="clearInputImage(photo)"></clr-icon>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" [dismissable]="true"
+    [appendTo]="'body'">
+    <img class="overlay-image"
+        [src]="'data:' + photo.originalPhotoBlobContentType + ';base64,' + photo.originalPhotoBlob" alt="original image"
+        draggable="false" *ngIf="photo.originalPhotoBlob" />
+</p-overlayPanel>
+
+<clr-modal class="view-original" [(clrModalOpen)]="viewOriginal">
+    <div class="modal-body">
+        <img [src]="'data:' + photo.originalPhotoBlobContentType + ';base64,' + photo.originalPhotoBlob"
+            alt="original image" draggable="false" *ngIf="photo.originalPhotoBlob" />
+    </div>
+</clr-modal>

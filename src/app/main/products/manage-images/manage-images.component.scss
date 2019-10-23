@@ -1,12 +1,16 @@
+.limit-height clr-datagrid {
+    height: 500px;
+}
+
 h6 {
     margin: 0 !important;
 }
 
-.product-col{
-    width: 120px !important;
+.product-col {
+    width: 150px !important;
 }
 
-.sku-col{
+.sku-col {
     width: 100px !important;
 }
 
@@ -26,104 +30,104 @@ h6 {
         align-items: flex-start;
         // padding: 24px 24px 48px 24px;
         // margin-bottom: 20px;
-        margin: 0px 16px 16px 0px;
+        margin: 0px 5px 5px 0px;
 
-        .upload-preview {
-            display: flex;
-            min-width: 97px;
-        }
+        // .upload-preview {
+        //     display: flex;
+        //     min-width: 97px;
+        // }
 
-        //upload image
-        [type='file']::-webkit-file-upload-button {
-            -webkit-appearance: button;
-        }
+        // //upload image
+        // [type='file']::-webkit-file-upload-button {
+        //     -webkit-appearance: button;
+        // }
 
-        .upload-control {
-            width: 97px;
-            height: 97px;
-            position: relative;
-            cursor: cell;
-        }
+        
 
-        .upload-control .image-upload-btn {
-            width: 100%;
-            height: 100%;
-            border: 1px dashed #c4c6cf;
-            text-align: left;
-        }
+        // .upload-control .image-upload-btn {
+        //     width: 100%;
+        //     height: 100%;
+        //     border: 1px dashed #c4c6cf;
+        //     text-align: left;
+        // }
 
-        .upload-control .image-upload-btn .upload-btn-icon.next-icon {
-            margin: 18px 0 0 30px;
-            font-size: 2.5em;
-            color: #c4c6cf;
-        }
+        
 
-        .next-icon {
-            position: relative;
-            display: inline-block;
-            font-weight: 400;
-            width: 32px;
-            height: 32px;
-        }
+        
 
-        .upload-control .image-upload-btn .upload-text {
-            font-size: 12px;
-            text-align: center;
-            margin: 6px 0;
-            color: #c4c6cf;
-            padding: 0;
-        }
+        
 
-        .upload-control .image-preview {
-            display: block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 97px;
-            height: 97px;
-            background-color: #f6f6f6;
-            overflow: hidden;
-        }
+        // .upload-control .image-preview {
+        //     display: block;
+        //     position: absolute;
+        //     left: 0;
+        //     top: 0;
+        //     width: 97px;
+        //     height: 97px;
+        //     background-color: #f6f6f6;
+        //     overflow: hidden;
+        // }
 
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
+        // img {
+        //     max-width: 100%;
+        //     max-height: 100%;
+        // }
 
-        .overlay-image {
-            width: 256px;
-            height: 256px;
-        }
+        // .upload-control .image-preview .image-link {
+        //     display: table-cell;
+        //     width: 97px;
+        //     height: 97px;
+        //     text-align: center;
+        //     vertical-align: middle;
+        //     cursor: default;
+        //     //overflow: hidden;
+        // }
 
-        .upload-control .image-preview .image-link {
-            display: table-cell;
-            width: 97px;
-            height: 97px;
-            text-align: center;
-            vertical-align: middle;
-            cursor: default;
-            //overflow: hidden;
-        }
+        // .upload-control .image-preview:hover .image-tools {
+        //     height: 28px;
+        // }
 
-        a {
-            position: absolute !important;
-            cursor: pointer !important;
-        }
+        // .upload-control .image-preview:hover .image-tools fa-icon,
+        // button {
+        //     line-height: 28px;
+        //     color: #fff;
+        //     padding: 0 5px;
+        //     cursor: pointer;
+        //     float: left;
+        //     width: 33.3%;
+        // }
 
-        a:visited {
-            color: #199cb7;
-        }
+        // .upload-control .image-tools {
+        //     position: absolute;
+        //     bottom: 0;
+        //     left: 0;
+        //     opacity: 0.8;
+        //     width: 100%;
+        //     height: 0;
+        //     background-color: rgba(0, 0, 0, 0.7);
+        //     -webkit-transition: all 0.3s ease;
+        //     transition: all 0.3s ease;
+        // }
 
-        a:visited {
-            color: #d9e4f5;
-        }
+        // a {
+        //     position: absolute !important;
+        //     cursor: pointer !important;
+        // }
 
-        a:link {
-            color: #4077cc;
-        }
+        // a:visited {
+        //     color: #199cb7;
+        // }
+
+        // a:visited {
+        //     color: #d9e4f5;
+        // }
+
+        // a:link {
+        //     color: #4077cc;
+        // }
     }
 }
 
-.datagrid-row:hover{
-    background-color: transparent;       
+.datagrid-row:hover {
+    background-color: transparent;
 }

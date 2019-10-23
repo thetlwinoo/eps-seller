@@ -1,5 +1,6 @@
 export * from './account';
 export * from './merchants.model';
+export * from './dangerous-goods.model';
 export * from './suppliers.model';
 export * from './products.model';
 export * from './stock-items.model';
@@ -20,3 +21,4 @@ export * from './shopping-carts.model';
 export * from './shopping-cart-items.model';
 export * from './supplier-imported-document.model';
 export * from './upload-transactions.model';
+export * from './barcode-types.model';

@@ -15,6 +15,9 @@ import { NgxPicaModule } from '@digitalascetic/ngx-pica';
 import { EditorModule } from 'primeng/editor';
 import { TreeModule } from 'primeng/tree';
 import { FileUploadModule } from 'primeng/fileupload';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RootAlertModule } from '@root/components/alert/alert.module';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
     imports: [
@@ -30,7 +33,10 @@ import { FileUploadModule } from 'primeng/fileupload';
         NgxPicaModule,
         EditorModule,
         TreeModule,
-        FileUploadModule
+        FileUploadModule,
+        OverlayPanelModule,
+        RootAlertModule,
+        TooltipModule
     ],
     exports: [
         FormsModule,
@@ -48,7 +54,10 @@ import { FileUploadModule } from 'primeng/fileupload';
         NgxPicaModule,
         EditorModule,
         TreeModule,
-        FileUploadModule
+        FileUploadModule,
+        OverlayPanelModule,
+        RootAlertModule,
+        TooltipModule
     ],
     providers: [
     ]

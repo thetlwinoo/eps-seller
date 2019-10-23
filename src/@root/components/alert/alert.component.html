@@ -1,0 +1,19 @@
+<div *ngIf="visible">
+    <div class="alert" [ngClass]="{'alert-success': mode=='success', 'alert-danger': mode=='danger', 'alert-warning': mode=='warning', 'alert-info': mode=='info' }"
+        role="alert">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon *ngIf="mode == 'success'" class="alert-icon" shape="check-circle"></clr-icon>
+                    <clr-icon *ngIf="mode == 'danger'" class="alert-icon" shape="exclamation-circle"></clr-icon>
+                    <clr-icon *ngIf="mode == 'warning'" class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                    <clr-icon *ngIf="mode == 'info'" class="alert-icon" shape="info-circle"></clr-icon>
+                </div>
+                <span class="alert-text">{{message}}</span>
+            </div>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="close($event)">
+            <clr-icon aria-hidden="true" shape="close"></clr-icon>
+        </button>
+    </div>
+</div>

@@ -3,16 +3,19 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "bundle-report": "webpack-bundle-analyzer dist/metronic/stats.json",  
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "~8.0.1",
     "@angular/cdk": "^8.2.1",
+    "@angular/cli": "~8.0.3",
     "@angular/common": "~8.0.1",
     "@angular/compiler": "~8.0.1",
     "@angular/core": "~8.0.1",
@@ -40,6 +43,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "@webcomponents/custom-elements": "^1.0.0",
     "exif-js": "^2.3.0",
+    "express": "^4.17.1",
     "moment": "^2.24.0",
     "ng-jhipster": "^0.11.2",
     "ngx-cookie": "^4.1.2",
@@ -77,5 +81,9 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
+  },
+  "engines": {
+    "node": "10.16.1",
+    "npm": "6.12.0"
   }
 }

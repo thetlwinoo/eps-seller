@@ -1,6 +1,6 @@
 import { FetchActions } from 'app/ngrx/products/actions';
 import { createReducer, on } from '@ngrx/store';
-import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes } from '@root/models';
+import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes, IBarcodeTypes } from '@root/models';
 
 export const fetchFeatureKey = 'fetch';
 
@@ -12,6 +12,8 @@ export interface State {
     productAttributeList: IProductAttribute[];
     productOptionList: IProductOption[];
     warrantyTypes: IWarrantyTypes[];
+    barcodeTypes: IBarcodeTypes[];
+    isProductChoiceFetched: boolean;
     loading: boolean;
     error: string;
 }
@@ -23,7 +25,9 @@ const initialState: State = {
     productChoice: [],
     productAttributeList: [],
     productOptionList: [],
-    warrantyTypes:[],
+    warrantyTypes: [],
+    barcodeTypes: [],
+    isProductChoiceFetched: false,
     loading: false,
     error: ''
 };
@@ -36,6 +40,7 @@ export const reducer = createReducer(
         (state) => {
             return {
                 ...state,
+                isProductChoiceFetched: false,
                 loading: true,
                 error: ''
             };
@@ -61,6 +66,7 @@ export const reducer = createReducer(
     })),
     on(FetchActions.fetchProductChoiceSuccess, (state, { choice }) => ({
         ...state,
+        isProductChoiceFetched: true,
         productChoice: choice,
         loading: false,
         error: ''
@@ -83,6 +89,12 @@ export const reducer = createReducer(
         loading: false,
         error: ''
     })),
+    on(FetchActions.fetchBarcodeTypeSuccess, (state, { barcodeTypes }) => ({
+        ...state,
+        barcodeTypes: barcodeTypes,
+        loading: false,
+        error: ''
+    })),
 )
 
 export const getCategories = (state: State) => state.categories;
@@ -93,11 +105,15 @@ export const getBrands = (state: State) => state.brands;
 
 export const getProductChoice = (state: State) => state.productChoice;
 
+export const getIsProductChoiceFetched = (state: State) => state.isProductChoiceFetched;
+
 export const getProductAttributeList = (state: State) => state.productAttributeList;
 
 export const getProductOptionList = (state: State) => state.productOptionList;
 
 export const getWarrantyTypes = (state: State) => state.warrantyTypes;
+
+export const getBarcodeTypes = (state: State) => state.barcodeTypes;
 
 export const getLoading = (state: State) => state.loading;
 

@@ -3,9 +3,9 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { asyncScheduler, EMPTY as empty, of } from 'rxjs';
 import { catchError, debounceTime, map, skip, switchMap, takeUntil, filter, mergeMap, tap } from 'rxjs/operators';
-import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes } from '@root/models';
+import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes, IBarcodeTypes } from '@root/models';
 import { FetchActions } from '../actions';
-import { ProductCategoryService, ProductModelService, ProductBrandService, ProductChoiceService, ProductAttributeService, ProductOptionService, WarrantyTypesService } from '@root/services';
+import { ProductCategoryService, ProductModelService, ProductBrandService, ProductChoiceService, ProductAttributeService, ProductOptionService, WarrantyTypesService, BarcodeTypesService } from '@root/services';
 import { select, Store } from '@ngrx/store';
 import * as fromProducts from 'app/ngrx/products/reducers';
 
@@ -140,6 +140,23 @@ export class FetchEffects {
         )
     );
 
+    fetchBarcodeTypes$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FetchActions.fetchBarcodeType),
+            switchMap(() =>
+                this.barcodeTypesService.query().pipe(
+                    filter((res: HttpResponse<IBarcodeTypes[]>) => res.ok),
+                    map((res: HttpResponse<IBarcodeTypes[]>) =>
+                        FetchActions.fetchBarcodeTypeSuccess({ barcodeTypes: res.body })
+                    ),
+                    catchError(err =>
+                        of(FetchActions.fetchFailure({ errorMsg: err.message }))
+                    )
+                )
+            )
+        )
+    );
+
     constructor(
         private actions$: Actions,
         private store: Store<fromProducts.State>,
@@ -149,6 +166,7 @@ export class FetchEffects {
         private productChoiceService: ProductChoiceService,
         private productAttributeService: ProductAttributeService,
         private productOptionService: ProductOptionService,
-        private warrantyTypesService: WarrantyTypesService
+        private warrantyTypesService: WarrantyTypesService,
+        private barcodeTypesService: BarcodeTypesService
     ) { }
 }

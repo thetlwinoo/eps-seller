@@ -19,9 +19,16 @@ import { ProductsDTO } from '@root/dto';
 import { ProductsService } from '@root/services';
 import { ProductListComponent } from './manage-images/product-list/product-list.component';
 
+import { select, Store } from '@ngrx/store';
+import * as fromProducts from 'app/ngrx/products/reducers';
+import { CategoryActions } from 'app/ngrx/products/actions';
+import { InformationFormComponent } from './products-update/information-form/information-form.component';
+import { StockItemsFilterPipe } from './filters/stock-items-filter.pipe';
+import { PhotoItemComponent } from './manage-images/photo-item/photo-item.component';
+
 @Injectable({ providedIn: 'root' })
 export class ProductsResolve implements Resolve<IProducts> {
-  constructor(private service: ProductsService) { }
+  constructor(private service: ProductsService, private store: Store<fromProducts.State>, ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProducts> {
     const id = route.params['id'] ? route.params['id'] : null;
@@ -29,10 +36,10 @@ export class ProductsResolve implements Resolve<IProducts> {
       return this.service.getOne(id).pipe(
         filter((res: HttpResponse<Products>) => res.ok),
         map((res: HttpResponse<Products>) => {
-
+          console.log('product',res.body);
           const products = new ProductsDTO(res.body);
-
-          console.log('converted product', products);
+          this.store.dispatch(CategoryActions.selectCategory({ id: products.productCategory.id }));
+          console.log('converted product', res.body, products);
           return products;
         })
       );
@@ -126,7 +133,10 @@ const routes = [
     BasicFormComponent,
     SkuFormComponent,
     DecorationFormComponent,
-    ProductListComponent
+    ProductListComponent,
+    InformationFormComponent,
+    StockItemsFilterPipe,
+    PhotoItemComponent
   ],
   imports: [
     CommonModule,

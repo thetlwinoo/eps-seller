@@ -6,8 +6,8 @@
                 <div class="card-header">
                     Basic Information
                 </div>
-                <div class="card-block">                    
-                    <basic-form [productsForm]="productsForm"></basic-form>
+                <div class="card-block">
+                    <basic-form [productsForm]="productsForm" [products]="products"></basic-form>
                 </div>
             </div>
         </div>
@@ -28,16 +28,28 @@
         <div class="clr-col-12">
             <div class="card">
                 <div class="card-header">
+                    Product Information
+                </div>
+                <div class="card-block">
+                    <information-form [productInformationForm]="productsForm.get('document')"></information-form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clr-row">
+        <div class="clr-col-12">
+            <div class="card">
+                <div class="card-header">
                     Product Decoration
                 </div>
                 <div class="card-block">
-                    <decoration-form [productsForm]="productsForm"></decoration-form>
+                    <decoration-form [productDecorationForm]="productsForm.get('document')"></decoration-form>
                 </div>
             </div>
         </div>
     </div>
     <div class="actions-wrapper sticky-bottom">
-        <button class="btn btn-primary">Publish</button>
+        <button class="btn btn-primary" (click)="saveProduct()">Publish</button>
     </div>
 </div>
 

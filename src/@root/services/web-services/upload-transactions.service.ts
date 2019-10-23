@@ -15,7 +15,7 @@ export class UploadTransactionsService {
     public resourceUrl = SERVER_API_URL + 'api/upload-transactions';
     public extendUrl = SERVER_API_URL + 'api/upload-transactions-extend';
 
-    constructor(protected http: HttpClient) {}
+    constructor(protected http: HttpClient) { }
 
     create(uploadTransactions: IUploadTransactions): Observable<EntityResponseType> {
         return this.http.post<IUploadTransactions>(this.resourceUrl, uploadTransactions, { observe: 'response' });
@@ -40,5 +40,9 @@ export class UploadTransactionsService {
 
     deleteStockItemTemps(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.extendUrl}/${id}`, { observe: 'response' });
+    }
+
+    findAll(): Observable<EntityArrayResponseType> {
+        return this.http.get<IUploadTransactions[]>(this.extendUrl, { observe: 'response' });
     }
 }

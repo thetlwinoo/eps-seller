@@ -3,18 +3,19 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/ht
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
-import { IStockItems, IStockItemTemp } from '@root/models';
+import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
+import { IStockItems, IStockItemTemp, IUploadTransactions } from '@root/models';
 import { AccountService, StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@root/services';
 import { ITEMS_PER_PAGE } from '@root/constants';
 import { ClrDatagridStateInterface } from "@clr/angular";
+import { RootAlertService } from '@root/components/alert/alert.service';
 
 @Component({
   selector: 'app-manage-products',
   templateUrl: './manage-products.component.html',
   styleUrls: ['./manage-products.component.scss']
 })
-export class ManageProductsComponent implements OnInit {
+export class ManageProductsComponent implements OnInit, OnDestroy {
   currentAccount: any;
   stockItems: IStockItems[];
   error: any;
@@ -32,12 +33,19 @@ export class ManageProductsComponent implements OnInit {
   selectedMode: number = 0;
   uploadedFiles: any[] = [];
   stockItemTempList: IStockItemTemp[] = [];
+  uploadTransactionList: IUploadTransactions[] = [];
   uploadedTransactionid: number;
   isUploaded = false;
   isImported = false;
   total: number = 0;
   stockItemTempLinks: any;
   loading: boolean = true;
+  loadingStockItemTemp: boolean = true;
+  loadingUploadTransactions: boolean = true;
+
+  countObj: any;
+
+  filterType: number = 0;
 
   constructor(
     protected stockItemsService: StockItemsService,
@@ -49,7 +57,9 @@ export class ManageProductsComponent implements OnInit {
     protected uploadTransactionsService: UploadTransactionsService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected eventManager: JhiEventManager
+    protected eventManager: JhiEventManager,
+    protected rootAlertService: RootAlertService,
+    protected dataUtils: JhiDataUtils,
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -61,16 +71,53 @@ export class ManageProductsComponent implements OnInit {
   }
 
   loadAll() {
-    this.stockItemsService
-      .query({
-        page: this.page - 1,
-        size: this.itemsPerPage,
-        sort: this.sort()
+    const options = {
+      page: this.page - 1,
+      size: this.itemsPerPage,
+      sort: this.sort()
+    };
+
+    if (this.filterType == 1) {
+      Object.assign(options, {
+        'activeInd.equals': true
       })
+    }
+
+    if (this.filterType == 2) {
+      Object.assign(options, {
+        'quantityOnHand.equals': 0
+      })
+    }
+
+    if (this.filterType == 3) {
+      Object.assign(options, {
+        'activeInd.equals': false
+      })
+    }
+
+    console.log('options', options)
+    this.stockItemsService
+      .findAll(options)
       .subscribe(
         (res: HttpResponse<IStockItems[]>) => this.paginateStockItems(res.body, res.headers),
         (res: HttpErrorResponse) => this.onError(res.message)
       );
+  }
+
+  refresh() {
+    this.onLoadStockItems({
+      page: {
+        from: 0,
+        size: 5
+      }
+    });
+  }
+
+  onLoadStockItems(state: ClrDatagridStateInterface) {
+    this.loading = true;
+    this.itemsPerPage = state.page.size;
+    this.page = state.page.current;
+    this.loadPage(this.page);
   }
 
   loadPage(page: number) {
@@ -78,6 +125,15 @@ export class ManageProductsComponent implements OnInit {
       this.previousPage = page;
       this.transition();
     }
+  }
+
+  loadCount() {
+    this.stockItemsService.loadCount().pipe(
+      filter((res: HttpResponse<number>) => res.ok),
+      map((res: HttpResponse<number>) => res.body)
+    ).subscribe(res => {
+      this.countObj = res;
+    });
   }
 
   transition() {
@@ -89,6 +145,12 @@ export class ManageProductsComponent implements OnInit {
       }
     });
     this.loadAll();
+    this.onLoadUploadTransactions({
+      page: {
+        from: 0,
+        size: 5
+      }
+    });
   }
 
   clear() {
@@ -105,6 +167,7 @@ export class ManageProductsComponent implements OnInit {
 
   ngOnInit() {
     this.loadAll();
+    this.loadCount();
     this.accountService.identity().then(account => {
       this.currentAccount = account;
     });
@@ -118,14 +181,33 @@ export class ManageProductsComponent implements OnInit {
         content: 'Deleted an uploadTransactions'
       });
       this.uploadedTransactionid = null;
-      this.refresh({
+      this.onLoadStockItemTemp({
         page: {
           from: 0,
           size: 5
         }
       });
-
+      this.rootAlertService.setMessage("Clear successfully", "success");
     });
+  }
+
+  updateStockItemActive(event) {
+    console.log('update', event);
+    this.subscribeToUpdateStockItemActiveResponse(this.productsService.updateStockItemActive(event.id, event.activeInd));
+  }
+
+  protected subscribeToUpdateStockItemActiveResponse(result: Observable<HttpResponse<any>>) {
+    result.subscribe((res: HttpResponse<any>) => this.onUpdateStockItemActiveSuccess(res), (err: HttpErrorResponse) => this.onUpdateStockItemActiveError(err));
+  }
+
+  onUpdateStockItemActiveSuccess(res) {
+    console.log('success active', res);
+    this.loadCount();
+    // this.loadAll();
+  }
+
+  onUpdateStockItemActiveError(res) {
+    console.log('error', res);
   }
 
   ngOnDestroy() {
@@ -152,6 +234,7 @@ export class ManageProductsComponent implements OnInit {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
     this.stockItems = data;
+    this.loading = false;
   }
 
   protected onError(errorMessage: string) {
@@ -168,7 +251,7 @@ export class ManageProductsComponent implements OnInit {
   }
 
   onImportToSystem(event: any) {
-    this.subscribeToUploadResponse(this.productsService.importToSystem(this.uploadedTransactionid));
+    this.subscribeToImportResponse(this.productsService.importToSystem(this.uploadedTransactionid));
   }
 
   protected subscribeToUploadResponse(result: Observable<HttpResponse<any>>) {
@@ -181,34 +264,43 @@ export class ManageProductsComponent implements OnInit {
 
   protected onUploadSuccess(res) {
     console.log('upload success', res);
-    this.uploadedTransactionid = res.id;
+    this.uploadedTransactionid = res ? res.id : null;
 
-    this.refresh({
+    this.onLoadStockItemTemp({
       page: {
         from: 0,
+        current: 0,
         size: 5
       }
     });
     this.isUploaded = true;
+    this.rootAlertService.setMessage("File uploaded successfully", "success");
   }
 
   protected onUploadError(err) {
-    console.log('upload failed');
     this.isUploaded = false;
+    this.rootAlertService.setMessage("File upload failed", "danger");
   }
 
   protected onImportSuccess(res) {
-    console.log('import success', res);
+    this.onLoadStockItemTemp({
+      page: {
+        from: 0,
+        current: 0,
+        size: 5
+      }
+    });
     this.isImported = true;
+    this.rootAlertService.setMessage("File imported successfully", "success");
   }
 
   protected onImportError(err) {
-    console.log('import failed');
     this.isImported = false;
+    this.rootAlertService.setMessage("File import failed", "danger");
   }
 
-  refresh(state: ClrDatagridStateInterface) {
-    this.loading = true;
+  onLoadStockItemTemp(state: ClrDatagridStateInterface) {
+    this.loadingStockItemTemp = true;
     // We convert the filters from an array to a map,
     // because that's what our backend-calling service is expecting
     // let filters: { [prop: string]: any[] } = {};
@@ -222,12 +314,11 @@ export class ManageProductsComponent implements OnInit {
     if (!this.uploadedTransactionid) {
       this.stockItemTempList = [];
       this.total = 0;
-      this.loading = false;
+      this.loadingStockItemTemp = false;
       return;
     }
 
-    console.log('refresh', this.uploadedTransactionid)
-    this.stockItemTempService.getAllByTransactionId(state.page.from, state.page.size, this.uploadedTransactionid)
+    this.stockItemTempService.getAllByTransactionId(state.page.current, state.page.size, this.uploadedTransactionid)
       .pipe(
         filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
         map((res: HttpResponse<IStockItemTemp[]>) => res)
@@ -237,8 +328,25 @@ export class ManageProductsComponent implements OnInit {
         this.stockItemTempList = result.body;
         this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
         this.total = parseInt(result.headers.get('X-Total-Count'), 10);
-        console.log('result', result.body)
-        this.loading = false;
+        this.loadingStockItemTemp = false;
       });
+  }
+
+  onLoadUploadTransactions(state: ClrDatagridStateInterface) {
+    this.loadingUploadTransactions = true;
+    this.uploadTransactionsService.findAll()
+      .pipe(
+        filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
+        map((res: HttpResponse<IStockItemTemp[]>) => res)
+      )
+      .subscribe(result => {
+        this.uploadTransactionList = result.body;
+        this.loadingUploadTransactions = false;
+        console.log('this.uploadTransactionList', this.uploadTransactionList)
+      });
+  }
+
+  openFile(contentType, field) {
+    return this.dataUtils.openFile(contentType, field);
   }
 }

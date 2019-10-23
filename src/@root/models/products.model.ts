@@ -7,29 +7,17 @@ export interface IProducts {
     productName?: string;
     handle?: string;
     productNumber?: string;
-    searchDetails?: string;
-    thumbnailUrl?: string;
-    warrantyPeriod?: string;
-    warrantyPolicy?: string;
+    searchDetails?: any;
     sellCount?: number;
-    whatInTheBox?: string;
+    activeInd?: boolean;
+    documentId?: number;
     stockItemLists?: IStockItems[];
     supplierSupplierName?: string;
     supplierId?: number;
-    merchantMerchantName?: string;
-    merchantId?: number;
-    unitPackagePackageTypeName?: string;
-    unitPackageId?: number;
-    outerPackagePackageTypeName?: string;
-    outerPackageId?: number;
-    productModelProductModelName?: string;
-    productModelId?: number;
     productCategoryName?: string;
     productCategoryId?: number;
     productBrandProductBrandName?: string;
     productBrandId?: number;
-    warrantyTypeWarrantyTypeName?: string;
-    warrantyTypeId?: number;
     productAttributeIds?: number[];
     productOptionIds?: number[];
     productAttributeList?: IProductAttribute[];
@@ -42,29 +30,17 @@ export class Products implements IProducts {
         public productName?: string,
         public handle?: string,
         public productNumber?: string,
-        public searchDetails?: string,
-        public thumbnailUrl?: string,
-        public warrantyPeriod?: string,
-        public warrantyPolicy?: string,
+        public searchDetails?: any,
         public sellCount?: number,
-        public whatInTheBox?: string,
+        public activeInd?: boolean,
+        public documentId?: number,
         public stockItemLists?: IStockItems[],
         public supplierSupplierName?: string,
         public supplierId?: number,
-        public merchantMerchantName?: string,
-        public merchantId?: number,
-        public unitPackagePackageTypeName?: string,
-        public unitPackageId?: number,
-        public outerPackagePackageTypeName?: string,
-        public outerPackageId?: number,
-        public productModelProductModelName?: string,
-        public productModelId?: number,
         public productCategoryName?: string,
         public productCategoryId?: number,
         public productBrandProductBrandName?: string,
         public productBrandId?: number,
-        public warrantyTypeWarrantyTypeName?: string,
-        public warrantyTypeId?: number,
         public productAttributeIds?: number[],
         public productOptionIds?: number[],
         public productAttributeList?: IProductAttribute[],
@@ -121,9 +97,9 @@ export class Products implements IProducts {
                 if (attribute && option) {
                     const stockItem = new StockItems();
                     stockItem.productAttributeId = attribute.id;
-                    stockItem.productAttributeValue = attribute.productAttributeValue;
+                    stockItem.productAttributeProductAttributeValue = attribute.productAttributeValue;
                     stockItem.productOptionId = option.id;
-                    stockItem.productOptionValue = option.productOptionValue;
+                    stockItem.productOptionProductOptionValue = option.productOptionValue;
 
                     const item = this.stockItemLists ? this.stockItemLists.find(x => x.productAttributeId == attribute.id && x.productOptionId == option.id) : null;
 

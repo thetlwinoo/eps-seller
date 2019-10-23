@@ -1,20 +1,27 @@
 import { Moment } from 'moment';
-import { RootUtils } from '@root/utils';
-import { IPhotos, Photos, ISpecialDeals } from '@root/models';
+import { IPhotos, IDangerousGoods, ISpecialDeals } from '@root/models';
 
 export interface IStockItems {
     id?: number;
     stockItemName?: string;
-    sellerSKU?: string;
+    vendorCode?: string;
+    vendorSKU?: string;
     generatedSKU?: string;
     barcode?: string;
     unitPrice?: number;
     recommendedRetailPrice?: number;
-    quantityPerOuter?: number;
-    typicalWeightPerUnit?: number;
-    typicalLengthPerUnit?: number;
-    typicalWidthPerUnit?: number;
-    typicalHeightPerUnit?: number;
+    quantityOnHand?: number;
+    itemLength?: number;
+    itemWidth?: number;
+    itemHeight?: number;
+    itemWeight?: number;
+    itemPackageLength?: number;
+    itemPackageWidth?: number;
+    itemPackageHeight?: number;
+    itemPackageWeight?: number;
+    noOfPieces?: number;
+    noOfItems?: number;
+    manufacture?: string;
     marketingComments?: string;
     internalComments?: string;
     sellStartDate?: Moment;
@@ -22,41 +29,61 @@ export interface IStockItems {
     sellCount?: number;
     customFields?: string;
     thumbnailUrl?: string;
+    activeInd?: boolean;
     stockItemOnReviewLineId?: number;
     photoLists?: IPhotos[];
+    dangerousGoodLists?: IDangerousGoods[];
     specialDiscounts?: ISpecialDeals[];
-    lengthUnitMeasureCodeUnitMeasureCode?: string;
-    lengthUnitMeasureCodeId?: number;
-    weightUnitMeasureCodeUnitMeasureCode?: string;
-    weightUnitMeasureCodeId?: number;
-    widthUnitMeasureCodeUnitMeasureCode?: string;
-    widthUnitMeasureCodeId?: number;
-    heightUnitMeasureCodeUnitMeasureCode?: string;
-    heightUnitMeasureCodeId?: number;
-    productAttributeValue?: string;
+    itemLengthUnitUnitMeasureCode?: string;
+    itemLengthUnitId?: number;
+    itemWidthUnitUnitMeasureCode?: string;
+    itemWidthUnitId?: number;
+    itemHeightUnitUnitMeasureCode?: string;
+    itemHeightUnitId?: number;
+    packageLengthUnitUnitMeasureCode?: string;
+    packageLengthUnitId?: number;
+    packageWidthUnitUnitMeasureCode?: string;
+    packageWidthUnitId?: number;
+    packageHeightUnitUnitMeasureCode?: string;
+    packageHeightUnitId?: number;
+    itemPackageWeightUnitUnitMeasureCode?: string;
+    itemPackageWeightUnitId?: number;
+    productAttributeProductAttributeValue?: string;
     productAttributeId?: number;
-    productOptionValue?: string;
+    productOptionProductOptionValue?: string;
     productOptionId?: number;
+    materialMaterialName?: string;
+    materialId?: number;
+    currencyCurrencyCode?: string;
+    currencyId?: number;
+    barcodeTypeBarcodeTypeName?: string;
+    barcodeTypeId?: number;
     stockItemHoldingId?: number;
     productId?: number;
-    guid?: string;
-    handle?: string;
 }
 
 export class StockItems implements IStockItems {
     constructor(
         public id?: number,
         public stockItemName?: string,
-        public sellerSKU?: string,
+        public vendorCode?: string,
+        public vendorSKU?: string,
         public generatedSKU?: string,
         public barcode?: string,
         public unitPrice?: number,
         public recommendedRetailPrice?: number,
-        public quantityPerOuter?: number,
-        public typicalWeightPerUnit?: number,
-        public typicalLengthPerUnit?: number,
-        public typicalWidthPerUnit?: number,
-        public typicalHeightPerUnit?: number,
+        public quantityOnHand?: number,
+        public itemLength?: number,
+        public itemWidth?: number,
+        public itemHeight?: number,
+        public itemWeight?: number,
+        public itemPackageLength?: number,
+        public itemPackageWidth?: number,
+        public itemPackageHeight?: number,
+        public itemPackageWeight?: number,
+        public noOfPieces?: number,
+        public noOfItems?: number,
+        public manufacture?: string,
         public marketingComments?: string,
         public internalComments?: string,
         public sellStartDate?: Moment,
@@ -64,42 +91,38 @@ export class StockItems implements IStockItems {
         public sellCount?: number,
         public customFields?: string,
         public thumbnailUrl?: string,
+        public activeInd?: boolean,
         public stockItemOnReviewLineId?: number,
         public photoLists?: IPhotos[],
+        public dangerousGoodLists?: IDangerousGoods[],
         public specialDiscounts?: ISpecialDeals[],
-        public lengthUnitMeasureCodeUnitMeasureCode?: string,
-        public lengthUnitMeasureCodeId?: number,
-        public weightUnitMeasureCodeUnitMeasureCode?: string,
-        public weightUnitMeasureCodeId?: number,
-        public widthUnitMeasureCodeUnitMeasureCode?: string,
-        public widthUnitMeasureCodeId?: number,
-        public heightUnitMeasureCodeUnitMeasureCode?: string,
-        public heightUnitMeasureCodeId?: number,
-        public productAttributeValue?: string,
+        public itemLengthUnitUnitMeasureCode?: string,
+        public itemLengthUnitId?: number,
+        public itemWidthUnitUnitMeasureCode?: string,
+        public itemWidthUnitId?: number,
+        public itemHeightUnitUnitMeasureCode?: string,
+        public itemHeightUnitId?: number,
+        public packageLengthUnitUnitMeasureCode?: string,
+        public packageLengthUnitId?: number,
+        public packageWidthUnitUnitMeasureCode?: string,
+        public packageWidthUnitId?: number,
+        public packageHeightUnitUnitMeasureCode?: string,
+        public packageHeightUnitId?: number,
+        public itemPackageWeightUnitUnitMeasureCode?: string,
+        public itemPackageWeightUnitId?: number,
+        public productAttributeProductAttributeValue?: string,
         public productAttributeId?: number,
-        public productOptionValue?: string,
+        public productOptionProductOptionValue?: string,
         public productOptionId?: number,
+        public materialMaterialName?: string,
+        public materialId?: number,
+        public currencyCurrencyCode?: string,
+        public currencyId?: number,
+        public barcodeTypeBarcodeTypeName?: string,
+        public barcodeTypeId?: number,
         public stockItemHoldingId?: number,
-        public productId?: number,
-        public guid?: string,
-        public handle?: string
+        public productId?: number
     ) {
-        this.guid = RootUtils.generateGUID();
-        this.handle = this.stockItemName ? RootUtils.handleize(this.stockItemName) : null;
-
-        console.log('photoLists',photoLists)
-        if (photoLists && photoLists.length) {
-            for (var _i = 0; _i < (8 - photoLists.length); _i++) {
-                const IPhotos = new Photos();
-                this.photoLists.push(IPhotos);
-            }
-        } else {
-            this.photoLists = [];
-            for (var _i = 0; _i < 8; _i++) {
-                const IPhotos = new Photos();
-                this.photoLists.push(IPhotos);
-            }
-        }
-
+        this.activeInd = this.activeInd || false;
     }
 }

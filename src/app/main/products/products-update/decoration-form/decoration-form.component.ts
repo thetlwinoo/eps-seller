@@ -10,15 +10,22 @@ import { rootAnimations } from '@root/animations';
   animations: rootAnimations
 })
 export class DecorationFormComponent implements OnInit {
-  @Input() productsForm: FormGroup;
+  @Input() productDecorationForm: FormGroup;
 
-  description:any;
-  videoUrl:any;
-  highlights:any;
-  
   constructor() { }
 
   ngOnInit() {
   }
 
+  onClearLongDescription(event) {
+    this.productDecorationForm.patchValue({
+      longDescription: null
+    });
+  }
+  
+  onClearHighlights(event) {
+    this.productDecorationForm.patchValue({
+      highlights: null
+    });
+  }
 }

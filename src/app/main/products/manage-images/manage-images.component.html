@@ -8,8 +8,9 @@
                     <clr-icon shape="caret down"></clr-icon>
                 </button>
                 <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
-                    <button type="button" (click)="onExportAll()" clrDropdownItem>Export All</button>
-                    <button type="button" (click)="onExportSelected()" clrDropdownItem>Export Selected Items</button>
+                    <button type="button" (click)="onExportAll()" clrDropdownItem disabled>Export All</button>
+                    <button type="button" (click)="onExportSelected()" clrDropdownItem disabled>Export Selected
+                        Items</button>
                 </clr-dropdown-menu>
             </clr-dropdown>
         </div>
@@ -28,28 +29,26 @@
         </nav>
     </div>
     <div>
-        <clr-datagrid>
+        <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading">
             <clr-dg-column class="product-col">Product</clr-dg-column>
             <clr-dg-column class="sku-col">SKU</clr-dg-column>
             <clr-dg-column>All Images</clr-dg-column>
 
             <clr-dg-row *ngFor="let stockItem of stockItems" [clrDgItem]="stockItem">
                 <clr-dg-cell>{{stockItem.stockItemName}}</clr-dg-cell>
-                <clr-dg-cell>{{stockItem.sellerSKU}}</clr-dg-cell>
+                <clr-dg-cell>{{stockItem.vendorSKU}}</clr-dg-cell>
                 <clr-dg-cell>
                     <div class="upload-wrapper">
 
                         <div class="upload-item" *ngFor="let photo of stockItem.photoLists; let i = index">
 
-                            <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob
+                            <!-- <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob
                                 [style.display]="'none'"
                                 (change)="setFileData($event, photo, 'originalPhotoBlob', true);" />
 
                             <div class="upload-control" *ngIf="!photo.originalPhotoBlob;else preview">
                                 <span>
                                     <div class="image-upload-btn" (click)="originalBlob.click()">
-                                        <!-- <mat-icon class="next-icon next-icon-add next-icon-medium upload-btn-icon">
-                                            add_a_photo</mat-icon> -->
                                         <clr-icon shape="image"
                                             class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
                                         <p class="upload-text">Upload Image</p>
@@ -67,26 +66,28 @@
                                         style="max-height: 100px;" alt="stock item image" draggable="false"
                                         (mouseenter)="op.toggle($event)" (mouseleave)="op.toggle($event)" />
                                 </div>
-                                <!-- <p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"
-                                    [dismissable]="true" [appendTo]="'body'">
-                                    <img class="overlay-image"
-                                        [src]="'data:' + photo.originalPhotoBlobContentType + ';base64,' + photo.originalPhotoBlob"
-                                        alt="original image" draggable="false" *ngIf="photo.originalPhotoBlob" />
-                                </p-overlayPanel> -->
-                            </ng-template>
+                            </ng-template> -->
+                            <photo-item [photo]="photo"></photo-item>
                         </div>
                     </div>
                 </clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>
-                <clr-dg-pagination #pagination [clrDgPageSize]="itemsPerPage">
-                    <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Items per page</clr-dg-page-size>
+                <clr-dg-pagination #pagination [clrDgPageSize]="itemsPerPage" [clrDgTotalItems]="totalItems">
+                    <clr-dg-page-size [clrPageSizeOptions]="[5,10,20,50,100]">Items per page
+                    </clr-dg-page-size>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    of {{totalItems}} items
+                    of {{pagination.totalItems}} items
                 </clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
         <!-- <p-paginator [rows]="itemsPerPage" [totalRecords]="totalItems" (onPageChange)="loadPage(page)"></p-paginator> -->
     </div>
 </div>
+<!-- <p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"
+                                    [dismissable]="true" [appendTo]="'body'">
+                                    <img class="overlay-image"
+                                        [src]="'data:' + photo.originalPhotoBlobContentType + ';base64,' + photo.originalPhotoBlob"
+                                        alt="original image" draggable="false" *ngIf="photo.originalPhotoBlob" />
+                                </p-overlayPanel> -->

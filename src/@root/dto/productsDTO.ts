@@ -3,27 +3,22 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { StockItems, Photos } from '@root/models';
 import { StockItemsDTO } from '@root/dto';
+import * as _ from 'lodash';
 
 export class ProductsDTO {
     id: number;
     guid: string;
-    merchant: any;
-    outerPackage: any;
     productBrand: any;
-    productCategory: any;
-    productModel: any;
+    productCategory: any;   
+    document: any;
     productName: string;
     productNumber: string;
+    handle: string;
     searchDetails: string;
     sellCount: number;
     stockItemLists: any[];
     supplier: any;
-    thumbnailUrl: string;
-    unitPackage: any;
-    warrantyPeriod: string;
-    warrantyPolicy: string;
-    warrantyType: any;
-    whatInTheBox: string;
+    activeInd: boolean;
     createdBy: string;
     createdDate: Moment;
     lastModifiedBy: string;
@@ -35,23 +30,16 @@ export class ProductsDTO {
         product = product || {};
         this.id = product.id || null;
         this.guid = product.id || RootUtils.generateGUID();
-        this.merchant = product.merchant || null;
-        this.outerPackage = product.outerPackage || null;
         this.productBrand = product.productBrand || null;
         this.productCategory = product.productCategory || null;
-        this.productModel = product.productModel || null;
+        this.document = product.document || null;
         this.productName = product.productName || '';
         this.productNumber = product.productNumber || '';
         this.searchDetails = product.searchDetails || '';
         this.sellCount = product.sellCount || 0;
         this.stockItemLists = product.stockItemLists || [];
         this.supplier = product.supplier || null;
-        this.thumbnailUrl = product.thumbnailUrl || '';
-        this.unitPackage = product.unitPackage || null;
-        this.warrantyPeriod = product.warrantyPeriod || '';
-        this.warrantyPolicy = product.warrantyPolicy || '';
-        this.warrantyType = product.warrantyType || null;
-        this.whatInTheBox = product.whatInTheBox || '';
+        this.activeInd = product.activeInd || false;
         this.createdBy = product.createdBy || '';
         this.createdDate = moment(product.createdDate) || null;
         this.lastModifiedBy = product.lastModifiedBy || '';
@@ -60,7 +48,7 @@ export class ProductsDTO {
         this.productOptionList = product.stockItemLists ? RootUtils.getUnique([...new Set(product.stockItemLists.map(item => item.productOption))], 'id') : [];
 
         const tempStockItemList: StockItemsDTO[] = [];
-        this.stockItemLists.forEach(stockItem => {
+        this.stockItemLists.forEach(stockItem => {            
             tempStockItemList.push(new StockItemsDTO(stockItem));
         });
         this.stockItemLists = tempStockItemList;
@@ -138,11 +126,5 @@ export class ProductsDTO {
 
             });
         }
-    }
-
-    addNewStockItem() {
-        this.stockItemLists = [];
-        const stockItem = new StockItemsDTO();
-        this.stockItemLists.push(stockItem);
     }
 }

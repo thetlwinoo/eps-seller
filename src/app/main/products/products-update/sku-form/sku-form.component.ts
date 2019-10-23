@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy, ElementRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { rootAnimations } from '@root/animations';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IProductCategory, IProductChoice, IProductAttribute, IProductOption, IStockItems, StockItems, IProducts, Products } from '@root/models';
+import { IProductCategory, IProductChoice, IProductAttribute, IProductOption, IBarcodeTypes, StockItems, IProducts, Products } from '@root/models';
 
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -11,7 +11,7 @@ import { FetchActions, CategoryActions } from 'app/ngrx/products/actions';
 // import { ProductSku } from './product-sku.model';
 import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 import { ImageUtils } from '@root/services';
-import { ProductsDTO } from '@root/dto';
+import { ProductsDTO, StockItemsDTO } from '@root/dto';
 
 @Component({
   selector: 'sku-form',
@@ -28,9 +28,10 @@ export class SkuFormComponent implements OnInit, OnDestroy {
   productChoice$: Observable<IProductChoice[]>;
   productAttributeList$: Observable<IProductAttribute[]>;
   productOptionList$: Observable<IProductOption[]>;
+  barcodeTypes$: Observable<IBarcodeTypes[]>;
   productChoice: IProductChoice;
   categoryId$: Observable<number>;
-
+  categoryId: number;
   productOptionId: number;
   productAttribueId: number;
   attributeList: IProductAttribute[];
@@ -56,6 +57,7 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     this.productChoice$ = store.pipe(select(fromProducts.getFetchProductChoice)) as Observable<IProductChoice[]>;
     this.productAttributeList$ = store.pipe(select(fromProducts.getFetchProductAttributeList)) as Observable<IProductAttribute[]>;
     this.productOptionList$ = store.pipe(select(fromProducts.getFetchProductOptionList)) as Observable<IProductOption[]>;
+    this.barcodeTypes$ = this.store.pipe(select(fromProducts.getFetchBarcodeTypes)) as Observable<IBarcodeTypes[]>;
 
     this.productAttributeList$.subscribe(data => {
       data.map(item => {
@@ -96,29 +98,39 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     this.categoryId$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(categoryId => {
-        console.log('selected category id', categoryId);
-        this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
+        this.categoryId = categoryId;
+        if (categoryId) {
+          this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
+        }
       });
 
     this.productChoice$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(data => {
         this.productChoice = data.length ? data[0] : null;
-        this.resetChoice();
-
+        // this.resetChoice();        
         if (this.productChoice) {
-          this.noChoiceInd = false;
-          this.attributeInd = this.productChoice.productAttributeSetId ? true : false;
-          this.optionInd = this.productChoice.productOptionSetId ? true : false;
-        } else {
-          this.noChoiceInd = true;
-          this.attributeInd = false;
-          this.optionInd = false;
-          this.products.addNewStockItem();
+          const attributeSetName = this.productChoice.productAttributeSetProductAttributeSetName;
+          const optionSetName = this.productChoice.productOptionSetProductOptionSetValue;
+          if (attributeSetName == 'NoAttributeSet' && optionSetName == 'NoOptionSet') {
+            this.noChoiceInd = true;
+            this.attributeInd = false;
+            this.optionInd = false;
+
+            if (this.products.stockItemLists.length <= 0) {
+              const stockItem = new StockItemsDTO();
+              this.products.stockItemLists.push(stockItem);
+            }
+          } else {
+            this.noChoiceInd = false;
+            this.attributeInd = attributeSetName !== 'NoAttributeSet' ? true : false;
+            this.optionInd = optionSetName !== 'NoOptionSet' ? true : false;
+          }
         }
       });
 
     this.store.dispatch(FetchActions.fetchCategories());
+    this.store.dispatch(FetchActions.fetchBarcodeType());
   }
 
   byteSize(field) {
@@ -157,13 +169,13 @@ export class SkuFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  resetChoice() {
-    this.productsForm.patchValue({
-      productAttribute: null,
-      productOption: null
-    });
-    this.products.resetChoice();
-  }
+  // resetChoice() {
+  //   this.productsForm.patchValue({
+  //     productAttribute: null,
+  //     productOption: null
+  //   });
+  //   this.products.resetChoice();
+  // }
   addAttribute(event) {
     const attribute = this.productsForm.getRawValue().productAttribute;
     // console.log('this.products',this.products)
