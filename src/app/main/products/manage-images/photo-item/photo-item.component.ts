@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, ElementRef, ViewEncapsulation } from '@angular/core';
-import { IPhotos } from '@root/models';
+import { IPhotos } from '@epm/models';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { ImageUtils } from '@root/services';
-import { rootAnimations } from '@root/animations';
+import { ImageUtils } from '@epm/services';
+import { rootAnimations } from '@epm/animations';
 
 @Component({
   selector: 'photo-item',

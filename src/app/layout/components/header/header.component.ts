@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
-import { AccountService, LoginService } from '@root/services/core';
+import { AccountService, LoginService } from '@epm/services/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RootSharedModule } from '@root/shared.module';
+import { RootSharedModule } from '@epm/shared.module';
 import { AlertComponent } from './alert.component';
 
 @NgModule({

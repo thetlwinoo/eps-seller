@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { ProductActions } from 'app/ngrx/products/actions';
-import { IProducts } from '@root/models';
+import { IProducts } from '@epm/models';
 
 export const productsFeatureKey = 'products';
 

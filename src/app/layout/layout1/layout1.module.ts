@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { RootSidebarModule } from '@root/components';
-import { RootSharedModule } from '@root/shared.module';
+import { RootSidebarModule } from '@epm/components';
+import { RootSharedModule } from '@epm/shared.module';
 import { AlertModule } from 'app/layout/components/alert/alert.module';
 import { NavbarModule } from 'app/layout/components/navbar/navbar.module';
 import { ToolbarModule } from 'app/layout/components/toolbar/toolbar.module';

@@ -3,9 +3,9 @@ import { HttpResponse } from '@angular/common/http';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, filter, mergeMap, switchMap } from 'rxjs/operators';
-import { ISuppliers } from '@root/models';
+import { ISuppliers } from '@epm/models';
 import { SupplierActions } from '../actions';
-import { SuppliersService } from '@root/services';
+import { SuppliersService } from '@epm/services';
 
 @Injectable()
 export class SupplierEffects {

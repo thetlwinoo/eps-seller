@@ -1,4 +1,4 @@
-import { ISuppliers } from '@root/models';
+import { ISuppliers } from '@epm/models';
 import {
     createSelector,
     createFeatureSelector,

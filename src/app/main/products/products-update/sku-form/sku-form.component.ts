@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy, ElementRef, Output, EventEmitter, ViewChild } from '@angular/core';
-import { rootAnimations } from '@root/animations';
+import { rootAnimations } from '@epm/animations';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IProductCategory, IProductChoice, IProductAttribute, IProductOption, IBarcodeTypes, StockItems, IProducts, Products } from '@root/models';
+import { IProductCategory, IProductChoice, IProductAttribute, IProductOption, IBarcodeTypes, StockItems, IProducts, Products } from '@epm/models';
 
 import { select, Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
@@ -10,8 +10,8 @@ import * as fromProducts from 'app/ngrx/products/reducers';
 import { FetchActions, CategoryActions } from 'app/ngrx/products/actions';
 // import { ProductSku } from './product-sku.model';
 import { JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { ImageUtils } from '@root/services';
-import { ProductsDTO, StockItemsDTO } from '@root/dto';
+import { ImageUtils } from '@epm/services';
+import { ProductsDTO, StockItemsDTO } from '@epm/dto';
 
 @Component({
   selector: 'sku-form',

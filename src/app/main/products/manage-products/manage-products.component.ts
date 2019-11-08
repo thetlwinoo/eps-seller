@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IStockItems, IStockItemTemp, IUploadTransactions } from '@root/models';
-import { AccountService, StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@root/services';
-import { ITEMS_PER_PAGE } from '@root/constants';
+import { IStockItems, IStockItemTemp, IUploadTransactions } from '@epm/models';
+import { AccountService, StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@epm/services';
+import { ITEMS_PER_PAGE } from '@epm/constants';
 import { ClrDatagridStateInterface } from "@clr/angular";
-import { RootAlertService } from '@root/components/alert/alert.service';
+import { RootAlertService } from '@epm/components/alert/alert.service';
 
 @Component({
   selector: 'app-manage-products',
@@ -16,6 +16,8 @@ import { RootAlertService } from '@root/components/alert/alert.service';
   styleUrls: ['./manage-products.component.scss']
 })
 export class ManageProductsComponent implements OnInit, OnDestroy {
+  errorVisible:boolean = false;
+  errorMessage: String = '';
   currentAccount: any;
   stockItems: IStockItems[];
   error: any;
@@ -239,6 +241,9 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
 
   protected onError(errorMessage: string) {
     console.log('errorMessage', errorMessage);
+    this.errorVisible = true;
+    this.loading = false;
+    this.errorMessage = errorMessage;
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
@@ -278,6 +283,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   }
 
   protected onUploadError(err) {
+    this.loadingStockItemTemp = false;
     this.isUploaded = false;
     this.rootAlertService.setMessage("File upload failed", "danger");
   }

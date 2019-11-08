@@ -4,12 +4,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { asyncScheduler, EMPTY as empty, of, forkJoin, from } from 'rxjs';
 import { catchError, debounceTime, map, skip, switchMap, takeUntil, filter, exhaustMap, flatMap, mergeMap, concatAll, concat, tap } from 'rxjs/operators';
 import { JhiParseLinks } from 'ng-jhipster';
-import { IProducts, Products, IPhotos, IStockItems } from '@root/models';
+import { IProducts, Products, IPhotos, IStockItems } from '@epm/models';
 import { ProductActions } from '../actions';
-import { ProductsService, StockItemsService, PhotosService } from '@root/services';
+import { ProductsService, StockItemsService, PhotosService } from '@epm/services';
 import * as _ from 'lodash';
-import { RootUtils } from '@root/utils';
-import { SERVER_API_URL } from '@root/constants';
+import { RootUtils } from '@epm/utils';
+import { SERVER_API_URL } from '@epm/constants';
 import { Router } from '@angular/router';
 
 @Injectable()

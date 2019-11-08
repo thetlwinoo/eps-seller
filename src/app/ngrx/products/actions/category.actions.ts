@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { HttpHeaders } from '@angular/common/http';
-import { IProductCategory } from '@root/models';
+import { IProductCategory } from '@epm/models';
 
 export const loadCategory = createAction(
     '[Category] Load Category',

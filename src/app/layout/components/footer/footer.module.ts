@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RootSharedModule } from '@root/shared.module';
+import { RootSharedModule } from '@epm/shared.module';
 import { RouterModule } from '@angular/router';
 import { FooterComponent } from './footer.component';
 

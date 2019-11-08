@@ -23,8 +23,8 @@
       "@angular/*": [
         "node_modules/@angular/*"
       ],
-      "@root": [
-        "@root/"
+      "@epm": [
+        "@epm/"
       ],
       "@app/env": [
         "environments/environment"

@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { IBarcodeTypes, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes } from '@root/models';
+import { IBarcodeTypes, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes } from '@epm/models';
 
 export const fetchCategories = createAction('[Products/API] Fetch Categories');
 

@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ISuppliers } from '@root/models';
+import { ISuppliers } from '@epm/models';
 
 export const getLoginSupplier = createAction('[Supplier/API] Get Login Supplier');
 

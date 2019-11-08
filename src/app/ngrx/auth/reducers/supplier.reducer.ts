@@ -3,7 +3,7 @@ import { createReducer, on } from '@ngrx/store';
 import {
     SupplierActions
 } from 'app/ngrx/auth/actions';
-import { ISuppliers } from '@root/models';
+import { ISuppliers } from '@epm/models';
 
 export const supplierFeatureKey = 'supplier';
 

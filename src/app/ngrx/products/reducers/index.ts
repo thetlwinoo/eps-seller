@@ -1,4 +1,4 @@
-import { IProducts } from '@root/models';
+import { IProducts } from '@epm/models';
 import {
     createSelector,
     createFeatureSelector,
@@ -10,7 +10,7 @@ import * as fromCategory from 'app/ngrx/products/reducers/category.reducer';
 import * as fromRoot from 'app/ngrx';
 import * as fromSearch from 'app/ngrx/products/reducers/search.reducer';
 import * as fromProducts from 'app/ngrx/products/reducers/products.reducer';
-import { ITEMS_PER_PAGE } from '@root/constants';
+import { ITEMS_PER_PAGE } from '@epm/constants';
 import { TreeNode } from 'primeng/api';
 
 export const productsFeatureKey = 'products';

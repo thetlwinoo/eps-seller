@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewEncapsulation, Renderer, ElementRef, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from "@angular/forms";
 import { Router } from '@angular/router';
-import { RootConfigService } from '@root/services';
-import { rootAnimations } from '@root/animations';
+import { RootConfigService } from '@epm/services';
+import { rootAnimations } from '@epm/animations';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { LoginService } from '@root/services/core/login/login.service';
-import { StateStorageService } from '@root/services/core/auth/state-storage.service';
+import { LoginService } from '@epm/services/core/login/login.service';
+import { StateStorageService } from '@epm/services/core/auth/state-storage.service';
 
 @Component({
   selector: 'app-login',

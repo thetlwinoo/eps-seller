@@ -5,8 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd } from "@angular/router";
-import { RootConfigService, RootTranslationLoaderService } from '@root/services';
-import { RootNavigationService } from '@root/components/navigation/navigation.service';
+import { RootConfigService, RootTranslationLoaderService } from '@epm/services';
+import { RootNavigationService } from '@epm/components/navigation/navigation.service';
 import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationMyanmar } from 'app/navigation/i18n/mm';
@@ -17,7 +17,7 @@ import { locale as navigationMyanmar } from 'app/navigation/i18n/mm';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'gateway-vendor';
+  title = 'epm-seller';
   rootConfig: any;
   navigation: any;
   private _unsubscribeAll: Subject<any>;

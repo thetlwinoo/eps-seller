@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { RootConfigService } from '@root/services';
+import { RootConfigService } from '@epm/services';
 import { Subject } from 'rxjs';
-import { AccountService } from '@root/services/core';
+import { AccountService } from '@epm/services/core';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { Store, select } from "@ngrx/store";
 import * as fromAuth from 'app/ngrx/auth/reducers';

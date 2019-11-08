@@ -1,3 +1,10 @@
+<clr-alert [clrAlertType]="'danger'" *ngIf="errorVisible">
+    <clr-alert-item>
+        <span class="alert-text">
+            {{errorMessage}}
+        </span>
+    </clr-alert-item>
+</clr-alert>
 <div>
     <h6>Manage Products</h6>
     <input #file [style.display]="'none'" type="file" id="file" accept=".xls,.xlsx,.csv,.json"
@@ -48,7 +55,8 @@
                 </li>
                 <li class="nav-item">
                     <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 3"
-                        (click)="filterType = 3;loadAll()"><span class="nav-text">Inactive({{countObj?.inactive}})</span></a>
+                        (click)="filterType = 3;loadAll()"><span
+                            class="nav-text">Inactive({{countObj?.inactive}})</span></a>
                 </li>
             </ul>
         </nav>
@@ -120,8 +128,8 @@
                             </clr-button-group>
                         </div>
                         <div>
-                            <clr-datagrid (clrDgRefresh)="onLoadStockItemTemp($event)" [clrDgLoading]="loadingStockItemTemp"
-                                class="datagrid-compact">
+                            <clr-datagrid (clrDgRefresh)="onLoadStockItemTemp($event)"
+                                [clrDgLoading]="loadingStockItemTemp" class="datagrid-compact">
                                 <clr-dg-column [clrDgField]="'stockItemName'">Name</clr-dg-column>
                                 <clr-dg-column [clrDgField]="'vendorSKU'">SKU</clr-dg-column>
                                 <clr-dg-column [clrDgField]="'barcode'">Barcode</clr-dg-column>
@@ -160,8 +168,8 @@
                     <button clrTabLink>Import History</button>
                     <clr-tab-content *clrIfActive>
                         <div>
-                            <clr-datagrid (clrDgRefresh)="onLoadUploadTransactions($event)" [clrDgLoading]="loadingUploadTransactions"
-                                class="datagrid-compact">
+                            <clr-datagrid (clrDgRefresh)="onLoadUploadTransactions($event)"
+                                [clrDgLoading]="loadingUploadTransactions" class="datagrid-compact">
                                 <clr-dg-column [clrDgField]="'fileName'">File</clr-dg-column>
                                 <clr-dg-column [clrDgField]="''">Action</clr-dg-column>
                                 <clr-dg-column [clrDgField]="'createdDate'">Created On</clr-dg-column>

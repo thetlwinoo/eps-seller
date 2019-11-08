@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { RootSharedModule } from '@root/shared.module';
-import { UserRouteAccessService } from '@root/services/core';
-import { BreadcrumbGuard } from '@root/services';
+import { RootSharedModule } from '@epm/shared.module';
+import { UserRouteAccessService } from '@epm/services/core';
+import { BreadcrumbGuard } from '@epm/services';
 import { DashboardComponent } from './dashboard.component';
 
 const routes = [

@@ -3,9 +3,9 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { asyncScheduler, EMPTY as empty, of } from 'rxjs';
 import { catchError, debounceTime, map, skip, switchMap, takeUntil, filter, mergeMap, tap } from 'rxjs/operators';
-import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes, IBarcodeTypes } from '@root/models';
+import { IProductCategory, IProductModel, IProductBrand, IProductChoice, IProductAttribute, IProductOption, IWarrantyTypes, IBarcodeTypes } from '@epm/models';
 import { FetchActions } from '../actions';
-import { ProductCategoryService, ProductModelService, ProductBrandService, ProductChoiceService, ProductAttributeService, ProductOptionService, WarrantyTypesService, BarcodeTypesService } from '@root/services';
+import { ProductCategoryService, ProductModelService, ProductBrandService, ProductChoiceService, ProductAttributeService, ProductOptionService, WarrantyTypesService, BarcodeTypesService } from '@epm/services';
 import { select, Store } from '@ngrx/store';
 import * as fromProducts from 'app/ngrx/products/reducers';
 

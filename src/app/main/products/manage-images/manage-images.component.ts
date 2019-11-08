@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy, ElementRef } from '@angular/core';
-import { RootTranslationLoaderService } from '@root/services';
-import { rootAnimations } from '@root/animations';
+import { RootTranslationLoaderService } from '@epm/services';
+import { rootAnimations } from '@epm/animations';
 
 import { locale as english } from './i18n/en';
 import { locale as myanmar } from './i18n/mm';
@@ -10,11 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IStockItems, IPhotos, Photos } from '@root/models';
-import { AccountService, StockItemsService, PhotosService } from '@root/services';
-import { ITEMS_PER_PAGE } from '@root/constants';
+import { IStockItems, IPhotos, Photos } from '@epm/models';
+import { AccountService, StockItemsService, PhotosService } from '@epm/services';
+import { ITEMS_PER_PAGE } from '@epm/constants';
 import { ClrDatagridStateInterface } from "@clr/angular";
-import { ImageUtils } from '@root/services';
+import { ImageUtils } from '@epm/services';
 
 @Component({
   selector: 'app-manage-images',

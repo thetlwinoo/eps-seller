@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RootSharedModule } from '@root/shared.module';
+import { RootSharedModule } from '@epm/shared.module';
 import { HeaderComponent } from './header.component';
 
 @NgModule({

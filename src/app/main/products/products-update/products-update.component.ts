@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { RootTranslationLoaderService } from '@root/services';
+import { RootTranslationLoaderService } from '@epm/services';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
-import { rootAnimations } from '@root/animations';
-import { RootUtils } from '@root/utils';
+import { rootAnimations } from '@epm/animations';
+import { RootUtils } from '@epm/utils';
 
-import { ISuppliers } from '@root/models';
+import { ISuppliers } from '@epm/models';
 
 import { locale as english } from './i18n/en';
 import { locale as myanmar } from './i18n/mm';
@@ -19,7 +19,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import * as fromProducts from 'app/ngrx/products/reducers';
 import * as fromAuth from 'app/ngrx/auth/reducers';
 import { ProductActions } from 'app/ngrx/products/actions';
-import { ProductsDTO } from '@root/dto';
+import { ProductsDTO } from '@epm/dto';
 
 @Component({
   selector: 'app-products-update',

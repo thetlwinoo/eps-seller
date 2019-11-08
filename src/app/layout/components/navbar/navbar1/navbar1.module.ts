@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Navbar1Component } from './navbar1.component';
-import { RootSharedModule } from '@root/shared.module';
-import { RootNavigationModule } from '@root/components';
+import { RootSharedModule } from '@epm/shared.module';
+import { RootNavigationModule } from '@epm/components';
 
 @NgModule({
   declarations: [Navbar1Component],

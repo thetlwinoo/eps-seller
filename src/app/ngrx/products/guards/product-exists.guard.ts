@@ -4,10 +4,10 @@ import { select, Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
-import { ProductsService } from '@root/services';
+import { ProductsService } from '@epm/services';
 import { ProductActions } from 'app/ngrx/products/actions';
 import * as fromProducts from 'app/ngrx/products/reducers';
-import { IProducts } from '@root/models';
+import { IProducts } from '@epm/models';
 
 @Injectable({
     providedIn: 'root',

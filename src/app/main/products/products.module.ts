@@ -1,12 +1,12 @@
 import { NgModule, Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { RootSharedModule } from '@root/shared.module';
+import { RootSharedModule } from '@epm/shared.module';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, RouterModule } from '@angular/router';
 import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
 import { ManageProductsComponent } from './manage-products/manage-products.component';
-import { UserRouteAccessService, StockItemsService } from '@root/services';
-import { IStockItems, StockItems } from '@root/models';
+import { UserRouteAccessService, StockItemsService } from '@epm/services';
+import { IStockItems, StockItems } from '@epm/models';
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { ProductsUpdateComponent } from './products-update/products-update.component';
@@ -14,9 +14,9 @@ import { ManageImagesComponent } from './manage-images/manage-images.component';
 import { BasicFormComponent } from './products-update/basic-form/basic-form.component';
 import { SkuFormComponent } from './products-update/sku-form/sku-form.component';
 import { DecorationFormComponent } from './products-update/decoration-form/decoration-form.component';
-import { IProducts, Products } from '@root/models';
-import { ProductsDTO } from '@root/dto';
-import { ProductsService } from '@root/services';
+import { IProducts, Products } from '@epm/models';
+import { ProductsDTO } from '@epm/dto';
+import { ProductsService } from '@epm/services';
 import { ProductListComponent } from './manage-images/product-list/product-list.component';
 
 import { select, Store } from '@ngrx/store';

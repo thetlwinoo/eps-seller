@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RootConfigService } from '@root/services';
+import { RootConfigService } from '@epm/services';
 import { Platform } from '@angular/cdk/platform';
-import { AccountService, LoginService } from '@root/services/core';
+import { AccountService, LoginService } from '@epm/services/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { BreadcrumbService } from '@root/services';
+import { BreadcrumbService } from '@epm/services';
 
 @Component({
   selector: 'app-layout1',
