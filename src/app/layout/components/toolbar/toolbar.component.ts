@@ -2,29 +2,29 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router } from '@angular/router';
 // import { TranslateService } from '@ngx-translate/core';
-import { LoginModalService, AccountService, LoginService } from '@epm/services/core';
-import { Observable, Subscription } from "rxjs";
-import { Account } from '@epm/models';
-import { Store, select } from "@ngrx/store";
-import { RootConfigService } from '@epm/services';
-// import { RootSidebarService } from '@epm/components/sidebar/sidebar.service';
+import { LoginModalService, AccountService, LoginService } from '@eps/services/core';
+import { Observable, Subscription } from 'rxjs';
+import { Account } from '@eps/services/core/user/account.model';
+// import { Store, select } from '@ngrx/store';
+import { RootConfigService } from '@eps/services';
+// import { RootSidebarService } from '@eps/components/sidebar/sidebar.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { takeUntil, map } from 'rxjs/operators';
+// import * as _ from 'lodash';
 import { Platform } from '@angular/cdk/platform';
 
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   isMobile: boolean;
   account: Account;
   wishlistCount$: Observable<number>;
   compareCount$: Observable<number>;
-  isCollapsed: boolean = true;
+  isCollapsed = true;
 
   rootConfig: any;
   horizontalNavbar: boolean;
@@ -37,10 +37,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isNavbarCollapsed = true;
 
-  private _unsubscribeAll: Subject<any>;
+  private unsubscribeAll: Subject<any>;
   private subscriptions: Subscription[] = [];
   constructor(
-    private _rootConfigService: RootConfigService,
+    private rootConfigService: RootConfigService,
     // private _rootSidebarService: RootSidebarService,
     // private _translateService: TranslateService,
     private accountService: AccountService,
@@ -48,69 +48,72 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private loginModalService: LoginModalService,
     private eventManager: JhiEventManager,
-    private _platform: Platform
+    private platform: Platform
   ) {
-    this._unsubscribeAll = new Subject();
+    this.unsubscribeAll = new Subject();
   }
 
-  ngOnInit() {
-    if (this._platform.ANDROID || this._platform.IOS) {
+  ngOnInit(): void {
+    if (this.platform.ANDROID || this.platform.IOS) {
       this.isMobile = true;
     }
 
-    const configSubscription = this._rootConfigService.config
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((settings) => {
-        this.rootConfig = settings;
-        this.horizontalNavbar = settings.layout.navbar.position === 'top';
-        this.rightNavbar = settings.layout.navbar.position === 'right';
-        this.hiddenNavbar = settings.layout.navbar.hidden === true;
-      });
-    this.subscriptions.push(configSubscription);
-    this.accountService.identity().then((account: Account) => {
-      this.account = account;
+    const configSubscription = this.rootConfigService.config.pipe(takeUntil(this.unsubscribeAll)).subscribe(settings => {
+      this.rootConfig = settings;
+      this.horizontalNavbar = settings.layout.navbar.position === 'top';
+      this.rightNavbar = settings.layout.navbar.position === 'right';
+      this.hiddenNavbar = settings.layout.navbar.hidden === true;
     });
+    this.subscriptions.push(configSubscription);
+    this.accountService.identity().pipe(
+      map(account => {
+        this.account = account;
+      })
+    );
     this.registerAuthenticationSuccess();
 
     // Set the selected language from default languages
-    // this.selectedLanguage = _.find(this.languages, { 'id': this._translateService.currentLang });    
+    // this.selectedLanguage = _.find(this.languages, { 'id': this._translateService.currentLang });
   }
 
-  registerAuthenticationSuccess() {
+  registerAuthenticationSuccess(): void {
     const eventSubscription = this.eventManager.subscribe('authenticationSuccess', message => {
-      this.accountService.identity().then(account => {
-        if (account) {
-          this.account = account;
-          console.log('auth success')
-        }
-      });
+      console.log('message', message);
+      this.accountService.identity().pipe(
+        map(account => {
+          this.account = account || null;
+        })
+      );
     });
     this.subscriptions.push(eventSubscription);
   }
 
-  isAuthenticated() {
+  isAuthenticated(): boolean {
     return this.accountService.isAuthenticated();
   }
 
-  login() {
+  login(): void {
     // this.modalRef = this.loginModalService.open();
   }
 
-  logout() {
+  logout(): void {
     this.loginService.logout();
     this.router.navigate(['']);
   }
 
   ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
 
     this.subscriptions.forEach(el => {
-      if (el) el.unsubscribe();
+      if (el) {
+        el.unsubscribe();
+      }
     });
   }
 
   toggleSidebarOpen(key): void {
+    console.log('key', key);
     // this._rootSidebarService.getSidebar(key).toggleOpen();
   }
 

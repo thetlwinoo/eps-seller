@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RootNavigationModule } from '@epm/components';
-import { RootSharedModule } from '@epm/shared.module';
+import { RootNavigationModule } from '@eps/components';
+import { RootSharedModule } from '@eps/shared.module';
 
 import { NavbarVerticalStyle1Component } from 'app/layout/components/navbar/vertical/style-1/style-1.component';
 

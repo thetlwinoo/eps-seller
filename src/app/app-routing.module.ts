@@ -5,24 +5,24 @@ const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
-    loadChildren: './main/dashboard/dashboard.module#DashboardModule'
+    loadChildren: './main/dashboard/dashboard.module#DashboardModule',
   },
   {
     path: 'products',
-    loadChildren: './main/products/products.module#ProductsModule'
+    loadChildren: './main/products/products.module#ProductsModule',
   },
   {
     path: 'pages',
-    loadChildren: './main/pages/pages.module#PagesModule'
+    loadChildren: './main/pages/pages.module#PagesModule',
   },
   {
     path: '**',
-    redirectTo: 'dashboard'
-  }
+    redirectTo: 'dashboard',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

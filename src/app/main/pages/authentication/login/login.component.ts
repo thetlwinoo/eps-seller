@@ -1,19 +1,19 @@
 import { Component, OnInit, ViewEncapsulation, Renderer, ElementRef, AfterViewInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from "@angular/forms";
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RootConfigService } from '@epm/services';
-import { rootAnimations } from '@epm/animations';
+import { RootConfigService } from '@eps/services';
+import { rootAnimations } from '@eps/animations';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { LoginService } from '@epm/services/core/login/login.service';
-import { StateStorageService } from '@epm/services/core/auth/state-storage.service';
+import { LoginService } from '@eps/services/core/login/login.service';
+import { StateStorageService } from '@eps/services/core/auth/state-storage.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: rootAnimations
+  animations: rootAnimations,
 })
 export class LoginComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup;
@@ -32,32 +32,32 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private eventManager: JhiEventManager,
     private loginService: LoginService,
     private stateStorageService: StateStorageService,
-    private router: Router,
+    private router: Router
   ) {
     this._rootConfigService.config = {
       layout: {
         alert: {
-          hidden: true
+          hidden: true,
         },
         header: {
-          hidden: true
+          hidden: true,
         },
         subnav: {
-          hidden: true
+          hidden: true,
         },
         sidenav: {
-          hidden: true
+          hidden: true,
         },
         toolbar: {
-          hidden: true
+          hidden: true,
         },
         footer: {
-          hidden: true
+          hidden: true,
         },
         sidepanel: {
-          hidden: true
-        }
-      }
+          hidden: true,
+        },
+      },
     };
   }
 
@@ -65,39 +65,49 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.loginForm = this._formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', Validators.required],
-      rememberMe: [false]
+      rememberMe: [false],
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     setTimeout(() => this.renderer.invokeElementMethod(this.elementRef.nativeElement.querySelector('#username'), 'focus', []), 0);
   }
 
-  login() {
-    const loginData = this.loginForm.getRawValue();
+  login(): void {
     this.loginService
       .login({
-        username: loginData.username,
-        password: loginData.password,
-        rememberMe: loginData.rememberMe
+        username: this.loginForm.get('username').value,
+        password: this.loginForm.get('password').value,
+        rememberMe: this.loginForm.get('rememberMe').value,
       })
-      .then(() => {
-        this.authenticationError = false;
+      .subscribe(
+        () => {
+          this.authenticationError = false;
+          // this.activeModal.dismiss('login success');
+          if (
+            this.router.url === '/account/register' ||
+            this.router.url.startsWith('/account/activate') ||
+            this.router.url.startsWith('/account/reset/')
+          ) {
+            this.router.navigate(['']);
+          }
 
-        this.eventManager.broadcast({
-          name: 'authenticationSuccess',
-          content: 'Sending Authentication Success'
-        });
+          this.eventManager.broadcast({
+            name: 'authenticationSuccess',
+            content: 'Sending Authentication Success',
+          });
 
-        const redirect = this.stateStorageService.getUrl();
-        if (redirect) {
-          this.stateStorageService.storeUrl(null);
-          this.router.navigate([redirect]);
-        }
-        this.router.navigate(['']);
-      })
-      .catch(() => {
-        this.authenticationError = true;
-      });
+          // previousState was set in the authExpiredInterceptor before being redirected to login modal.
+          // since login is successful, go to stored previousState and clear previousState
+          const redirect = this.stateStorageService.getUrl();
+          if (redirect) {
+            this.stateStorageService.storeUrl(null);
+            this.router.navigateByUrl(redirect);
+          } else {
+            this.router.navigate(['']);
+          }
+        },
+        () => (this.authenticationError = true)
+      );
   }
 }

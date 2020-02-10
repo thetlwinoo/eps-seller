@@ -1,4 +1,4 @@
-import { RootNavigation } from '@epm/types';
+import { RootNavigation } from '@eps/types';
 
 export const navigation: RootNavigation[] = [
     {

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { rootAnimations } from '@epm/animations';
-import { IWarrantyTypes, IBarcodeTypes } from '@epm/models';
+import { rootAnimations } from '@eps/animations';
+import { IWarrantyTypes, IBarcodeTypes } from '@eps/models';
 
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';

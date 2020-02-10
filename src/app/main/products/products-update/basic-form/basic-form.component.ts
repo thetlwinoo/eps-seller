@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IProducts, IProductCategory, Products, IProductModel, ISuppliers, IProductBrand, IWarrantyTypes } from '@epm/models';
+import { IProducts, IProductCategory, Products, IProductModel, ISuppliers, IProductBrand, IWarrantyTypes } from '@eps/models';
 import { locale as english } from '../i18n/en';
 import { locale as myanmar } from '../i18n/mm';
-import { rootAnimations } from '@epm/animations';
+import { rootAnimations } from '@eps/animations';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TreeNode } from 'primeng/api';
@@ -13,8 +13,8 @@ import { Observable } from 'rxjs';
 import * as fromProducts from 'app/ngrx/products/reducers';
 import * as fromAuth from 'app/ngrx/auth/reducers';
 import { FetchActions, CategoryActions } from 'app/ngrx/products/actions';
-import { RootTranslationLoaderService } from '@epm/services';
-import { ProductsDTO } from '@epm/dto';
+import { RootTranslationLoaderService } from '@eps/services';
+import { ProductsDTO } from '@eps/dto';
 
 @Component({
   selector: 'basic-form',

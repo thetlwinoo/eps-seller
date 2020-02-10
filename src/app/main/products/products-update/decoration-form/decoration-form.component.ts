@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { rootAnimations } from '@epm/animations';
+import { rootAnimations } from '@eps/animations';
 
 @Component({
   selector: 'decoration-form',

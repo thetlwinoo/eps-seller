@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { CategoryActions } from 'app/ngrx/products/actions';
-import { IProductCategory } from '@epm/models';
+import { IProductCategory } from '@eps/models';
 
 export const categoryFeatureKey = 'category';
 

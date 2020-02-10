@@ -1,205 +1,206 @@
 <clr-alert [clrAlertType]="'danger'" *ngIf="errorVisible">
-    <clr-alert-item>
-        <span class="alert-text">
-            {{errorMessage}}
-        </span>
-    </clr-alert-item>
+  <clr-alert-item>
+    <span class="alert-text">
+      {{ errorMessage }}
+    </span>
+  </clr-alert-item>
 </clr-alert>
 <div>
-    <h6>Manage Products</h6>
-    <input #file [style.display]="'none'" type="file" id="file" accept=".xls,.xlsx,.csv,.json"
-        (change)="onUpload($event)" hidden>
-    <div class="products-controller">
-        <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-secondary" [routerLink]="'/products/manage-products/new'">
-                <clr-icon shape="plus"></clr-icon> Add New
-            </button>
-            <button type="button" class="btn btn-sm btn-secondary" (click)="showImportModal = true">
-                <clr-icon shape="import"></clr-icon> Import
-            </button>
-        </div>
-        <div class="btn-group">
-            <clr-dropdown>
-                <button type="button" class="btn btn-sm btn-secondary" clrDropdownTrigger>
-                    Export
-                    <clr-icon shape="caret down"></clr-icon>
-                </button>
-                <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
-                    <button type="button" (click)="onExportAll()" clrDropdownItem disabled>Export All</button>
-                    <button type="button" (click)="onExportSelected()" clrDropdownItem disabled>Export Selected
-                        Items</button>
-                </clr-dropdown-menu>
-            </clr-dropdown>
-        </div>
+  <h6>Manage Products</h6>
+  <input #file [style.display]="'none'" type="file" id="file" accept=".xls,.xlsx,.csv,.json" (change)="onUpload($event)" hidden />
+  <div class="products-controller">
+    <div class="btn-group">
+      <button type="button" class="btn btn-sm btn-secondary" [routerLink]="'/products/manage-products/new'">
+        <clr-icon shape="plus"></clr-icon> Add New
+      </button>
+      <button type="button" class="btn btn-sm btn-secondary" (click)="showImportModal = true">
+        <clr-icon shape="import"></clr-icon> Import
+      </button>
     </div>
-    <div>
-        <nav class="subnav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 0"
-                        (click)="filterType = 0;loadAll()"><span class="nav-text">All({{countObj?.all}})</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 1"
-                        (click)="filterType = 1;loadAll()"><span class="nav-text">Live({{countObj?.active}})</span></a>
-                </li>
-                <!-- <li class="nav-item">
+    <div class="btn-group">
+      <clr-dropdown>
+        <button type="button" class="btn btn-sm btn-secondary" clrDropdownTrigger>
+          Export
+          <clr-icon shape="caret down"></clr-icon>
+        </button>
+        <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+          <button type="button" (click)="onExportAll()" clrDropdownItem disabled>Export All</button>
+          <button type="button" (click)="onExportSelected()" clrDropdownItem disabled>Export Selected Items</button>
+        </clr-dropdown-menu>
+      </clr-dropdown>
+    </div>
+  </div>
+  <div>
+    <nav class="subnav">
+      <ul class="nav">
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 0" (click)="filterType = 0; loadAll()"
+            ><span class="nav-text">All({{ countObj?.all }})</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 1" (click)="filterType = 1; loadAll()"
+            ><span class="nav-text">Live({{ countObj?.active }})</span></a
+          >
+        </li>
+        <!-- <li class="nav-item">
                     <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2"
                         (click)="filterType = 2;loadAll()"><span class="nav-text">Image
                             Missing({{countObj?.imagemissing}})</span></a>
                 </li> -->
-                <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2"
-                        (click)="filterType = 2;loadAll()"><span class="nav-text">Sold
-                            Out({{countObj?.soldout}})</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 3"
-                        (click)="filterType = 3;loadAll()"><span
-                            class="nav-text">Inactive({{countObj?.inactive}})</span></a>
-                </li>
-            </ul>
-        </nav>
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2" (click)="filterType = 2; loadAll()"
+            ><span class="nav-text">Sold Out({{ countObj?.soldout }})</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 3" (click)="filterType = 3; loadAll()"
+            ><span class="nav-text">Inactive({{ countObj?.inactive }})</span></a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div>
+    <clr-datagrid (clrDgRefresh)="onLoadStockItems($event)" [clrDgLoading]="loading" class="datagrid-compact">
+      <clr-dg-column [clrDgField]="'name'">Name</clr-dg-column>
+      <clr-dg-column [clrDgField]="'name'">Attribute</clr-dg-column>
+      <clr-dg-column [clrDgField]="'name'">Option</clr-dg-column>
+      <clr-dg-column [clrDgField]="'name'">UnitPrice</clr-dg-column>
+      <clr-dg-column [clrDgField]="'name'">RetailPrice</clr-dg-column>
+      <clr-dg-column [clrDgField]="'name'">CreatedDate</clr-dg-column>
+      <clr-dg-column [clrDgField]="'quantityOnHand'">Active</clr-dg-column>
+
+      <clr-dg-row *ngFor="let stockItem of stockItems" [clrDgItem]="stockItem">
+        <clr-dg-action-overflow>
+          <button class="action-item" [routerLink]="'/products/manage-products/' + stockItem.productId">Edit</button>
+          <button class="action-item" [routerLink]="'/products/manage-images'">Manange Images</button>
+          <button class="action-item" (click)="onDelete(stockItem)">Delete</button>
+        </clr-dg-action-overflow>
+        <clr-dg-cell>{{ stockItem.name }}</clr-dg-cell>
+        <clr-dg-cell>{{ stockItem.productAttributeValue }}</clr-dg-cell>
+        <clr-dg-cell>{{ stockItem.productOptionValue }}</clr-dg-cell>
+        <clr-dg-cell>{{ stockItem.unitPrice }}</clr-dg-cell>
+        <clr-dg-cell>{{ stockItem.recommendedRetailPrice }}</clr-dg-cell>
+        <clr-dg-cell>{{ stockItem.createdDate | date }}</clr-dg-cell>
+        <clr-dg-cell
+          ><input
+            type="checkbox"
+            clrToggle
+            name="action"
+            [value]="stockItem.activeInd"
+            [(ngModel)]="stockItem.activeInd"
+            (ngModelChange)="updateStockItemActive(stockItem)"
+          />
+        </clr-dg-cell>
+      </clr-dg-row>
+
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="itemsPerPage" [clrDgTotalItems]="totalItems">
+          <clr-dg-page-size [clrPageSizeOptions]="[10, 20, 50, 100]">Items per page </clr-dg-page-size>
+          {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} items
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+    <!-- <p-paginator [rows]="itemsPerPage" [totalRecords]="totalItems" (onPageChange)="loadPage(page)"></p-paginator> -->
+  </div>
+  <clr-modal [(clrModalOpen)]="showImportModal" [clrModalSize]="'xl'">
+    <h3 class="modal-title">Import</h3>
+    <div class="modal-body">
+      <root-alert></root-alert>
+      <clr-tabs>
+        <clr-tab>
+          <button clrTabLink id="import">Import</button>
+          <clr-tab-content id="content1" *clrIfActive="true">
+            <div class="import-wrapper">
+              <clr-select-container class="control-item">
+                <label>Import Mode</label>
+                <select clrSelect name="options" [(ngModel)]="selectedMode">
+                  <option value="0">Create New Products</option>
+                  <option value="1">Update Products</option>
+                  <option value="2">Update Stock</option>
+                  <option value="3">Update Price</option>
+                </select>
+              </clr-select-container>
+              <clr-button-group class="btn-primary control-item">
+                <clr-button (click)="file.click()">Upload Files</clr-button>
+                <clr-button class="btn btn-success" [disabled]="total <= 0" (click)="onImportToSystem($event)">Import To System</clr-button>
+                <clr-button class="btn btn-warning" [disabled]="total <= 0" (click)="confirmDeleteStockItemTemp(uploadedTransactionid)"
+                  >Clear</clr-button
+                >
+              </clr-button-group>
+            </div>
+            <div>
+              <clr-datagrid (clrDgRefresh)="onLoadStockItemTemp($event)" [clrDgLoading]="loadingStockItemTemp" class="datagrid-compact">
+                <clr-dg-column [clrDgField]="'stockItemName'">Name</clr-dg-column>
+                <clr-dg-column [clrDgField]="'vendorSKU'">SKU</clr-dg-column>
+                <clr-dg-column [clrDgField]="'barcode'">Barcode</clr-dg-column>
+                <clr-dg-column [clrDgField]="'productCategoryName'">Category</clr-dg-column>
+                <clr-dg-column [clrDgField]="'productAttributeValue'">Attribute</clr-dg-column>
+                <clr-dg-column [clrDgField]="'productOptionValue'">Option</clr-dg-column>
+                <clr-dg-column [clrDgField]="'unitPrice'">Unit Price</clr-dg-column>
+                <clr-dg-column [clrDgField]="'remommendedRetailPrice'">Retail Price</clr-dg-column>
+                <clr-dg-column [clrDgField]="'quantityOnHand'">Quantity</clr-dg-column>
+
+                <clr-dg-row *ngFor="let item of stockItemTempList">
+                  <clr-dg-cell>{{ item.stockItemName }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.vendorSKU }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.barcode }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.productCategoryName }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.productAttributeValue }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.productOptionValue }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.unitPrice }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.remommendedRetailPrice }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.quantityOnHand }}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                  <clr-dg-pagination #pagination [clrDgPageSize]="5" [clrDgTotalItems]="total">
+                    <clr-dg-page-size [clrPageSizeOptions]="[5, 10, 20, 50, 100]">Items per page </clr-dg-page-size>
+                    {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} items
+                  </clr-dg-pagination>
+                </clr-dg-footer>
+              </clr-datagrid>
+            </div>
+          </clr-tab-content>
+        </clr-tab>
+        <clr-tab>
+          <button clrTabLink>Import History</button>
+          <clr-tab-content *clrIfActive>
+            <div>
+              <clr-datagrid
+                (clrDgRefresh)="onLoadUploadTransactions($event)"
+                [clrDgLoading]="loadingUploadTransactions"
+                class="datagrid-compact"
+              >
+                <clr-dg-column [clrDgField]="'fileName'">File</clr-dg-column>
+                <clr-dg-column [clrDgField]="''">Action</clr-dg-column>
+                <clr-dg-column [clrDgField]="'createdDate'">Created On</clr-dg-column>
+
+                <clr-dg-row *ngFor="let item of uploadTransactionList">
+                  <clr-dg-cell
+                    ><a [href]="item.templateUrl">{{ item.fileName }}</a></clr-dg-cell
+                  >
+                  <clr-dg-cell>{{ item.actionTypeActionTypeName }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.createdDate | date: 'medium' }}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                  <clr-dg-pagination #pagination [clrDgPageSize]="5" [clrDgTotalItems]="total">
+                    <clr-dg-page-size [clrPageSizeOptions]="[5, 10, 20, 50, 100]">Items per page </clr-dg-page-size>
+                    {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} items
+                  </clr-dg-pagination>
+                </clr-dg-footer>
+              </clr-datagrid>
+            </div>
+          </clr-tab-content>
+        </clr-tab>
+      </clr-tabs>
     </div>
-    <div>
-        <clr-datagrid (clrDgRefresh)="onLoadStockItems($event)" [clrDgLoading]="loading" class="datagrid-compact">
-            <clr-dg-column [clrDgField]="'name'">Name</clr-dg-column>
-            <clr-dg-column [clrDgField]="'name'">Attribute</clr-dg-column>
-            <clr-dg-column [clrDgField]="'name'">Option</clr-dg-column>
-            <clr-dg-column [clrDgField]="'name'">UnitPrice</clr-dg-column>
-            <clr-dg-column [clrDgField]="'name'">RetailPrice</clr-dg-column>
-            <clr-dg-column [clrDgField]="'name'">CreatedDate</clr-dg-column>
-            <clr-dg-column [clrDgField]="'quantityOnHand'">Active</clr-dg-column>
-
-            <clr-dg-row *ngFor="let stockItem of stockItems" [clrDgItem]="stockItem">
-                <clr-dg-action-overflow>
-                    <button class="action-item"
-                        [routerLink]="'/products/manage-products/'+stockItem.productId">Edit</button>
-                    <button class="action-item" [routerLink]="'/products/manage-images'">Manange Images</button>
-                    <button class="action-item" (click)="onDelete(stockItem)">Delete</button>
-                </clr-dg-action-overflow>
-                <clr-dg-cell>{{stockItem.stockItemName}}</clr-dg-cell>
-                <clr-dg-cell>{{stockItem.productAttributeProductAttributeValue}}</clr-dg-cell>
-                <clr-dg-cell>{{stockItem.productOptionProductOptionValue}}</clr-dg-cell>
-                <clr-dg-cell>{{stockItem.unitPrice}}</clr-dg-cell>
-                <clr-dg-cell>{{stockItem.recommendedRetailPrice}}</clr-dg-cell>
-                <clr-dg-cell>{{stockItem.createdDate| date}}</clr-dg-cell>
-                <clr-dg-cell><input type="checkbox" clrToggle name="action" [value]="stockItem.activeInd"
-                        [(ngModel)]="stockItem.activeInd" (ngModelChange)="updateStockItemActive(stockItem)" />
-                </clr-dg-cell>
-            </clr-dg-row>
-
-            <clr-dg-footer>
-                <clr-dg-pagination #pagination [clrDgPageSize]="itemsPerPage" [clrDgTotalItems]="totalItems">
-                    <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Items per page
-                    </clr-dg-page-size>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    of {{pagination.totalItems}} items
-                </clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
-        <!-- <p-paginator [rows]="itemsPerPage" [totalRecords]="totalItems" (onPageChange)="loadPage(page)"></p-paginator> -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="showImportModal = false">
+        Done
+      </button>
     </div>
-    <clr-modal [(clrModalOpen)]="showImportModal" [clrModalSize]="'xl'">
-        <h3 class="modal-title">Import</h3>
-        <div class="modal-body">
-            <root-alert></root-alert>
-            <clr-tabs>
-                <clr-tab>
-                    <button clrTabLink id="import">Import</button>
-                    <clr-tab-content id="content1" *clrIfActive="true">
-                        <div class="import-wrapper">
-                            <clr-select-container class="control-item">
-                                <label>Import Mode</label>
-                                <select clrSelect name="options" [(ngModel)]="selectedMode">
-                                    <option value="0">Create New Products</option>
-                                    <option value="1">Update Products</option>
-                                    <option value="2">Update Stock</option>
-                                    <option value="3">Update Price</option>
-                                </select>
-                            </clr-select-container>
-                            <clr-button-group class="btn-primary control-item">
-                                <clr-button (click)="file.click()">Upload Files</clr-button>
-                                <clr-button class="btn btn-success" [disabled]="total<=0"
-                                    (click)="onImportToSystem($event)">Import
-                                    To System</clr-button>
-                                <clr-button class="btn btn-warning" [disabled]="total<=0"
-                                    (click)="confirmDeleteStockItemTemp(uploadedTransactionid);">Clear</clr-button>
-                            </clr-button-group>
-                        </div>
-                        <div>
-                            <clr-datagrid (clrDgRefresh)="onLoadStockItemTemp($event)"
-                                [clrDgLoading]="loadingStockItemTemp" class="datagrid-compact">
-                                <clr-dg-column [clrDgField]="'stockItemName'">Name</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'vendorSKU'">SKU</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'barcode'">Barcode</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'productCategoryName'">Category</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'productAttributeValue'">Attribute</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'productOptionValue'">Option</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'unitPrice'">Unit Price</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'remommendedRetailPrice'">Retail Price</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'quantityOnHand'">Quantity</clr-dg-column>
-
-                                <clr-dg-row *ngFor="let item of stockItemTempList">
-                                    <clr-dg-cell>{{item.stockItemName}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.vendorSKU}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.barcode}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.productCategoryName}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.productAttributeValue}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.productOptionValue}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.unitPrice}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.remommendedRetailPrice}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.quantityOnHand}}</clr-dg-cell>
-                                </clr-dg-row>
-
-                                <clr-dg-footer>
-                                    <clr-dg-pagination #pagination [clrDgPageSize]="5" [clrDgTotalItems]="total">
-                                        <clr-dg-page-size [clrPageSizeOptions]="[5,10,20,50,100]">Items per page
-                                        </clr-dg-page-size>
-                                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                                        of {{pagination.totalItems}} items
-                                    </clr-dg-pagination>
-                                </clr-dg-footer>
-                            </clr-datagrid>
-                        </div>
-                    </clr-tab-content>
-                </clr-tab>
-                <clr-tab>
-                    <button clrTabLink>Import History</button>
-                    <clr-tab-content *clrIfActive>
-                        <div>
-                            <clr-datagrid (clrDgRefresh)="onLoadUploadTransactions($event)"
-                                [clrDgLoading]="loadingUploadTransactions" class="datagrid-compact">
-                                <clr-dg-column [clrDgField]="'fileName'">File</clr-dg-column>
-                                <clr-dg-column [clrDgField]="''">Action</clr-dg-column>
-                                <clr-dg-column [clrDgField]="'createdDate'">Created On</clr-dg-column>
-
-                                <clr-dg-row *ngFor="let item of uploadTransactionList">
-                                    <clr-dg-cell><a [href]="item.templateUrl">{{item.fileName}}</a></clr-dg-cell>
-                                    <clr-dg-cell>{{item.actionTypeActionTypeName}}</clr-dg-cell>
-                                    <clr-dg-cell>{{item.createdDate | date:'medium'}}</clr-dg-cell>
-                                </clr-dg-row>
-
-                                <clr-dg-footer>
-                                    <clr-dg-pagination #pagination [clrDgPageSize]="5" [clrDgTotalItems]="total">
-                                        <clr-dg-page-size [clrPageSizeOptions]="[5,10,20,50,100]">Items per page
-                                        </clr-dg-page-size>
-                                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                                        of {{pagination.totalItems}} items
-                                    </clr-dg-pagination>
-                                </clr-dg-footer>
-                            </clr-datagrid>
-                        </div>
-                    </clr-tab-content>
-                </clr-tab>
-            </clr-tabs>
-
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="showImportModal = false">
-                Done
-            </button>
-        </div>
-    </clr-modal>
-
+  </clr-modal>
 </div>

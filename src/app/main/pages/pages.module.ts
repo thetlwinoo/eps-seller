@@ -4,9 +4,6 @@ import { LoginModule } from 'app/main/pages/authentication/login/login.module';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    LoginModule
-  ]
+  imports: [CommonModule, LoginModule],
 })
-export class PagesModule { }
+export class PagesModule {}

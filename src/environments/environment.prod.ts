@@ -1,12 +1,16 @@
 export const environment = {
   production: true,
   serverApi: {
-    baseUrl: 'https://ecp-resource.herokuapp.com/'
+    baseUrl: 'https://system.zezawar.com/',
+    url: 'http://localhost:8080',
+  },
+  client: {
+    baseUrl: 'https://seller.zezawar.com/',
   },
   socketConfig: {
-    url: 'https://ecp-resource.herokuapp.com/',
+    url: 'https://system.zezawar.com/',
     opts: {
-      transports: ['websocket']
-    }
-  }
+      transports: ['websocket'],
+    },
+  },
 };

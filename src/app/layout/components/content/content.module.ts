@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { RootSharedModule } from '@epm/shared.module';
+import { RootSharedModule } from '@eps/shared.module';
 import { ContentComponent } from './content.component';
 
 @NgModule({

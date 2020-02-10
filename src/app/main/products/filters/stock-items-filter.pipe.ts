@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { IStockItems } from '@epm/models';
+import { IStockItems } from '@eps/models';
 
 @Pipe({
   name: 'stockItemsFilter'

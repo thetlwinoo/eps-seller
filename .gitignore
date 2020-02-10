@@ -44,3 +44,11 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Linting
+!.eslintrc
+!.eslintrc.json
+!.eslintrc.js
+!.prettierrc
+!.prettierrc.json
+!.prettierrc.js

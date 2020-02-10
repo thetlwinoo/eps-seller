@@ -1,12 +1,12 @@
 import { NgModule, Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { RootSharedModule } from '@epm/shared.module';
+import { RootSharedModule } from '@eps/shared.module';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes, RouterModule } from '@angular/router';
 import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
 import { ManageProductsComponent } from './manage-products/manage-products.component';
-import { UserRouteAccessService, StockItemsService } from '@epm/services';
-import { IStockItems, StockItems } from '@epm/models';
+import { UserRouteAccessService, StockItemsService } from '@eps/services';
+import { IStockItems, StockItems } from '@eps/models';
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { ProductsUpdateComponent } from './products-update/products-update.component';
@@ -14,9 +14,9 @@ import { ManageImagesComponent } from './manage-images/manage-images.component';
 import { BasicFormComponent } from './products-update/basic-form/basic-form.component';
 import { SkuFormComponent } from './products-update/sku-form/sku-form.component';
 import { DecorationFormComponent } from './products-update/decoration-form/decoration-form.component';
-import { IProducts, Products } from '@epm/models';
-import { ProductsDTO } from '@epm/dto';
-import { ProductsService } from '@epm/services';
+import { IProducts, Products } from '@eps/models';
+import { ProductsDTO } from '@eps/dto';
+import { ProductsService } from '@eps/services';
 import { ProductListComponent } from './manage-images/product-list/product-list.component';
 
 import { select, Store } from '@ngrx/store';
@@ -28,15 +28,15 @@ import { PhotoItemComponent } from './manage-images/photo-item/photo-item.compon
 
 @Injectable({ providedIn: 'root' })
 export class ProductsResolve implements Resolve<IProducts> {
-  constructor(private service: ProductsService, private store: Store<fromProducts.State>, ) { }
+  constructor(private service: ProductsService, private store: Store<fromProducts.State>) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProducts> {
-    const id = route.params['id'] ? route.params['id'] : null;
+    const id = route.params.id ? route.params.id : null;
     if (id) {
       return this.service.getOne(id).pipe(
         filter((res: HttpResponse<Products>) => res.ok),
         map((res: HttpResponse<Products>) => {
-          console.log('product',res.body);
+          console.log('product', res.body);
           const products = new ProductsDTO(res.body);
           this.store.dispatch(CategoryActions.selectCategory({ id: products.productCategory.id }));
           console.log('converted product', res.body, products);
@@ -53,77 +53,77 @@ const routes = [
     path: 'manage-products',
     component: ManageProductsComponent,
     resolve: {
-      pagingParams: JhiResolvePagingParams
+      pagingParams: JhiResolvePagingParams,
     },
     data: {
       authorities: ['ROLE_USER'],
       defaultSort: 'id,asc',
-      pageTitle: 'resourceApp.products.home.title'
+      pageTitle: 'resourceApp.products.home.title',
     },
-    canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/new',
     component: ProductsUpdateComponent,
     resolve: {
-      products: ProductsResolve
+      products: ProductsResolve,
     },
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'PRODUCTS.TITLE'
+      pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/:id/edit',
     component: ProductsUpdateComponent,
     resolve: {
-      products: ProductsResolve
+      products: ProductsResolve,
     },
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'PRODUCTS.TITLE'
+      pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/:id',
     component: ProductsUpdateComponent,
     resolve: {
-      products: ProductsResolve
+      products: ProductsResolve,
     },
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'PRODUCTS.TITLE'
+      pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/:id/:handle',
     component: ProductsUpdateComponent,
     resolve: {
-      products: ProductsResolve
+      products: ProductsResolve,
     },
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'PRODUCTS.TITLE'
+      pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService]
+    canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-images',
     component: ManageImagesComponent,
     resolve: {
-      pagingParams: JhiResolvePagingParams
+      pagingParams: JhiResolvePagingParams,
     },
     data: {
       authorities: ['ROLE_USER'],
       defaultSort: 'id,asc',
-      pageTitle: 'resourceApp.products.home.title'
+      pageTitle: 'resourceApp.products.home.title',
     },
-    canActivate: [UserRouteAccessService]
-  }
-]
+    canActivate: [UserRouteAccessService],
+  },
+];
 
 @NgModule({
   declarations: [
@@ -136,12 +136,8 @@ const routes = [
     ProductListComponent,
     InformationFormComponent,
     StockItemsFilterPipe,
-    PhotoItemComponent
+    PhotoItemComponent,
   ],
-  imports: [
-    CommonModule,
-    RootSharedModule,
-    RouterModule.forChild(routes),
-  ]
+  imports: [CommonModule, RootSharedModule, RouterModule.forChild(routes)],
 })
-export class ProductsModule { }
+export class ProductsModule {}
