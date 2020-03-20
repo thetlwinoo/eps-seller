@@ -26,9 +26,9 @@
     "@angular/platform-browser": "~9.0.7",
     "@angular/platform-browser-dynamic": "~9.0.7",
     "@angular/router": "~9.0.7",
-    "@clr/angular": "^2.2.1",
-    "@clr/icons": "2.2.1",
-    "@clr/ui": "2.2.1",
+    "@clr/angular": "^3.0.1",
+    "@clr/icons": "3.0.1",
+    "@clr/ui": "3.0.1",
     "@digitalascetic/ngx-pica": "^8.0.2",
     "@fortawesome/angular-fontawesome": "^0.5.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
@@ -43,7 +43,6 @@
     "@ngrx/store-devtools": "^8.3.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
-    "@webcomponents/custom-elements": "^1.0.0",
     "exif-js": "^2.3.0",
     "express": "^4.17.1",
     "moment": "^2.24.0",
@@ -60,7 +59,9 @@
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
     "webstomp-client": "^1.2.6",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "@clr/core": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.900.7",
