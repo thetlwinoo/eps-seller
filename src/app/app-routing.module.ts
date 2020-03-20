@@ -5,15 +5,15 @@ const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
-    loadChildren: './main/dashboard/dashboard.module#DashboardModule',
+    loadChildren: () => import('./main/dashboard/dashboard.module').then(m => m.DashboardModule),
   },
   {
     path: 'products',
-    loadChildren: './main/products/products.module#ProductsModule',
+    loadChildren: () => import('./main/products/products.module').then(m => m.ProductsModule),
   },
   {
     path: 'pages',
-    loadChildren: './main/pages/pages.module#PagesModule',
+    loadChildren: () => import('./main/pages/pages.module').then(m => m.PagesModule),
   },
   {
     path: '**',

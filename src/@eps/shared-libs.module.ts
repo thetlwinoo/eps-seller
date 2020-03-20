@@ -63,9 +63,9 @@ import { TooltipModule } from 'primeng/tooltip';
     ]
 })
 export class ResourceSharedLibsModule {
-    static forRoot() {
-        return {
-            ngModule: ResourceSharedLibsModule
-        };
-    }
+    static forRoot(): ModuleWithProviders<ResourceSharedLibsModule> {
+    return {
+        ngModule: ResourceSharedLibsModule
+    };
+}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Renderer, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RootConfigService } from '@eps/services';
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private _rootConfigService: RootConfigService,
     private _formBuilder: FormBuilder,
     private elementRef: ElementRef,
-    private renderer: Renderer,
+    private renderer: Renderer2,
     private eventManager: JhiEventManager,
     private loginService: LoginService,
     private stateStorageService: StateStorageService,
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.renderer.invokeElementMethod(this.elementRef.nativeElement.querySelector('#username'), 'focus', []), 0);
+    setTimeout(() => this.elementRef.nativeElement.querySelector('#username').focus(), 0);
   }
 
   login(): void {
