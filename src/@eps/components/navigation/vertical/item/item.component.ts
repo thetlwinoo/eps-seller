@@ -6,68 +6,38 @@ import { RootNavigationItem } from '@eps/types';
 import { RootNavigationService } from '@eps/components/navigation/navigation.service';
 
 @Component({
-    selector   : 'root-nav-vertical-item',
-    templateUrl: './item.component.html',
-    styleUrls  : ['./item.component.scss']
+  selector: 'root-nav-vertical-item',
+  templateUrl: './item.component.html',
+  styleUrls: ['./item.component.scss'],
 })
-export class RootNavVerticalItemComponent implements OnInit, OnDestroy
-{
-    @HostBinding('class')
-    classes = 'nav-item';
+export class RootNavVerticalItemComponent implements OnInit, OnDestroy {
+  @HostBinding('class')
+  classes = 'nav-item';
 
-    @Input()
-    item: RootNavigationItem;
+  @Input()
+  item: RootNavigationItem;
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
-    /**
-     * Constructor
-     */
+  constructor(private _changeDetectorRef: ChangeDetectorRef, private _rootNavigationService: RootNavigationService) {
+    // Set the private defaults
+    this._unsubscribeAll = new Subject();
+  }
 
-    /**
-     *
-     * @param {ChangeDetectorRef} _changeDetectorRef
-     * @param {RootNavigationService} _rootNavigationService
-     */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _rootNavigationService: RootNavigationService
+  ngOnInit(): void {
+    merge(
+      this._rootNavigationService.onNavigationItemAdded,
+      this._rootNavigationService.onNavigationItemUpdated,
+      this._rootNavigationService.onNavigationItemRemoved
     )
-    {
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
+  }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Subscribe to navigation item
-        merge(
-            this._rootNavigationService.onNavigationItemAdded,
-            this._rootNavigationService.onNavigationItemUpdated,
-            this._rootNavigationService.onNavigationItemRemoved
-        ).pipe(takeUntil(this._unsubscribeAll))
-         .subscribe(() => {
-
-             // Mark for check
-             this._changeDetectorRef.markForCheck();
-         });
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
 }

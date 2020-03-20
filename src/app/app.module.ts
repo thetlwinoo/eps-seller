@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import './vendor.ts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,18 +12,12 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
 import { RootSharedModule } from '@eps/shared.module';
 import { RootModule } from '@eps/root.module';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { AuthInterceptor } from '@eps/blocks/interceptor/auth.interceptor';
-import { AuthExpiredInterceptor } from '@eps/blocks/interceptor/auth-expired.interceptor';
-import { ErrorHandlerInterceptor } from '@eps/blocks/interceptor/errorhandler.interceptor';
-import { NotificationInterceptor } from '@eps/blocks/interceptor/notification.interceptor';
-import { NgxWebstorageModule } from 'ngx-webstorage';
-import { NgJhipsterModule } from 'ng-jhipster';
-import { TranslateModule } from '@ngx-translate/core';
 import { ROOT_REDUCERS, metaReducers } from 'app/ngrx';
 import { NgrxCoreModule } from 'app/ngrx/core';
 import { RouterEffects } from 'app/ngrx/core/effects';
+
+import { CoreModule } from '@eps/core/core.module';
 
 import { RootProgressBarModule } from '@eps/components/progress-bar/progress-bar.module';
 import { LayoutModule } from 'app/layout/layout.module';
@@ -32,21 +25,12 @@ import { NgrxAuthModule } from 'app/ngrx/auth';
 import { NgrxProductsModule } from 'app/ngrx/products';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     LayoutModule,
     BrowserAnimationsModule,
-    TranslateModule.forRoot(),
-    NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-' }),
-    NgJhipsterModule.forRoot({
-      alertAsToast: false,
-      alertTimeout: 5000,
-      i18nEnabled: false
-    }),
     RootModule.forRoot(rootConfig),
     HttpClientModule,
     StoreModule.forRoot(ROOT_REDUCERS, {
@@ -67,34 +51,14 @@ import { NgrxProductsModule } from 'app/ngrx/products';
       // logOnly: environment.production,
     }),
     EffectsModule.forRoot([RouterEffects]),
+    CoreModule,
     NgrxCoreModule,
     RootSharedModule,
     RootProgressBarModule,
     NgrxAuthModule,
-    NgrxProductsModule
+    NgrxProductsModule,
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthExpiredInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlerInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: NotificationInterceptor,
-      multi: true
-    }
-  ],
-  bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

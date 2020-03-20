@@ -6,81 +6,45 @@ import { rootAnimations } from '@eps/animations';
 import { RootConfigService } from '@eps/services';
 
 @Component({
-    selector   : 'root-nav-horizontal-collapsable',
-    templateUrl: './collapsable.component.html',
-    styleUrls  : ['./collapsable.component.scss'],
-    animations : rootAnimations
+  selector: 'root-nav-horizontal-collapsable',
+  templateUrl: './collapsable.component.html',
+  styleUrls: ['./collapsable.component.scss'],
+  animations: rootAnimations,
 })
-export class RootNavHorizontalCollapsableComponent implements OnInit, OnDestroy
-{
-    rootConfig: any;
-    isOpen = false;
+export class RootNavHorizontalCollapsableComponent implements OnInit, OnDestroy {
+  rootConfig: any;
+  isOpen = false;
 
-    @HostBinding('class')
-    classes = 'nav-collapsable nav-item';
+  @HostBinding('class')
+  classes = 'nav-collapsable nav-item';
 
-    @Input()
-    item: any;
+  @Input()
+  item: any;
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
-    constructor(
-        private _rootConfigService: RootConfigService
-    )
-    {
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
+  constructor(private _rootConfigService: RootConfigService) {
+    this._unsubscribeAll = new Subject();
+  }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+  ngOnInit(): void {
+    this._rootConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
+      this.rootConfig = config;
+    });
+  }
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Subscribe to config changes
-        this._rootConfigService.config
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(
-                (config) => {
-                    this.rootConfig = config;
-                }
-            );
-    }
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
 
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
+  @HostListener('mouseenter')
+  open(): void {
+    this.isOpen = true;
+  }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Open
-     */
-    @HostListener('mouseenter')
-    open(): void
-    {
-        this.isOpen = true;
-    }
-
-    /**
-     * Close
-     */
-    @HostListener('mouseleave')
-    close(): void
-    {
-        this.isOpen = false;
-    }
+  @HostListener('mouseleave')
+  close(): void {
+    this.isOpen = false;
+  }
 }

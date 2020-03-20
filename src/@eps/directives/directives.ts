@@ -8,26 +8,24 @@ import { RootMatSidenavHelperDirective, RootMatSidenavTogglerDirective } from '@
 import { HeaderScrollDirective } from '@eps/directives/header-scroll.directive';
 
 @NgModule({
-    declarations: [
-        HasAnyAuthorityDirective,
-        RootIfOnDomDirective,
-        RootInnerScrollDirective,
-        RootMatSidenavHelperDirective,
-        RootMatSidenavTogglerDirective,
-        RootPerfectScrollbarDirective,
-        HeaderScrollDirective
-    ],
-    imports     : [],
-    exports     : [
-        HasAnyAuthorityDirective,
-        RootIfOnDomDirective,
-        RootInnerScrollDirective,
-        RootMatSidenavHelperDirective,
-        RootMatSidenavTogglerDirective,
-        RootPerfectScrollbarDirective,
-        HeaderScrollDirective
-    ]
+  declarations: [
+    HasAnyAuthorityDirective,
+    RootIfOnDomDirective,
+    RootInnerScrollDirective,
+    RootMatSidenavHelperDirective,
+    RootMatSidenavTogglerDirective,
+    RootPerfectScrollbarDirective,
+    HeaderScrollDirective,
+  ],
+  imports: [],
+  exports: [
+    HasAnyAuthorityDirective,
+    RootIfOnDomDirective,
+    RootInnerScrollDirective,
+    RootMatSidenavHelperDirective,
+    RootMatSidenavTogglerDirective,
+    RootPerfectScrollbarDirective,
+    HeaderScrollDirective,
+  ],
 })
-export class RootDirectivesModule
-{
-}
+export class RootDirectivesModule {}

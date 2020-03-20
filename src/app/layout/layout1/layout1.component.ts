@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RootConfigService } from '@eps/services';
 import { Platform } from '@angular/cdk/platform';
-import { AccountService, LoginService } from '@eps/services/core';
+import { AccountService, LoginService } from '@eps/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbService } from '@eps/services';
@@ -11,7 +11,7 @@ import { BreadcrumbService } from '@eps/services';
 @Component({
   selector: 'app-layout1',
   templateUrl: './layout1.component.html',
-  styleUrls: ['./layout1.component.scss']
+  styleUrls: ['./layout1.component.scss'],
 })
 export class Layout1Component implements OnInit, OnDestroy {
   crumbs$: Observable<MenuItem[]>;
@@ -25,28 +25,26 @@ export class Layout1Component implements OnInit, OnDestroy {
     private _platform: Platform,
     private accountService: AccountService,
     private loginService: LoginService,
-    private router: Router,    
-    private breadcrumb: BreadcrumbService,
+    private router: Router,
+    private breadcrumb: BreadcrumbService
   ) {
     this._unsubscribeAll = new Subject();
   }
 
-  ngOnInit() {
-    this._rootConfigService.config
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((config) => {
-        this.rootConfig = config;
-      });
+  ngOnInit(): void {
+    this._rootConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
+      this.rootConfig = config;
+    });
 
     this.crumbs$ = this.breadcrumb.crumbs$;
-    this.home = { icon: 'pi pi-home', routerLink: ['/home'] };    
+    this.home = { icon: 'pi pi-home', routerLink: ['/home'] };
   }
 
-  isAuthenticated() {
+  isAuthenticated(): boolean {
     return this.accountService.isAuthenticated();
   }
 
-  logout() {
+  logout(): void {
     this.loginService.logout();
     this.router.navigate(['/pages/auth/login']);
   }
@@ -55,5 +53,4 @@ export class Layout1Component implements OnInit, OnDestroy {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
-
 }

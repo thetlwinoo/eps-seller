@@ -14,27 +14,23 @@ import { RootNavHorizontalItemComponent } from './horizontal/item/item.component
 import { RootNavHorizontalCollapsableComponent } from './horizontal/collapsable/collapsable.component';
 
 @NgModule({
-    imports     : [
-        CommonModule,
-        RouterModule,
-        RootSharedModule,
-        // MatIconModule,
-        // MatRippleModule,
+  imports: [
+    CommonModule,
+    RouterModule,
+    RootSharedModule,
+    // MatIconModule,
+    // MatRippleModule,
 
-        TranslateModule.forChild()
-    ],
-    exports     : [
-        RootNavigationComponent
-    ],
-    declarations: [
-        RootNavigationComponent,
-        RootNavVerticalGroupComponent,
-        RootNavVerticalItemComponent,
-        RootNavVerticalCollapsableComponent,
-        RootNavHorizontalItemComponent,
-        RootNavHorizontalCollapsableComponent
-    ]
+    TranslateModule.forChild(),
+  ],
+  exports: [RootNavigationComponent],
+  declarations: [
+    RootNavigationComponent,
+    RootNavVerticalGroupComponent,
+    RootNavVerticalItemComponent,
+    RootNavVerticalCollapsableComponent,
+    RootNavHorizontalItemComponent,
+    RootNavHorizontalCollapsableComponent,
+  ],
 })
-export class RootNavigationModule
-{
-}
+export class RootNavigationModule {}

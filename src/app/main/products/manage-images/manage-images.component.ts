@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 import { IStockItems, IPhotos, Photos } from '@eps/models';
-import { AccountService, StockItemsService, PhotosService } from '@eps/services';
-import { ITEMS_PER_PAGE } from '@eps/constants';
+import { StockItemsService, PhotosService } from '@eps/services';
+import { AccountService } from '@eps/core';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { ImageUtils } from '@eps/services';
 

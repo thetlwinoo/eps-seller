@@ -5,8 +5,8 @@ import { RootConfigService } from '@eps/services';
 import { rootAnimations } from '@eps/animations';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { LoginService } from '@eps/services/core/login/login.service';
-import { StateStorageService } from '@eps/services/core/auth/state-storage.service';
+import { LoginService } from '@eps/core/login/login.service';
+import { StateStorageService } from '@eps/core/auth/state-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -74,40 +74,38 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   login(): void {
-    this.loginService
-      .login({
-        username: this.loginForm.get('username').value,
-        password: this.loginForm.get('password').value,
-        rememberMe: this.loginForm.get('rememberMe').value,
-      })
-      .subscribe(
-        () => {
-          this.authenticationError = false;
-          // this.activeModal.dismiss('login success');
-          if (
-            this.router.url === '/account/register' ||
-            this.router.url.startsWith('/account/activate') ||
-            this.router.url.startsWith('/account/reset/')
-          ) {
-            this.router.navigate(['']);
-          }
-
-          this.eventManager.broadcast({
-            name: 'authenticationSuccess',
-            content: 'Sending Authentication Success',
-          });
-
-          // previousState was set in the authExpiredInterceptor before being redirected to login modal.
-          // since login is successful, go to stored previousState and clear previousState
-          const redirect = this.stateStorageService.getUrl();
-          if (redirect) {
-            this.stateStorageService.storeUrl(null);
-            this.router.navigateByUrl(redirect);
-          } else {
-            this.router.navigate(['']);
-          }
-        },
-        () => (this.authenticationError = true)
-      );
+    // this.loginService
+    //   .login({
+    //     username: this.loginForm.get('username').value,
+    //     password: this.loginForm.get('password').value,
+    //     rememberMe: this.loginForm.get('rememberMe').value,
+    //   })
+    //   .subscribe(
+    //     () => {
+    //       this.authenticationError = false;
+    //       // this.activeModal.dismiss('login success');
+    //       if (
+    //         this.router.url === '/account/register' ||
+    //         this.router.url.startsWith('/account/activate') ||
+    //         this.router.url.startsWith('/account/reset/')
+    //       ) {
+    //         this.router.navigate(['']);
+    //       }
+    //       this.eventManager.broadcast({
+    //         name: 'authenticationSuccess',
+    //         content: 'Sending Authentication Success',
+    //       });
+    //       // previousState was set in the authExpiredInterceptor before being redirected to login modal.
+    //       // since login is successful, go to stored previousState and clear previousState
+    //       const redirect = this.stateStorageService.getUrl();
+    //       if (redirect) {
+    //         this.stateStorageService.storeUrl(null);
+    //         this.router.navigateByUrl(redirect);
+    //       } else {
+    //         this.router.navigate(['']);
+    //       }
+    //     },
+    //     () => (this.authenticationError = true)
+    //   );
   }
 }

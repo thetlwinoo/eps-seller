@@ -4,12 +4,12 @@ import { BreadcrumbService } from './breadcrumb.service';
 
 @Injectable()
 export class BreadcrumbGuard implements CanActivate {
-    routeParams = '';
-    constructor(private service: BreadcrumbService) { }
+  routeParams = '';
+  constructor(private service: BreadcrumbService) {}
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const crumbs = route.data['crumbs'];   
-        this.service.setCrumbs(crumbs);
-        return true;
-    }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const crumbs = route.data.crumbs;
+    this.service.setCrumbs(crumbs);
+    return true;
+  }
 }

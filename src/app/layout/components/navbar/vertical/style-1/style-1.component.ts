@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { RootConfigService } from '@eps/services';
 import { Subject } from 'rxjs';
-import { AccountService } from '@eps/services/core';
+import { AccountService } from '@eps/core';
 import { takeUntil, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromAuth from 'app/ngrx/auth/reducers';
 import { SupplierActions } from 'app/ngrx/auth/actions';
-import { Account } from '@eps/services/core/user/account.model';
+import { Account } from '@eps/core/user/account.model';
 
 @Component({
   selector: 'navbar-vertical-style-1',

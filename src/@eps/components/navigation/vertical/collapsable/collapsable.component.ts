@@ -8,261 +8,157 @@ import { rootAnimations } from '@eps/animations';
 import { RootNavigationService } from '@eps/components/navigation/navigation.service';
 
 @Component({
-    selector   : 'root-nav-vertical-collapsable',
-    templateUrl: './collapsable.component.html',
-    styleUrls  : ['./collapsable.component.scss'],
-    animations : rootAnimations
+  selector: 'root-nav-vertical-collapsable',
+  templateUrl: './collapsable.component.html',
+  styleUrls: ['./collapsable.component.scss'],
+  animations: rootAnimations,
 })
-export class RootNavVerticalCollapsableComponent implements OnInit, OnDestroy
-{
-    @Input()
-    item: RootNavigationItem;
+export class RootNavVerticalCollapsableComponent implements OnInit, OnDestroy {
+  @Input()
+  item: RootNavigationItem;
 
-    @HostBinding('class')
-    classes = 'nav-collapsable nav-item';
+  @HostBinding('class')
+  classes = 'nav-collapsable nav-item';
 
-    @HostBinding('class.open')
-    public isOpen = false;
+  @HostBinding('class.open')
+  public isOpen = false;
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any>;
 
-    /**
-     * Constructor
-     *
-     * @param {ChangeDetectorRef} _changeDetectorRef
-     * @param {RootNavigationService} _rootNavigationService
-     * @param {Router} _router
-     */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _rootNavigationService: RootNavigationService,
-        private _router: Router
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _rootNavigationService: RootNavigationService,
+    private _router: Router
+  ) {
+    // Set the private defaults
+    this._unsubscribeAll = new Subject();
+  }
+
+  ngOnInit(): void {
+    this._router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this._unsubscribeAll)
+      )
+      .subscribe((event: NavigationEnd) => {
+        if (this.isUrlInChildren(this.item, event.urlAfterRedirects)) {
+          this.expand();
+        } else {
+          this.collapse();
+        }
+      });
+
+    this._rootNavigationService.onItemCollapsed.pipe(takeUntil(this._unsubscribeAll)).subscribe(clickedItem => {
+      if (clickedItem && clickedItem.children) {
+        if (this.isChildrenOf(this.item, clickedItem)) {
+          return;
+        }
+
+        if (this.isUrlInChildren(this.item, this._router.url)) {
+          return;
+        }
+
+        if (this.item !== clickedItem) {
+          this.collapse();
+        }
+      }
+    });
+
+    if (this.isUrlInChildren(this.item, this._router.url)) {
+      this.expand();
+    } else {
+      this.collapse();
+    }
+
+    merge(
+      this._rootNavigationService.onNavigationItemAdded,
+      this._rootNavigationService.onNavigationItemUpdated,
+      this._rootNavigationService.onNavigationItemRemoved
     )
-    {
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Listen for router events
-        this._router.events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                takeUntil(this._unsubscribeAll)
-            )
-            .subscribe((event: NavigationEnd) => {
-
-                // Check if the url can be found in
-                // one of the children of this item
-                if ( this.isUrlInChildren(this.item, event.urlAfterRedirects) )
-                {
-                    this.expand();
-                }
-                else
-                {
-                    this.collapse();
-                }
-            });
-
-        // Listen for collapsing of any navigation item
-        this._rootNavigationService.onItemCollapsed
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(
-                (clickedItem) => {
-                    if ( clickedItem && clickedItem.children )
-                    {
-                        // Check if the clicked item is one
-                        // of the children of this item
-                        if ( this.isChildrenOf(this.item, clickedItem) )
-                        {
-                            return;
-                        }
-
-                        // Check if the url can be found in
-                        // one of the children of this item
-                        if ( this.isUrlInChildren(this.item, this._router.url) )
-                        {
-                            return;
-                        }
-
-                        // If the clicked item is not this item, collapse...
-                        if ( this.item !== clickedItem )
-                        {
-                            this.collapse();
-                        }
-                    }
-                }
-            );
-
-        // Check if the url can be found in
-        // one of the children of this item
-        if ( this.isUrlInChildren(this.item, this._router.url) )
-        {
-            this.expand();
-        }
-        else
-        {
-            this.collapse();
-        }
-
-        // Subscribe to navigation item
-        merge(
-            this._rootNavigationService.onNavigationItemAdded,
-            this._rootNavigationService.onNavigationItemUpdated,
-            this._rootNavigationService.onNavigationItemRemoved
-        ).pipe(takeUntil(this._unsubscribeAll))
-         .subscribe(() => {
-
-             // Mark for check
-             this._changeDetectorRef.markForCheck();
-         });
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Toggle collapse
-     *
-     * @param ev
-     */
-    toggleOpen(ev): void
-    {
-        ev.preventDefault();
-
-        this.isOpen = !this.isOpen;
-
-        // Navigation collapse toggled...
-        this._rootNavigationService.onItemCollapsed.next(this.item);
-        this._rootNavigationService.onItemCollapseToggled.next();
-    }
-
-    /**
-     * Expand the collapsable navigation
-     */
-    expand(): void
-    {
-        if ( this.isOpen )
-        {
-            return;
-        }
-
-        this.isOpen = true;
-
-        // Mark for check
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(() => {
         this._changeDetectorRef.markForCheck();
+      });
+  }
 
-        this._rootNavigationService.onItemCollapseToggled.next();
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+
+  toggleOpen(ev): void {
+    ev.preventDefault();
+
+    this.isOpen = !this.isOpen;
+    this._rootNavigationService.onItemCollapsed.next(this.item);
+    this._rootNavigationService.onItemCollapseToggled.next();
+  }
+
+  expand(): void {
+    if (this.isOpen) {
+      return;
     }
 
-    /**
-     * Collapse the collapsable navigation
-     */
-    collapse(): void
-    {
-        if ( !this.isOpen )
-        {
-            return;
-        }
+    this.isOpen = true;
 
-        this.isOpen = false;
+    this._changeDetectorRef.markForCheck();
 
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
+    this._rootNavigationService.onItemCollapseToggled.next();
+  }
 
-        this._rootNavigationService.onItemCollapseToggled.next();
+  collapse(): void {
+    if (!this.isOpen) {
+      return;
     }
 
-    /**
-     * Check if the given parent has the
-     * given item in one of its children
-     *
-     * @param parent
-     * @param item
-     * @returns {boolean}
-     */
-    isChildrenOf(parent, item): boolean
-    {
-        const children = parent.children;
+    this.isOpen = false;
 
-        if ( !children )
-        {
-            return false;
-        }
+    this._changeDetectorRef.markForCheck();
 
-        if ( children.indexOf(item) > -1 )
-        {
-            return true;
-        }
+    this._rootNavigationService.onItemCollapseToggled.next();
+  }
 
-        for ( const child of children )
-        {
-            if ( child.children )
-            {
-                if ( this.isChildrenOf(child, item) )
-                {
-                    return true;
-                }
-            }
-        }
+  isChildrenOf(parent, item): boolean {
+    const children = parent.children;
 
-        return false;
+    if (!children) {
+      return false;
     }
 
-    /**
-     * Check if the given url can be found
-     * in one of the given parent's children
-     *
-     * @param parent
-     * @param url
-     * @returns {boolean}
-     */
-    isUrlInChildren(parent, url): boolean
-    {
-        const children = parent.children;
-
-        if ( !children )
-        {
-            return false;
-        }
-
-        for ( const child of children )
-        {
-            if ( child.children )
-            {
-                if ( this.isUrlInChildren(child, url) )
-                {
-                    return true;
-                }
-            }
-
-            if ( child.url === url || url.includes(child.url) )
-            {
-                return true;
-            }
-        }
-
-        return false;
+    if (children.indexOf(item) > -1) {
+      return true;
     }
 
+    for (const child of children) {
+      if (child.children) {
+        if (this.isChildrenOf(child, item)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  isUrlInChildren(parent, url): boolean {
+    const children = parent.children;
+
+    if (!children) {
+      return false;
+    }
+
+    for (const child of children) {
+      if (child.children) {
+        if (this.isUrlInChildren(child, url)) {
+          return true;
+        }
+      }
+
+      if (child.url === url || url.includes(child.url)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

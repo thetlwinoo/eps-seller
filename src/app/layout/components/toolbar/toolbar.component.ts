@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router } from '@angular/router';
 // import { TranslateService } from '@ngx-translate/core';
-import { LoginModalService, AccountService, LoginService } from '@eps/services/core';
+import { AccountService, LoginService } from '@eps/core';
 import { Observable, Subscription } from 'rxjs';
-import { Account } from '@eps/services/core/user/account.model';
+import { Account } from '@eps/core/user/account.model';
 // import { Store, select } from '@ngrx/store';
 import { RootConfigService } from '@eps/services';
 // import { RootSidebarService } from '@eps/components/sidebar/sidebar.service';
@@ -46,7 +46,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private loginService: LoginService,
     private router: Router,
-    private loginModalService: LoginModalService,
+    // private loginModalService: LoginModalService,
     private eventManager: JhiEventManager,
     private platform: Platform
   ) {
