@@ -14,15 +14,16 @@ import * as moment from 'moment';
 import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateMomentAdapter } from '@eps/utils/datepicker-adapter';
 
+import { HttpRequestInterceptor } from '@eps/blocks/interceptor/http-request.interceptor';
 import { AuthExpiredInterceptor } from '@eps/blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from '@eps/blocks/interceptor/errorhandler.interceptor';
 import { NotificationInterceptor } from '@eps/blocks/interceptor/notification.interceptor';
 
 import { fontAwesomeIcons } from './icons/font-awesome-icons';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/en/', '.json');
-}
+// export function createTranslateLoader(http: HttpClient) {
+//   return new TranslateHttpLoader(http, './assets/i18n/en/', '.json');
+// }
 
 @NgModule({
   imports: [
@@ -36,18 +37,19 @@ export function createTranslateLoader(http: HttpClient) {
       i18nEnabled: true,
       defaultI18nLang: 'en',
     }),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-      missingTranslationHandler: {
-        provide: MissingTranslationHandler,
-        useFactory: missingTranslationHandler,
-        deps: [JhiConfigService],
-      },
-    }),
+    TranslateModule.forRoot()
+    // TranslateModule.forRoot({
+    //   loader: {
+    //     provide: TranslateLoader,
+    //     useFactory: translatePartialLoader,
+    //     deps: [HttpClient],
+    //   },
+    //   missingTranslationHandler: {
+    //     provide: MissingTranslationHandler,
+    //     useFactory: missingTranslationHandler,
+    //     deps: [JhiConfigService],
+    //   },
+    // }),
   ],
   providers: [
     Title,
@@ -57,6 +59,11 @@ export function createTranslateLoader(http: HttpClient) {
     },
     { provide: NgbDateAdapter, useClass: NgbDateMomentAdapter },
     DatePipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpRequestInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthExpiredInterceptor,

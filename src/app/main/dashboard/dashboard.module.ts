@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { RootSharedModule } from '@eps/shared.module';
-import { UserRouteAccessService } from '@eps/core';
 import { BreadcrumbGuard } from '@eps/services';
 import { DashboardComponent } from './dashboard.component';
 
@@ -20,7 +19,7 @@ const routes = [
       authorities: ['ROLE_USER'],
       pageTitle: 'DASHBOARD.TITLE',
     },
-    canActivate: [UserRouteAccessService, BreadcrumbGuard],
+    canActivate: [BreadcrumbGuard],
   },
 ];
 

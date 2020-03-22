@@ -73,7 +73,7 @@ const routes = [
       authorities: ['ROLE_USER'],
       pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService],
+    // canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/:id/edit',
@@ -85,7 +85,7 @@ const routes = [
       authorities: ['ROLE_USER'],
       pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService],
+    // canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/:id',
@@ -97,7 +97,7 @@ const routes = [
       authorities: ['ROLE_USER'],
       pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService],
+    // canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-products/:id/:handle',
@@ -109,7 +109,7 @@ const routes = [
       authorities: ['ROLE_USER'],
       pageTitle: 'PRODUCTS.TITLE',
     },
-    canActivate: [UserRouteAccessService],
+    // canActivate: [UserRouteAccessService],
   },
   {
     path: 'manage-images',
@@ -122,7 +122,7 @@ const routes = [
       defaultSort: 'id,asc',
       pageTitle: 'resourceApp.products.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    // canActivate: [UserRouteAccessService],
   },
 ];
 

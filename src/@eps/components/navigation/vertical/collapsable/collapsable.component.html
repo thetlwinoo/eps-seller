@@ -1,6 +1,6 @@
 <ng-container *ngIf="!item.hidden">
     <clr-vertical-nav-group routerLinkActive="active">
-        <clr-icon shape="user" clrVerticalNavIcon></clr-icon>
+        <clr-icon [attr.shape]="item.icon" clrVerticalNavIcon *ngIf="item.icon"></clr-icon>
         <span class="hint-text" [translate]="item.translate">{{ item.title }}</span>
         <clr-vertical-nav-group-children *clrIfExpanded="true">
             <ng-container *ngFor="let item of item.children">

@@ -58,7 +58,6 @@ import { NgrxProductsModule } from 'app/ngrx/products';
     NgrxAuthModule,
     NgrxProductsModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,3 +1,17 @@
-.content-area{
-    padding-bottom: 0 !important;
+:host {
+    .content-area {
+        padding-bottom: 0 !important;
+    }
+
+    .branding {
+        >a {
+            >img {
+                width: 48px;
+            }
+
+            >.title {
+                text-transform: uppercase;
+            }
+        }
+    }
 }

@@ -29,7 +29,7 @@ export class AppComponent {
     private _translateService: TranslateService,
     private _rootTranslationLoaderService: RootTranslationLoaderService,
     private _platform: Platform,
-    private router: Router
+    private router: Router,
   ) {
     this.navigation = navigation;
     this._rootNavigationService.register('main', this.navigation);

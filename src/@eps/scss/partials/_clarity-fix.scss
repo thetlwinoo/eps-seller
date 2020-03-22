@@ -1,0 +1,17 @@
+.clr-vertical-nav .nav-content>.nav-group>.group-items>.nav-item>.nav-link {
+    flex: 0 0 1.5rem;
+}
+
+.main-container:not([class*=open-overflow-menu]):not([class*=open-hamburger-menu]) .clr-vertical-nav.is-collapsed .group-title {
+    display: none;
+}
+
+.main-container:not([class*=open-overflow-menu]):not([class*=open-hamburger-menu]) .clr-vertical-nav.is-collapsed {
+    .group-title {
+        display: none;
+    }
+
+    .nav-link-title.item-title {
+        display: none;
+    }
+}

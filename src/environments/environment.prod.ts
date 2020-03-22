@@ -1,8 +1,7 @@
 export const environment = {
   production: true,
   serverApi: {
-    baseUrl: 'https://system.zezawar.com/',
-    url: 'http://localhost:8080',
+    url: 'https://system.zezawar.com/',
   },
   client: {
     baseUrl: 'https://seller.zezawar.com/',

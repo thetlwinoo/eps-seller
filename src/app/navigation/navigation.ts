@@ -5,14 +5,14 @@ export const navigation: RootNavigation[] = [
     id: 'inventory',
     title: 'Inventory',
     translate: 'NAV.INVENTORY',
-    type: 'group',
+    type: 'group',    
     children: [
       {
         id: 'products',
         title: 'Products',
         translate: 'NAV.PRODUCTS.TITLE',
         type: 'collapsable',
-        icon: 'library_books',
+        icon: 'shopping-bag',
         children: [
           {
             id: 'manage-products',
@@ -42,7 +42,7 @@ export const navigation: RootNavigation[] = [
         title: 'Orders',
         translate: 'NAV.ORDERS.TITLE',
         type: 'collapsable',
-        icon: 'reorder',
+        icon: 'truck',
         children: [
           {
             id: 'manage-orders',
@@ -72,7 +72,7 @@ export const navigation: RootNavigation[] = [
         title: 'Promotions',
         translate: 'NAV.PROMOTIONS.TITLE',
         type: 'collapsable',
-        icon: 'speaker_group',
+        icon: 'shopping-bag',
         children: [
           {
             id: 'campaign-management',
@@ -118,7 +118,7 @@ export const navigation: RootNavigation[] = [
         title: 'Finance',
         translate: 'NAV.FINANCE.TITLE',
         type: 'collapsable',
-        icon: 'bar_chart',
+        icon: 'bank',
         children: [
           {
             id: 'account-statements',
