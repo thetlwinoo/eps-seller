@@ -1,0 +1,9 @@
+--------------------------------------
+Docker
+--------------------------------------
+docker build -f Dockerfile . -t eps-seller
+
+docker image tag eps-seller thetlwinoo/eps-seller
+
+docker image push thetlwinoo/eps-seller
+--------------------------------------
