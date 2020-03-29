@@ -77,7 +77,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "eps-seller:build",
-            // "proxyConfig": "src/proxy.conf.js"
+            "proxyConfig": "src/proxy.conf.js"
           },
           "configurations": {
             "production": {
