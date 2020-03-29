@@ -16,10 +16,10 @@ type EntityArrayResponseType = HttpResponse<IProducts[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
-    public resourceUrl = SERVER_API_URL + 'api/products';
-    public extendUrl = SERVER_API_URL + 'api/products-extend';
-    public uploadUrl = SERVER_API_URL + 'api/excelupload';
-    public importUrl = SERVER_API_URL + 'api/importtosystem';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/products';
+    public extendUrl = SERVER_API_URL + 'services/zezawar/api/products-extend';
+    public uploadUrl = SERVER_API_URL + 'services/zezawar/api/excelupload';
+    public importUrl = SERVER_API_URL + 'services/zezawar/api/importtosystem';
 
     constructor(
         protected http: HttpClient,
@@ -118,7 +118,7 @@ export class ProductsService {
     //                         map((res: HttpResponse<IStockItems>) => res.body)
     //                     )
     //                     .subscribe(stockItemSuccess => {
-    //                         stockItemSuccess.thumbnailUrl = SERVER_API_URL + 'api/photos-extend?stockitem=' + stockItemSuccess.id;
+    //                         stockItemSuccess.thumbnailUrl = SERVER_API_URL + 'services/zezawar/api/photos-extend?stockitem=' + stockItemSuccess.id;
     //                         console.log('stockItem done', stockItemSuccess);
     //                         this.stockItemsService.update(stockItemSuccess).pipe(
     //                             filter((res: HttpResponse<IStockItems>) => res.ok),

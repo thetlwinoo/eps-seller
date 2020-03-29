@@ -11,8 +11,8 @@ type EntityArrayResponseType = HttpResponse<IMerchants[]>;
 
 @Injectable({ providedIn: 'root' })
 export class MerchantsService {
-    public resourceUrl = SERVER_API_URL + 'api/merchants';
-    public extendUrl = SERVER_API_URL + 'api/merchants-extend';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/merchants';
+    public extendUrl = SERVER_API_URL + 'services/zezawar/api/merchants-extend';
 
     constructor(protected http: HttpClient) {}
 

@@ -11,7 +11,7 @@ type EntityArrayResponseType = HttpResponse<IProductModel[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProductModelService {
-    public resourceUrl = SERVER_API_URL + 'api/product-models';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/product-models';
 
     constructor(protected http: HttpClient) { }
 

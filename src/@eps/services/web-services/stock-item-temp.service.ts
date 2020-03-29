@@ -13,8 +13,8 @@ type EntityArrayResponseType = HttpResponse<IStockItemTemp[]>;
 
 @Injectable({ providedIn: 'root' })
 export class StockItemTempService {
-    public resourceUrl = SERVER_API_URL + 'api/stock-item-temps';
-    public extendUrl = SERVER_API_URL + 'api/stock-item-temp-extend';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/stock-item-temps';
+    public extendUrl = SERVER_API_URL + 'services/zezawar/api/stock-item-temp-extend';
 
     constructor(protected http: HttpClient) { }
 

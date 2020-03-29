@@ -11,8 +11,8 @@ type EntityArrayResponseType = HttpResponse<IPhotos[]>;
 
 @Injectable({ providedIn: 'root' })
 export class PhotosService {
-  public resourceUrl = SERVER_API_URL + 'api/photos';
-  public extendUrl = SERVER_API_URL + 'api/photos-extend';
+  public resourceUrl = SERVER_API_URL + 'services/zezawar/api/photos';
+  public extendUrl = SERVER_API_URL + 'services/zezawar/api/photos-extend';
 
   constructor(protected http: HttpClient) {}
 

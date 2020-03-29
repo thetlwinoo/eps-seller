@@ -11,8 +11,8 @@ type EntityArrayResponseType = HttpResponse<IProductAttribute[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProductAttributeService {
-    public resourceUrl = SERVER_API_URL + 'api/product-attributes';
-    public extendUrl = SERVER_API_URL + 'api/product-attribute-extend';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/product-attributes';
+    public extendUrl = SERVER_API_URL + 'services/zezawar/api/product-attribute-extend';
 
     constructor(protected http: HttpClient) { }
 

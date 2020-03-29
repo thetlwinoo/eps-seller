@@ -11,7 +11,7 @@ type EntityArrayResponseType = HttpResponse<IWarrantyTypes[]>;
 
 @Injectable({ providedIn: 'root' })
 export class WarrantyTypesService {
-    public resourceUrl = SERVER_API_URL + 'api/warranty-types';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/warranty-types';
 
     constructor(protected http: HttpClient) {}
 

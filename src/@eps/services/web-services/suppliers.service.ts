@@ -13,8 +13,8 @@ type EntityArrayResponseType = HttpResponse<ISuppliers[]>;
 
 @Injectable({ providedIn: 'root' })
 export class SuppliersService {
-    public resourceUrl = SERVER_API_URL + 'api/suppliers';
-    public extendUrl = SERVER_API_URL + 'api/suppliers-extend';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/suppliers';
+    public extendUrl = SERVER_API_URL + 'services/zezawar/api/suppliers-extend';
     
     constructor(protected http: HttpClient) {}
 

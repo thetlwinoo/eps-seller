@@ -12,8 +12,8 @@ type EntityArrayResponseType = HttpResponse<IUploadTransactions[]>;
 
 @Injectable({ providedIn: 'root' })
 export class UploadTransactionsService {
-    public resourceUrl = SERVER_API_URL + 'api/upload-transactions';
-    public extendUrl = SERVER_API_URL + 'api/upload-transactions-extend';
+    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/upload-transactions';
+    public extendUrl = SERVER_API_URL + 'services/zezawar/api/upload-transactions-extend';
 
     constructor(protected http: HttpClient) { }
 
