@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
-import { AccountService, LoginService } from '@eps/core';
+import { AccountService, AuthService } from '@eps/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private _platform: Platform,
     private accountService: AccountService,
-    private loginService: LoginService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.loginService.logout();
-    this.router.navigate(['/pages/auth/login']);
+    this.authService.logout();    
   }
 }

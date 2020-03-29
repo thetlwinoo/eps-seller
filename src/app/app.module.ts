@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, DoBootstrap, ApplicationRef, APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,11 +24,17 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { NgrxAuthModule } from 'app/ngrx/auth';
 import { NgrxProductsModule } from 'app/ngrx/products';
 
+import { environment } from '../environments/environment';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+let keycloakService: KeycloakService = new KeycloakService();
+// import { initializer } from '@eps/utils/app-init';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    KeycloakAngularModule,
     LayoutModule,
     BrowserAnimationsModule,
     RootModule.forRoot(rootConfig),
@@ -58,6 +64,41 @@ import { NgrxProductsModule } from 'app/ngrx/products';
     NgrxAuthModule,
     NgrxProductsModule,
   ],
-  bootstrap: [AppComponent],
+  providers: [
+    {
+      provide: KeycloakService,
+      useValue: keycloakService
+    }
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: initializer,
+    //   multi: true,
+    //   deps: [KeycloakService]
+    // }
+  ],
+  // bootstrap: [AppComponent],
+  entryComponents: [AppComponent],
 })
-export class AppModule {}
+export class AppModule implements DoBootstrap {
+  async ngDoBootstrap(appRef: ApplicationRef) {
+
+    const { keycloak } = environment;
+
+    await keycloakService
+      .init({
+        config: keycloak,
+        initOptions: {
+          // onLoad: 'login-required',
+          checkLoginIframe: false
+        },
+        enableBearerInterceptor: true,
+        bearerExcludedUrls: ['/assets', '/clients/public']
+      })
+      .then(() => {
+        console.log('[ngDoBootstrap] bootstrap app');
+
+        appRef.bootstrap(AppComponent);
+      })
+      .catch(error => console.error('[ngDoBootstrap] init Keycloak failed', error));
+  }
+}

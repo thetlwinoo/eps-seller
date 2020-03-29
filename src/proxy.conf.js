@@ -11,7 +11,7 @@ const PROXY_CONFIG = [
             '/login',
             '/auth'
         ],
-        target: "http://localhost:8080",
+        target: "http://localhost:8180",
         secure: false,
         changeOrigin: false
     }

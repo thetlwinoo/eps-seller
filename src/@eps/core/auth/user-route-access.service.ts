@@ -3,31 +3,26 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AccountService } from '@eps/core/auth/account.service';
-import { LoginService } from '@eps/core/login/login.service';
+import { AccountService, AuthService } from '@eps/core';
 import { StateStorageService } from './state-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserRouteAccessService implements CanActivate {
   constructor(
     private router: Router,
-    private loginService: LoginService,
+    private authService: AuthService,
     private accountService: AccountService,
     private stateStorageService: StateStorageService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const authorities = route.data.authorities;
-    // We need to call the checkLogin / and so the accountService.identity() function, to ensure,
-    // that the client has a principal too, if they already logged in by the server.
-    // This could happen on a page refresh.
     return this.checkLogin(authorities, state.url);
   }
 
   checkLogin(authorities: string[], url: string): Observable<boolean> {
     return this.accountService.identity().pipe(
-      map(account => {
-        console.log('account',account)
+      map(account => {        
         if (!authorities || authorities.length === 0) {
           return true;
         }
@@ -45,7 +40,7 @@ export class UserRouteAccessService implements CanActivate {
         }
 
         this.stateStorageService.storeUrl(url);
-        this.loginService.login();
+        this.authService.login();
         return false;
       })
     );

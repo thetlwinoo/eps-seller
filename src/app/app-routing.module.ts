@@ -6,10 +6,6 @@ import { OktaCallbackComponent } from '@okta/okta-angular';
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
-    path: 'implicit/callback',
-    component: OktaCallbackComponent
-  },
-  {
     path: 'dashboard',    
     loadChildren: () => import('./main/dashboard/dashboard.module').then(m => m.DashboardModule),
   },

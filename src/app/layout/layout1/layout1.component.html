@@ -19,16 +19,17 @@
                     class="nav-text">Dashboard</span></a>
         </div>
 
-        <div class="header-actions">
+        <div class="header-actions" *ngSwitchCase="true">
             <clr-dropdown>
-                <button class="nav-icon" clrDropdownTrigger aria-label="toggle settings menu">
-                    <clr-icon shape="user"></clr-icon>
+                <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
+                    <!-- <clr-icon shape="user"></clr-icon> -->
+                    {{account.login | titlecase}}
                     <clr-icon shape="caret down"></clr-icon>
                 </button>
                 <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
                     <a href="javascript:void(0)" clrDropdownItem>About</a>
                     <a href="javascript:void(0)" clrDropdownItem>Preferences</a>
-                    <a href="javascript:void(0)" clrDropdownItem (click)="logout()" *ngSwitchCase="true">Log out</a>
+                    <a href="javascript:void(0)" clrDropdownItem (click)="logout()">Log out</a>
                 </clr-dropdown-menu>
             </clr-dropdown>
         </div>

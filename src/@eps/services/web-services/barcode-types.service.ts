@@ -11,7 +11,7 @@ type EntityArrayResponseType = HttpResponse<IBarcodeTypes[]>;
 
 @Injectable({ providedIn: 'root' })
 export class BarcodeTypesService {
-  public resourceUrl = SERVER_API_URL + 'api/barcode-types';
+  public resourceUrl = SERVER_API_URL + 'services/zezawar/api/barcode-types';
 
   constructor(protected http: HttpClient) {}
 

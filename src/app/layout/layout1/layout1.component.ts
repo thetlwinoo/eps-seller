@@ -3,10 +3,11 @@ import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RootConfigService } from '@eps/services';
 import { Platform } from '@angular/cdk/platform';
-import { AccountService, LoginService } from '@eps/core';
+import { AccountService, AuthService } from '@eps/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbService } from '@eps/services';
+import { Account } from '@eps/core/user/account.model';
 
 @Component({
   selector: 'app-layout1',
@@ -18,13 +19,14 @@ export class Layout1Component implements OnInit, OnDestroy {
   home: MenuItem;
   rootConfig: any;
   pageTitle: string;
+  account: Account;
   private _unsubscribeAll: Subject<any>;
 
   constructor(
     private _rootConfigService: RootConfigService,
     private _platform: Platform,
     private accountService: AccountService,
-    private loginService: LoginService,
+    private authService: AuthService,
     private router: Router,
     private breadcrumb: BreadcrumbService
   ) {
@@ -38,6 +40,8 @@ export class Layout1Component implements OnInit, OnDestroy {
 
     this.crumbs$ = this.breadcrumb.crumbs$;
     this.home = { icon: 'pi pi-home', routerLink: ['/home'] };
+
+    this.accountService.identity().subscribe(account => (this.account = account));
   }
 
   isAuthenticated(): boolean {
@@ -45,8 +49,8 @@ export class Layout1Component implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.loginService.logout();
-    this.router.navigate(['/pages/auth/login']);
+    this.authService.logout();
+    // this.router.navigate(['/pages/auth/login']);
   }
 
   ngOnDestroy(): void {
