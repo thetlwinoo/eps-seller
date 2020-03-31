@@ -26,6 +26,7 @@ import { CategoryActions } from 'app/ngrx/products/actions';
 import { InformationFormComponent } from './products-update/information-form/information-form.component';
 import { StockItemsFilterPipe } from './filters/stock-items-filter.pipe';
 import { PhotoItemComponent } from './manage-images/photo-item/photo-item.component';
+import { DocumentProcessService } from '@eps/services';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsResolve implements Resolve<IProducts> {
@@ -140,5 +141,6 @@ const routes = [
     PhotoItemComponent,
   ],
   imports: [CommonModule, RootSharedModule, RouterModule.forChild(routes)],
+  providers: [DocumentProcessService],
 })
 export class ProductsModule {}

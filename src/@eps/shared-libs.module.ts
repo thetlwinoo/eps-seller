@@ -23,6 +23,7 @@ import { RootDirectivesModule } from '@eps/directives/directives';
 import { ClarityModule } from '@clr/angular';
 import { RootPipesModule } from '@eps/pipes';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgPipesModule } from 'ngx-pipes';
 
 @NgModule({
   exports: [
@@ -49,6 +50,7 @@ import { TranslateModule } from '@ngx-translate/core';
     FlexLayoutModule,
     RootDirectivesModule,
     TranslateModule,
+    NgPipesModule,
   ],
   providers: [],
 })

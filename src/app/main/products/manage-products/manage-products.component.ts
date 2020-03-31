@@ -2,14 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, debounceTime, tap } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IStockItems, IStockItemTemp, IUploadTransactions } from '@eps/models';
+import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel, IUploadExcel } from '@eps/models';
 import { StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@eps/services';
 import { AccountService } from '@eps/core';
 import { ITEMS_PER_PAGE } from '@eps/constants';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { RootAlertService } from '@eps/components/alert/alert.service';
+import { DocumentProcessService } from '@eps/services';
 
 @Component({
   selector: 'app-manage-products',
@@ -43,12 +44,16 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   total = 0;
   stockItemTempLinks: any;
   loading = true;
-  loadingStockItemTemp = true;
+  loadingUploadExcel = false;
   loadingUploadTransactions = true;
 
   countObj: any;
 
   filterType = 0;
+  uploadExcelArray: string[];
+  uploadData$: Observable<IUploadExcel[]>;
+  uploadData: IUploadExcel[];
+  selectedRows: UploadExcel[] = [];
 
   constructor(
     protected stockItemsService: StockItemsService,
@@ -62,7 +67,8 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     protected router: Router,
     protected eventManager: JhiEventManager,
     protected rootAlertService: RootAlertService,
-    protected dataUtils: JhiDataUtils
+    protected dataUtils: JhiDataUtils,
+    protected documentProcessService: DocumentProcessService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -71,6 +77,30 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
       this.reverse = data.pagingParams.ascending;
       this.predicate = data.pagingParams.predicate;
     });
+
+    const uploadExcel = new UploadExcel();
+    this.uploadExcelArray = Object.getOwnPropertyNames(uploadExcel);
+  }
+
+  ngOnInit(): void {
+    this.loadAll();
+    this.loadCount();
+    this.accountService.identity().pipe(
+      map(account => {
+        this.currentAccount = account;
+      })
+    );
+
+    this.uploadData$ = this.documentProcessService.data$.pipe(
+      debounceTime(0),
+      map(data => data),
+      tap(data => {
+        data.map(item => new UploadExcel(item));
+      })
+    );
+
+    this.uploadData$.subscribe(data => (this.uploadData = data));
+    this.registerChangeInStockItems();
   }
 
   loadAll(): void {
@@ -112,6 +142,14 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
         size: 5,
       },
     });
+  }
+
+  onUploadExcelSelectAll(): void {
+    this.selectedRows = this.uploadData;
+  }
+
+  onUploadExcelUnSelectAll(): void {
+    this.selectedRows = [];
   }
 
   onLoadStockItems(state: ClrDatagridStateInterface): void {
@@ -167,17 +205,6 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
       },
     ]);
     this.loadAll();
-  }
-
-  ngOnInit(): void {
-    this.loadAll();
-    this.loadCount();
-    this.accountService.identity().pipe(
-      map(account => {
-        this.currentAccount = account;
-      })
-    );
-    this.registerChangeInStockItems();
   }
 
   confirmDeleteStockItemTemp(id: number): void {
@@ -237,7 +264,9 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
       this.uploadedFiles.push(file);
     }
 
-    this.subscribeToUploadResponse(this.productsService.upload(this.uploadedFiles[0]));
+    // this.subscribeToUploadResponse(this.productsService.upload(this.uploadedFiles[0]));
+    this.documentProcessService.parseExcelFile(this.uploadedFiles[0]);
+    this.loadingUploadExcel = false;
   }
 
   onImportToSystem(event: any): void {
@@ -245,7 +274,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   }
 
   onLoadStockItemTemp(state: ClrDatagridStateInterface): void {
-    this.loadingStockItemTemp = true;
+    this.loadingUploadExcel = true;
     // We convert the filters from an array to a map,
     // because that's what our backend-calling service is expecting
     // let filters: { [prop: string]: any[] } = {};
@@ -259,7 +288,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     if (!this.uploadedTransactionid) {
       this.stockItemTempList = [];
       this.total = 0;
-      this.loadingStockItemTemp = false;
+      this.loadingUploadExcel = false;
       return;
     }
 
@@ -273,9 +302,11 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
         this.stockItemTempList = result.body;
         this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
         this.total = parseInt(result.headers.get('X-Total-Count'), 10);
-        this.loadingStockItemTemp = false;
+        this.loadingUploadExcel = false;
       });
   }
+
+  refreshOnUpload(event): void {}
 
   onLoadUploadTransactions(state: ClrDatagridStateInterface): void {
     this.loadingUploadTransactions = true;
@@ -348,7 +379,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   }
 
   protected onUploadError(err): void {
-    this.loadingStockItemTemp = false;
+    this.loadingUploadExcel = false;
     this.isUploaded = false;
     this.rootAlertService.setMessage('File upload failed', 'danger');
   }

@@ -6,8 +6,8 @@ import { MenuItem } from 'primeng/api';
   providedIn: 'root',
 })
 export class BreadcrumbService {
-  private crumbs: ReplaySubject<MenuItem[]>; // <-- Change to ReplaySubject
   crumbs$: Observable<MenuItem[]>;
+  private crumbs: ReplaySubject<MenuItem[]>; // <-- Change to ReplaySubject
 
   constructor() {
     this.crumbs = new ReplaySubject<MenuItem[]>();

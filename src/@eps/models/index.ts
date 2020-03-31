@@ -21,3 +21,4 @@ export * from './shopping-cart-items.model';
 export * from './supplier-imported-document.model';
 export * from './upload-transactions.model';
 export * from './barcode-types.model';
+export * from './upload-excel.model';

@@ -4,6 +4,7 @@ export * from './common/translation-loader.service';
 export * from './common/breadcrumb.service';
 export * from './common/breadcrumb-guard.service';
 export * from './common/image-util.service';
+export * from './common/document-process.service';
 
 export * from './web-services/merchants.service';
 export * from './web-services/suppliers.service';

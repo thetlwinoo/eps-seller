@@ -51,11 +51,13 @@
     "angular-oauth2-oidc-jwks": "^9.0.0",
     "exif-js": "^2.3.0",
     "express": "^4.17.1",
+    "file-saver": "^2.0.2",
     "keycloak-angular": "^7.2.0",
     "keycloak-js": "^9.0.2",
     "moment": "^2.24.0",
     "ng-jhipster": "^0.12.0",
     "ngx-cookie": "^4.1.2",
+    "ngx-pipes": "^2.7.3",
     "ngx-webstorage": "^4.0.1",
     "perfect-scrollbar": "^1.4.0",
     "pica": "^5.1.0",
@@ -67,6 +69,7 @@
     "tslib": "^1.10.0",
     "web-animations-js": "^2.3.2",
     "webstomp-client": "^1.2.6",
+    "xlsx": "^0.15.6",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

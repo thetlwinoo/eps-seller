@@ -1,6 +1,6 @@
 import { KeycloakConfig } from 'keycloak-angular';
 
-let keycloakConfig: KeycloakConfig = {
+const keycloakConfig: KeycloakConfig = {
   url: 'https://auth.rangoon-tech.com/auth',
   realm: 'jhipster',
   clientId: 'web_app',

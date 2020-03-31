@@ -4,37 +4,24 @@ import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-export class RootMatchMediaService
-{
-    activeMediaQuery: string;
-    onMediaChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
+export class RootMatchMediaService {
+  activeMediaQuery: string;
+  onMediaChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-    constructor(
-        private _mediaObserver: MediaObserver
-    )
-    {
-        this.activeMediaQuery = '';
+  constructor(private _mediaObserver: MediaObserver) {
+    this.activeMediaQuery = '';
 
-        this._init();
+    this._init();
+  }
 
-    }
-    
-    private _init(): void
-    {
-        this._mediaObserver.media$
-            .pipe(
-                debounceTime(500),
-                distinctUntilChanged()
-            )
-            .subscribe((change: MediaChange) => {
-                if ( this.activeMediaQuery !== change.mqAlias )
-                {
-                    this.activeMediaQuery = change.mqAlias;
-                    this.onMediaChange.next(change.mqAlias);
-                }
-            });
-    }
-
+  private _init(): void {
+    this._mediaObserver.media$.pipe(debounceTime(500), distinctUntilChanged()).subscribe((change: MediaChange) => {
+      if (this.activeMediaQuery !== change.mqAlias) {
+        this.activeMediaQuery = change.mqAlias;
+        this.onMediaChange.next(change.mqAlias);
+      }
+    });
+  }
 }

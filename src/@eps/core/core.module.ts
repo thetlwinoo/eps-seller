@@ -1,13 +1,12 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { DatePipe, registerLocaleData } from '@angular/common';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { CookieModule } from 'ngx-cookie';
-import { TranslateModule, TranslateLoader, MissingTranslationHandler } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { NgxWebstorageModule } from 'ngx-webstorage';
-import { NgJhipsterModule, translatePartialLoader, missingTranslationHandler, JhiConfigService, JhiLanguageService } from 'ng-jhipster';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgJhipsterModule, JhiLanguageService } from 'ng-jhipster';
 import locale from '@angular/common/locales/en';
 
 import * as moment from 'moment';
@@ -21,10 +20,6 @@ import { NotificationInterceptor } from '@eps/blocks/interceptor/notification.in
 
 import { fontAwesomeIcons } from './icons/font-awesome-icons';
 
-// export function createTranslateLoader(http: HttpClient) {
-//   return new TranslateHttpLoader(http, './assets/i18n/en/', '.json');
-// }
-
 @NgModule({
   imports: [
     HttpClientModule,
@@ -37,7 +32,7 @@ import { fontAwesomeIcons } from './icons/font-awesome-icons';
       i18nEnabled: true,
       defaultI18nLang: 'en',
     }),
-    TranslateModule.forRoot()
+    TranslateModule.forRoot(),
     // TranslateModule.forRoot({
     //   loader: {
     //     provide: TranslateLoader,
@@ -62,7 +57,7 @@ import { fontAwesomeIcons } from './icons/font-awesome-icons';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,

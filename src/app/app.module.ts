@@ -26,7 +26,7 @@ import { NgrxProductsModule } from 'app/ngrx/products';
 
 import { environment } from '../environments/environment';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-let keycloakService: KeycloakService = new KeycloakService();
+const keycloakService: KeycloakService = new KeycloakService();
 // import { initializer } from '@eps/utils/app-init';
 
 @NgModule({
@@ -67,8 +67,8 @@ let keycloakService: KeycloakService = new KeycloakService();
   providers: [
     {
       provide: KeycloakService,
-      useValue: keycloakService
-    }
+      useValue: keycloakService,
+    },
     // {
     //   provide: APP_INITIALIZER,
     //   useFactory: initializer,
@@ -81,7 +81,6 @@ let keycloakService: KeycloakService = new KeycloakService();
 })
 export class AppModule implements DoBootstrap {
   async ngDoBootstrap(appRef: ApplicationRef) {
-
     const { keycloak } = environment;
 
     await keycloakService
@@ -89,10 +88,10 @@ export class AppModule implements DoBootstrap {
         config: keycloak,
         initOptions: {
           // onLoad: 'login-required',
-          checkLoginIframe: false
+          checkLoginIframe: false,
         },
         enableBearerInterceptor: true,
-        bearerExcludedUrls: ['/assets', '/clients/public']
+        bearerExcludedUrls: ['/assets', '/clients/public'],
       })
       .then(() => {
         console.log('[ngDoBootstrap] bootstrap app');

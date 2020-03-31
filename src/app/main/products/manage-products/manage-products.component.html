@@ -112,50 +112,74 @@
         <clr-tab>
           <button clrTabLink id="import">Import</button>
           <clr-tab-content id="content1" *clrIfActive="true">
+            <clr-select-container class="control-item">
+              <label>Import Mode</label>
+              <select clrSelect name="options" [(ngModel)]="selectedMode">
+                <option value="0">Create New Products</option>
+                <option value="1">Update Products</option>
+                <option value="2">Update Stock</option>
+                <option value="3">Update Price</option>
+              </select>
+            </clr-select-container>
             <div class="import-wrapper">
-              <clr-select-container class="control-item">
-                <label>Import Mode</label>
-                <select clrSelect name="options" [(ngModel)]="selectedMode">
-                  <option value="0">Create New Products</option>
-                  <option value="1">Update Products</option>
-                  <option value="2">Update Stock</option>
-                  <option value="3">Update Price</option>
-                </select>
-              </clr-select-container>
               <clr-button-group class="btn-primary control-item">
-                <clr-button (click)="file.click()">Upload Files</clr-button>
-                <clr-button class="btn btn-success" [disabled]="total <= 0" (click)="onImportToSystem($event)">Import To System</clr-button>
-                <clr-button class="btn btn-warning" [disabled]="total <= 0" (click)="confirmDeleteStockItemTemp(uploadedTransactionid)"
+                <clr-button class="btn btn-sm" (click)="file.click()">Upload Files</clr-button>
+                <clr-button class="btn btn-sm btn-success" [disabled]="!selectedRows.length" (click)="onImportToSystem($event)"
+                  >Import To System</clr-button
+                >
+                <clr-button
+                  class="btn btn-sm btn-warning"
+                  [disabled]="total <= 0"
+                  (click)="confirmDeleteStockItemTemp(uploadedTransactionid)"
                   >Clear</clr-button
                 >
               </clr-button-group>
+              <div class="btn-group">
+                <clr-dropdown>
+                  <button type="button" class="btn btn-sm btn-secondary" clrDropdownTrigger>
+                    Selection Mode
+                    <clr-icon shape="caret down"></clr-icon>
+                  </button>
+                  <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                    <button type="button" (click)="onUploadExcelSelectAll()" clrDropdownItem>Select All</button>
+                    <button type="button" (click)="onUploadExcelUnSelectAll()" clrDropdownItem>Unselect All</button>
+                  </clr-dropdown-menu>
+                </clr-dropdown>
+              </div>
             </div>
             <div>
-              <clr-datagrid (clrDgRefresh)="onLoadStockItemTemp($event)" [clrDgLoading]="loadingStockItemTemp" class="datagrid-compact">
-                <clr-dg-column [clrDgField]="'stockItemName'">Name</clr-dg-column>
-                <clr-dg-column [clrDgField]="'vendorSKU'">SKU</clr-dg-column>
-                <clr-dg-column [clrDgField]="'barcode'">Barcode</clr-dg-column>
-                <clr-dg-column [clrDgField]="'productCategoryName'">Category</clr-dg-column>
-                <clr-dg-column [clrDgField]="'productAttributeValue'">Attribute</clr-dg-column>
-                <clr-dg-column [clrDgField]="'productOptionValue'">Option</clr-dg-column>
-                <clr-dg-column [clrDgField]="'unitPrice'">Unit Price</clr-dg-column>
-                <clr-dg-column [clrDgField]="'remommendedRetailPrice'">Retail Price</clr-dg-column>
-                <clr-dg-column [clrDgField]="'quantityOnHand'">Quantity</clr-dg-column>
+              <clr-datagrid [(clrDgSelected)]="selectedRows" [clrDgRowSelection]="true">
+                <!-- <clr-dg-column [clrDgField]="column" *ngFor="let column of uploadExcelArray">{{ column }}</clr-dg-column> -->
+                <clr-dg-column>Vendor Code</clr-dg-column>
+                <clr-dg-column>Vendor SKU</clr-dg-column>
+                <clr-dg-column>Barcode</clr-dg-column>
+                <clr-dg-column [style.width.px]="300">Item Name</clr-dg-column>
+                <clr-dg-column>Brand Name</clr-dg-column>
+                <clr-dg-column>Product Cateogory</clr-dg-column>
+                <clr-dg-column>Product Sub Category</clr-dg-column>
+                <clr-dg-column>Model Name</clr-dg-column>
+                <clr-dg-column>Model Number</clr-dg-column>
+                <clr-dg-column>Quantity On Hand</clr-dg-column>
+                <clr-dg-column>Selling Price</clr-dg-column>
+                <clr-dg-column>Retail Price</clr-dg-column>
 
-                <clr-dg-row *ngFor="let item of stockItemTempList">
-                  <clr-dg-cell>{{ item.stockItemName }}</clr-dg-cell>
+                <clr-dg-row *clrDgItems="let item of uploadData$ | async" [clrDgItem]="item">
+                  <clr-dg-cell>{{ item.vendorCode }}</clr-dg-cell>
                   <clr-dg-cell>{{ item.vendorSKU }}</clr-dg-cell>
                   <clr-dg-cell>{{ item.barcode }}</clr-dg-cell>
-                  <clr-dg-cell>{{ item.productCategoryName }}</clr-dg-cell>
-                  <clr-dg-cell>{{ item.productAttributeValue }}</clr-dg-cell>
-                  <clr-dg-cell>{{ item.productOptionValue }}</clr-dg-cell>
-                  <clr-dg-cell>{{ item.unitPrice }}</clr-dg-cell>
-                  <clr-dg-cell>{{ item.remommendedRetailPrice }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.itemName }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.brandName }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.productCategory }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.productSubCategory }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.modelName }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.modelNumber }}</clr-dg-cell>
                   <clr-dg-cell>{{ item.quantityOnHand }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.sellingPrice }}</clr-dg-cell>
+                  <clr-dg-cell>{{ item.retailPrice }}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                  <clr-dg-pagination #pagination [clrDgPageSize]="5" [clrDgTotalItems]="total">
+                  <clr-dg-pagination #pagination [clrDgPageSize]="5">
                     <clr-dg-page-size [clrPageSizeOptions]="[5, 10, 20, 50, 100]">Items per page </clr-dg-page-size>
                     {{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }} of {{ pagination.totalItems }} items
                   </clr-dg-pagination>

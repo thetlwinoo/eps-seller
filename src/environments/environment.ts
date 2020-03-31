@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 import { KeycloakConfig } from 'keycloak-angular';
 
-let keycloakConfig: KeycloakConfig = {
+const keycloakConfig: KeycloakConfig = {
   url: 'http://localhost:9080/auth',
   realm: 'jhipster',
   clientId: 'web_app',
@@ -12,7 +12,7 @@ let keycloakConfig: KeycloakConfig = {
 export const environment = {
   production: false,
   keycloak: keycloakConfig,
-  serverApi: {    
+  serverApi: {
     url: 'http://localhost:8180/',
   },
   client: {
