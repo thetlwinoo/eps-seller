@@ -22,6 +22,10 @@ export class DocumentProcessService {
     this.base64Image$ = this.imageSubject.asObservable();
   }
 
+  clearData():void{
+    this.dataSubject.next([]);
+  }
+
   updateData(data: any[]): void {
     this.dataSubject.next(data);
   }
@@ -40,6 +44,7 @@ export class DocumentProcessService {
       /* convert worksheet to json data */
       const jsonData = this.workSheetToExcel(ws);
       // update dataSubject
+      this.clearData();
       this.updateData(jsonData);
     };
 
@@ -62,7 +67,6 @@ export class DocumentProcessService {
 
     fileReader.onload = (event: any): any => {
       const result = event.target.result;
-      console.log(result);
       this.imageSubject.next(result);
     };
 
@@ -81,7 +85,6 @@ export class DocumentProcessService {
 
   private workSheetToExcel(ws: XLSX.WorkSheet): any[] {
     const jsonData = XLSX.utils.sheet_to_json(ws);
-    console.log(jsonData);
     return jsonData;
   }
 }

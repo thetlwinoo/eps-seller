@@ -7,13 +7,17 @@
 </clr-alert>
 <div>
   <h6>Manage Products</h6>
-  <input #file [style.display]="'none'" type="file" id="file" accept=".xls,.xlsx,.csv,.json" (change)="onUpload($event)" hidden />
+  <!-- <input #file [style.display]="'none'" type="file" id="file" accept=".xls,.xlsx,.csv,.json" (change)="onUpload($event)"
+    hidden /> -->
   <div class="products-controller">
     <div class="btn-group">
       <button type="button" class="btn btn-sm btn-secondary" [routerLink]="'/products/manage-products/new'">
         <clr-icon shape="plus"></clr-icon> Add New
       </button>
-      <button type="button" class="btn btn-sm btn-secondary" (click)="showImportModal = true">
+      <!-- <button type="button" class="btn btn-sm btn-secondary" (click)="showImportModal = true">
+        <clr-icon shape="import"></clr-icon> Import
+      </button> -->
+      <button type="button" class="btn btn-sm btn-secondary" [routerLink]="'/products/manage-products/batch-upload'">
         <clr-icon shape="import"></clr-icon> Import
       </button>
     </div>
@@ -34,29 +38,20 @@
     <nav class="subnav">
       <ul class="nav">
         <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 0" (click)="filterType = 0; loadAll()"
-            ><span class="nav-text">All({{ countObj?.all }})</span></a
-          >
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 0"
+            (click)="filterType = 0; loadAll()"><span class="nav-text">All({{ countObj?.all }})</span></a>
         </li>
         <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 1" (click)="filterType = 1; loadAll()"
-            ><span class="nav-text">Live({{ countObj?.active }})</span></a
-          >
-        </li>
-        <!-- <li class="nav-item">
-                    <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2"
-                        (click)="filterType = 2;loadAll()"><span class="nav-text">Image
-                            Missing({{countObj?.imagemissing}})</span></a>
-                </li> -->
-        <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2" (click)="filterType = 2; loadAll()"
-            ><span class="nav-text">Sold Out({{ countObj?.soldout }})</span></a
-          >
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 1"
+            (click)="filterType = 1; loadAll()"><span class="nav-text">Live({{ countObj?.active }})</span></a>
         </li>
         <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 3" (click)="filterType = 3; loadAll()"
-            ><span class="nav-text">Inactive({{ countObj?.inactive }})</span></a
-          >
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2"
+            (click)="filterType = 2; loadAll()"><span class="nav-text">Sold Out({{ countObj?.soldout }})</span></a>
+        </li>
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 3"
+            (click)="filterType = 3; loadAll()"><span class="nav-text">Inactive({{ countObj?.inactive }})</span></a>
         </li>
       </ul>
     </nav>
@@ -83,15 +78,8 @@
         <clr-dg-cell>{{ stockItem.unitPrice }}</clr-dg-cell>
         <clr-dg-cell>{{ stockItem.recommendedRetailPrice }}</clr-dg-cell>
         <clr-dg-cell>{{ stockItem.createdDate | date }}</clr-dg-cell>
-        <clr-dg-cell
-          ><input
-            type="checkbox"
-            clrToggle
-            name="action"
-            [value]="stockItem.activeInd"
-            [(ngModel)]="stockItem.activeInd"
-            (ngModelChange)="updateStockItemActive(stockItem)"
-          />
+        <clr-dg-cell><input type="checkbox" clrToggle name="action" [value]="stockItem.activeInd"
+            [(ngModel)]="stockItem.activeInd" (ngModelChange)="updateStockItemActive(stockItem)" />
         </clr-dg-cell>
       </clr-dg-row>
 
@@ -104,10 +92,9 @@
     </clr-datagrid>
     <!-- <p-paginator [rows]="itemsPerPage" [totalRecords]="totalItems" (onPageChange)="loadPage(page)"></p-paginator> -->
   </div>
-  <clr-modal [(clrModalOpen)]="showImportModal" [clrModalSize]="'xl'">
+  <!-- <clr-modal [(clrModalOpen)]="showImportModal" [clrModalSize]="'xl'">
     <h3 class="modal-title">Import</h3>
     <div class="modal-body">
-      <!-- <root-alert></root-alert> -->
       <clr-tabs>
         <clr-tab>
           <button clrTabLink id="import">Import</button>
@@ -124,15 +111,10 @@
             <div class="import-wrapper">
               <clr-button-group class="btn-primary control-item">
                 <clr-button class="btn btn-sm" (click)="file.click()">Upload Files</clr-button>
-                <clr-button class="btn btn-sm btn-success" [disabled]="!selectedRows.length" (click)="onImportToSystem($event)"
-                  >Import To System</clr-button
-                >
-                <clr-button
-                  class="btn btn-sm btn-warning"
-                  [disabled]="total <= 0"
-                  (click)="confirmDeleteStockItemTemp(uploadedTransactionid)"
-                  >Clear</clr-button
-                >
+                <clr-button class="btn btn-sm btn-success" [disabled]="!selectedRows.length"
+                  (click)="onImportToSystem($event)">Import To System</clr-button>
+                <clr-button class="btn btn-sm btn-warning" [disabled]="total <= 0"
+                  (click)="confirmDeleteStockItemTemp(uploadedTransactionid)">Clear</clr-button>
               </clr-button-group>
               <div class="btn-group">
                 <clr-dropdown>
@@ -148,8 +130,7 @@
               </div>
             </div>
             <div>
-              <clr-datagrid [(clrDgSelected)]="selectedRows" [clrDgRowSelection]="true">
-                <!-- <clr-dg-column [clrDgField]="column" *ngFor="let column of uploadExcelArray">{{ column }}</clr-dg-column> -->
+              <clr-datagrid [(clrDgSelected)]="selectedRows" [clrDgRowSelection]="true">                
                 <clr-dg-column>Vendor Code</clr-dg-column>
                 <clr-dg-column>Vendor SKU</clr-dg-column>
                 <clr-dg-column>Barcode</clr-dg-column>
@@ -192,19 +173,14 @@
           <button clrTabLink>Import History</button>
           <clr-tab-content *clrIfActive>
             <div>
-              <clr-datagrid
-                (clrDgRefresh)="onLoadUploadTransactions($event)"
-                [clrDgLoading]="loadingUploadTransactions"
-                class="datagrid-compact"
-              >
+              <clr-datagrid (clrDgRefresh)="onLoadUploadTransactions($event)" [clrDgLoading]="loadingUploadTransactions"
+                class="datagrid-compact">
                 <clr-dg-column [clrDgField]="'fileName'">File</clr-dg-column>
                 <clr-dg-column [clrDgField]="''">Action</clr-dg-column>
                 <clr-dg-column [clrDgField]="'createdDate'">Created On</clr-dg-column>
 
                 <clr-dg-row *ngFor="let item of uploadTransactionList">
-                  <clr-dg-cell
-                    ><a [href]="item.templateUrl">{{ item.fileName }}</a></clr-dg-cell
-                  >
+                  <clr-dg-cell><a [href]="item.templateUrl">{{ item.fileName }}</a></clr-dg-cell>
                   <clr-dg-cell>{{ item.actionTypeActionTypeName }}</clr-dg-cell>
                   <clr-dg-cell>{{ item.createdDate | date: 'medium' }}</clr-dg-cell>
                 </clr-dg-row>
@@ -226,5 +202,5 @@
         Done
       </button>
     </div>
-  </clr-modal>
+  </clr-modal> -->
 </div>

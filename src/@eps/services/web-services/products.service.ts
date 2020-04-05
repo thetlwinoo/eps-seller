@@ -84,13 +84,21 @@ export class ProductsService {
         );
     }
 
-    importToSystem(transactionId): Observable<any> {
-        let params = new HttpParams();
-        params = params.append('id', transactionId);
-        return this.http.post<any>(this.importUrl, params, { observe: 'response' }).pipe(
-            filter((res: HttpResponse<any>) => res.ok),
-            map((res: HttpResponse<any>) => res.body)
-        );
+    // importToSystem(transactionId): Observable<any> {
+    //     let params = new HttpParams();
+    //     params = params.append('id', transactionId);
+    //     return this.http.post<any>(this.importUrl, params, { observe: 'response' }).pipe(
+    //         filter((res: HttpResponse<any>) => res.ok),
+    //         map((res: HttpResponse<any>) => res.body)
+    //     );
+    // }
+
+    importProduct(products: IProducts): Observable<IProducts> {
+        return this.http.post<IProducts>(this.extendUrl + '/import', products, { observe: 'response' })
+            .pipe(
+                filter((res: HttpResponse<Products>) => res.ok),
+                map((res: HttpResponse<Products>) => res.body)
+            );
     }
 
     updateStockItemActive(stockItemId, isActive): Observable<EntityResponseType> {

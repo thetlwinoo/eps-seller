@@ -19,7 +19,7 @@ export const navigation: RootNavigation[] = [
             title: 'Manage Products',
             type: 'item',
             url: '/products/manage-products',
-            exactMatch: true,
+            exactMatch: false,
           },
           {
             id: 'add-product',

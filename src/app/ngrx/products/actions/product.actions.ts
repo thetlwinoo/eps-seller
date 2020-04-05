@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { HttpHeaders } from '@angular/common/http';
-import { IProducts, Products, IStockItems, IPhotos } from '@eps/models';
+import { IProducts, Products, StockItems, IStockItems, IPhotos } from '@eps/models';
 
 export const loadProduct = createAction('[Product Exists Guard] Load Product', props<{ product: IProducts }>());
 
@@ -25,6 +25,14 @@ export const saveProductSuccess = createAction('[Products/API] Save Product Succ
 export const saveStockItem = createAction('[Products/API] Save StockItem', props<{ stockItems: IStockItems[]; product: IProducts }>());
 
 export const saveStockItemSuccess = createAction('[Products/API] Save StockItem Success', props<{ stockItem: IStockItems }>());
+
+export const importProduct = createAction('[Products/API] Import Product', props<{ product: IProducts }>());
+
+export const importProductSuccess = createAction('[Products/API] Import Product Success', props<{ product: IProducts }>());
+
+export const importStockItem = createAction('[Products/API] Import StockItem', props<{ stockItems: IStockItems[]; product: IProducts }>());
+
+export const importStockItemSuccess = createAction('[Products/API] Import StockItem Success', props<{ stockItem: IStockItems }>());
 
 export const saveStockItemListSuccess = createAction('[Products/API] Save StockItem List Success');
 

@@ -6,7 +6,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { SERVER_API_URL, DATE_FORMAT } from '@eps/constants';
 import { createRequestOption } from '@eps/utils';
-import { IStockItems, IPhotos } from '@eps/models';
+import { IStockItems, IPhotos, StockItems } from '@eps/models';
 
 type EntityResponseType = HttpResponse<IStockItems>;
 type EntityArrayResponseType = HttpResponse<IStockItems[]>;
@@ -14,9 +14,10 @@ type EntityArrayResponseType = HttpResponse<IStockItems[]>;
 @Injectable({ providedIn: 'root' })
 export class StockItemsService {
   public resourceUrl = SERVER_API_URL + 'services/zezawar/api/stock-items';
+
   public extendUrl = SERVER_API_URL + 'services/zezawar/api/stock-items-extend';
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) { }
 
   create(stockItems: IStockItems): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(stockItems);
@@ -69,19 +70,29 @@ export class StockItemsService {
     return this.http.get<any>(this.extendUrl + '/count', { observe: 'response' });
   }
 
+  importStockItem(stockItems: IStockItems): Observable<IStockItems> {
+    const copy = this.convertDateFromClient(stockItems);
+    return this.http.post<IStockItems>(this.extendUrl + '/import', copy, { observe: 'response' })
+      .pipe(
+        filter((res: HttpResponse<StockItems>) => res.ok),
+        map((res: HttpResponse<StockItems>) => res.body)
+      );
+  }
+
   protected convertDateFromClient(stockItems: IStockItems): IStockItems {
     const copy: IStockItems = Object.assign({}, stockItems, {
-      sellStartDate:
-        stockItems.sellStartDate != null && stockItems.sellStartDate.isValid() ? stockItems.sellStartDate.format(DATE_FORMAT) : null,
-      sellEndDate: stockItems.sellEndDate != null && stockItems.sellEndDate.isValid() ? stockItems.sellEndDate.format(DATE_FORMAT) : null,
+      sellStartDate: stockItems.sellStartDate && stockItems.sellStartDate.isValid() ? stockItems.sellStartDate.toJSON() : undefined,
+      sellEndDate: stockItems.sellEndDate && stockItems.sellEndDate.isValid() ? stockItems.sellEndDate.toJSON() : undefined,
+      lastEditedWhen: stockItems.lastEditedWhen && stockItems.lastEditedWhen.isValid() ? stockItems.lastEditedWhen.toJSON() : undefined
     });
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.sellStartDate = res.body.sellStartDate != null ? moment(res.body.sellStartDate) : null;
-      res.body.sellEndDate = res.body.sellEndDate != null ? moment(res.body.sellEndDate) : null;
+      res.body.sellStartDate = res.body.sellStartDate ? moment(res.body.sellStartDate) : undefined;
+      res.body.sellEndDate = res.body.sellEndDate ? moment(res.body.sellEndDate) : undefined;
+      res.body.lastEditedWhen = res.body.lastEditedWhen ? moment(res.body.lastEditedWhen) : undefined;
     }
     return res;
   }
@@ -89,8 +100,9 @@ export class StockItemsService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((stockItems: IStockItems) => {
-        stockItems.sellStartDate = stockItems.sellStartDate != null ? moment(stockItems.sellStartDate) : null;
-        stockItems.sellEndDate = stockItems.sellEndDate != null ? moment(stockItems.sellEndDate) : null;
+        stockItems.sellStartDate = stockItems.sellStartDate ? moment(stockItems.sellStartDate) : undefined;
+        stockItems.sellEndDate = stockItems.sellEndDate ? moment(stockItems.sellEndDate) : undefined;
+        stockItems.lastEditedWhen = stockItems.lastEditedWhen ? moment(stockItems.lastEditedWhen) : undefined;
       });
     }
     return res;

@@ -109,6 +109,58 @@ export class ProductEffects {
     )
   );
 
+  // importProduct$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(ProductActions.importProduct),
+  //     switchMap(({ product }) => {
+  //       console.log('import product', product)
+  //       if (!product) {
+  //         return empty;
+  //       }
+  //       // this.productsService.importProduct(product);
+  //       return this.productsService.importProduct(product).pipe(
+  //         filter((res: HttpResponse<IProducts>) => res.ok),
+  //         switchMap((res: HttpResponse<IProducts>) => [
+  //           ProductActions.importProductSuccess({ product: res.body }),
+  //           ProductActions.importStockItem({ stockItems: product.stockItemLists, product: res.body }),
+  //         ]),
+  //         catchError(err =>
+  //           of(ProductActions.productFailure({ errorMsg: err.message }))
+  //         )
+  //       );
+  //     })
+  //   )
+  // );
+
+  // importStockItem$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(ProductActions.importStockItem),
+  //     switchMap(({ stockItems, product }) => {
+  //       if (!stockItems) {
+  //         return empty;
+  //       }
+
+  //       stockItems.map(stockItem => {
+  //         stockItem.productId = product.id;
+  //         return this.stockItemsService.importStockItem(stockItem)
+  //         // .pipe(
+  //         //   filter((res: HttpResponse<IStockItems>) => res.ok),
+  //         //   switchMap((res: HttpResponse<IStockItems>) => [
+  //         //     ProductActions.importStockItemSuccess({ stockItem: res.body }),
+  //         //     // ProductActions.saveStockItemPhoto({ photos: stockItem.photoLists })
+  //         //   ]),
+  //         //   catchError(err => {
+  //         //     console.log('ERRRROR', err)
+  //         //     return of(ProductActions.productFailure({ errorMsg: err.message }));
+  //         //   }
+  //         //   )
+  //         // );
+  //       })
+
+  //     })
+  //   )
+  // );
+
   // saveProduct$ = createEffect(() =>
   //     this.actions$.pipe(
   //         ofType(ProductActions.saveProduct),
@@ -247,5 +299,5 @@ export class ProductEffects {
     private photosService: PhotosService,
     protected parseLinks: JhiParseLinks,
     private router: Router
-  ) {}
+  ) { }
 }

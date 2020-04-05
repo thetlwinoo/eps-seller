@@ -27,6 +27,7 @@ import { InformationFormComponent } from './products-update/information-form/inf
 import { StockItemsFilterPipe } from './filters/stock-items-filter.pipe';
 import { PhotoItemComponent } from './manage-images/photo-item/photo-item.component';
 import { DocumentProcessService } from '@eps/services';
+import { BatchUploadComponent } from './batch-upload/batch-upload.component';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsResolve implements Resolve<IProducts> {
@@ -61,6 +62,18 @@ const routes = [
       authorities: ['ROLE_USER'],
       defaultSort: 'id,asc',
       pageTitle: 'resourceApp.products.home.title',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'manage-products/batch-upload',
+    component: BatchUploadComponent,
+    // resolve: {
+    //   products: ProductsResolve,
+    // },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'PRODUCTS.TITLE',
     },
     canActivate: [UserRouteAccessService],
   },
@@ -139,6 +152,7 @@ const routes = [
     InformationFormComponent,
     StockItemsFilterPipe,
     PhotoItemComponent,
+    BatchUploadComponent,
   ],
   imports: [CommonModule, RootSharedModule, RouterModule.forChild(routes)],
   providers: [DocumentProcessService],

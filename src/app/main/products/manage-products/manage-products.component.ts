@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { filter, map, debounceTime, tap } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel, IUploadExcel } from '@eps/models';
+import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel } from '@eps/models';
 import { StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@eps/services';
 import { AccountService } from '@eps/core';
 import { ITEMS_PER_PAGE } from '@eps/constants';
 import { ClrDatagridStateInterface } from '@clr/angular';
-import { RootAlertService } from '@eps/components/alert/alert.service';
-import { DocumentProcessService } from '@eps/services';
+// import { RootAlertService } from '@eps/components/alert/alert.service';
+// import { DocumentProcessService } from '@eps/services';
 
 @Component({
   selector: 'app-manage-products',
@@ -33,42 +33,42 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   predicate: any;
   previousPage: any;
   reverse: any;
-  showImportModal = false;
+  // showImportModal = false;
   selectedMode = 0;
-  uploadedFiles: any[] = [];
-  stockItemTempList: IStockItemTemp[] = [];
-  uploadTransactionList: IUploadTransactions[] = [];
-  uploadedTransactionid: number;
-  isUploaded = false;
-  isImported = false;
-  total = 0;
-  stockItemTempLinks: any;
   loading = true;
-  loadingUploadExcel = false;
-  loadingUploadTransactions = true;
+  // uploadedFiles: any[] = [];
+  // stockItemTempList: IStockItemTemp[] = [];
+  // uploadTransactionList: IUploadTransactions[] = [];
+  // uploadedTransactionid: number;
+  // isUploaded = false;
+  // isImported = false;
+  // total = 0;
+  // stockItemTempLinks: any;  
+  // loadingUploadExcel = false;
+  // loadingUploadTransactions = true;
 
   countObj: any;
 
   filterType = 0;
-  uploadExcelArray: string[];
-  uploadData$: Observable<IUploadExcel[]>;
-  uploadData: IUploadExcel[];
-  selectedRows: UploadExcel[] = [];
+  // uploadExcelArray: string[];
+  // uploadData$: Observable<IUploadExcel[]>;
+  // uploadData: IUploadExcel[];
+  // selectedRows: UploadExcel[] = [];
 
   constructor(
     protected stockItemsService: StockItemsService,
-    protected stockItemTempService: StockItemTempService,
+    // protected stockItemTempService: StockItemTempService,
     protected parseLinks: JhiParseLinks,
     protected jhiAlertService: JhiAlertService,
     protected accountService: AccountService,
     protected productsService: ProductsService,
-    protected uploadTransactionsService: UploadTransactionsService,
+    // protected uploadTransactionsService: UploadTransactionsService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
     protected eventManager: JhiEventManager,
-    protected rootAlertService: RootAlertService,
-    protected dataUtils: JhiDataUtils,
-    protected documentProcessService: DocumentProcessService
+    // protected rootAlertService: RootAlertService,
+    // protected dataUtils: JhiDataUtils,
+    // protected documentProcessService: DocumentProcessService
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -78,8 +78,8 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
       this.predicate = data.pagingParams.predicate;
     });
 
-    const uploadExcel = new UploadExcel();
-    this.uploadExcelArray = Object.getOwnPropertyNames(uploadExcel);
+    // const uploadExcel = new UploadExcel();
+    // this.uploadExcelArray = Object.getOwnPropertyNames(uploadExcel);
   }
 
   ngOnInit(): void {
@@ -91,15 +91,15 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.uploadData$ = this.documentProcessService.data$.pipe(
-      debounceTime(0),
-      map(data => data),
-      tap(data => {
-        data.map(item => new UploadExcel(item));
-      })
-    );
+    // this.uploadData$ = this.documentProcessService.data$.pipe(
+    //   debounceTime(0),
+    //   map(data => data),
+    //   tap(data => {
+    //     data.map(item => new UploadExcel(item));
+    //   })
+    // );
 
-    this.uploadData$.subscribe(data => (this.uploadData = data));
+    // this.uploadData$.subscribe(data => (this.uploadData = data));
     this.registerChangeInStockItems();
   }
 
@@ -144,13 +144,13 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onUploadExcelSelectAll(): void {
-    this.selectedRows = this.uploadData;
-  }
+  // onUploadExcelSelectAll(): void {
+  //   this.selectedRows = this.uploadData;
+  // }
 
-  onUploadExcelUnSelectAll(): void {
-    this.selectedRows = [];
-  }
+  // onUploadExcelUnSelectAll(): void {
+  //   this.selectedRows = [];
+  // }
 
   onLoadStockItems(state: ClrDatagridStateInterface): void {
     this.loading = true;
@@ -187,12 +187,12 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
       },
     });
     this.loadAll();
-    this.onLoadUploadTransactions({
-      page: {
-        from: 0,
-        size: 5,
-      },
-    });
+    // this.onLoadUploadTransactions({
+    //   page: {
+    //     from: 0,
+    //     size: 5,
+    //   },
+    // });
   }
 
   clear(): void {
@@ -207,22 +207,22 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     this.loadAll();
   }
 
-  confirmDeleteStockItemTemp(id: number): void {
-    this.uploadTransactionsService.delete(id).subscribe(response => {
-      this.eventManager.broadcast({
-        name: 'uploadTransactionsListModification',
-        content: 'Deleted an uploadTransactions',
-      });
-      this.uploadedTransactionid = null;
-      this.onLoadStockItemTemp({
-        page: {
-          from: 0,
-          size: 5,
-        },
-      });
-      this.rootAlertService.setMessage('Clear successfully', 'success');
-    });
-  }
+  // confirmDeleteStockItemTemp(id: number): void {
+  //   this.uploadTransactionsService.delete(id).subscribe(response => {
+  //     this.eventManager.broadcast({
+  //       name: 'uploadTransactionsListModification',
+  //       content: 'Deleted an uploadTransactions',
+  //     });
+  //     this.uploadedTransactionid = null;
+  //     this.onLoadStockItemTemp({
+  //       page: {
+  //         from: 0,
+  //         size: 5,
+  //       },
+  //     });
+  //     this.rootAlertService.setMessage('Clear successfully', 'success');
+  //   });
+  // }
 
   updateStockItemActive(event): void {
     console.log('update', event);
@@ -259,72 +259,11 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  onUpload(event: any): void {
-    for (const file of event.target.files) {
-      this.uploadedFiles.push(file);
-    }
-
-    // this.subscribeToUploadResponse(this.productsService.upload(this.uploadedFiles[0]));
-    this.documentProcessService.parseExcelFile(this.uploadedFiles[0]);
-    this.loadingUploadExcel = false;
-  }
-
-  onImportToSystem(event: any): void {
-    this.subscribeToImportResponse(this.productsService.importToSystem(this.uploadedTransactionid));
-  }
-
-  onLoadStockItemTemp(state: ClrDatagridStateInterface): void {
-    this.loadingUploadExcel = true;
-    // We convert the filters from an array to a map,
-    // because that's what our backend-calling service is expecting
-    // let filters: { [prop: string]: any[] } = {};
-    // if (state.filters) {
-    //   for (let filter of state.filters) {
-    //     let { property, value } = <{ property: string, value: string }>filter;
-    //     filters[property] = [value];
-    //   }
-    // }
-
-    if (!this.uploadedTransactionid) {
-      this.stockItemTempList = [];
-      this.total = 0;
-      this.loadingUploadExcel = false;
-      return;
-    }
-
-    this.stockItemTempService
-      .getAllByTransactionId(state.page.current, state.page.size, this.uploadedTransactionid)
-      .pipe(
-        filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
-        map((res: HttpResponse<IStockItemTemp[]>) => res)
-      )
-      .subscribe(result => {
-        this.stockItemTempList = result.body;
-        this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
-        this.total = parseInt(result.headers.get('X-Total-Count'), 10);
-        this.loadingUploadExcel = false;
-      });
-  }
-
-  refreshOnUpload(event): void {}
-
-  onLoadUploadTransactions(state: ClrDatagridStateInterface): void {
-    this.loadingUploadTransactions = true;
-    this.uploadTransactionsService
-      .findAll()
-      .pipe(
-        filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
-        map((res: HttpResponse<IStockItemTemp[]>) => res)
-      )
-      .subscribe(result => {
-        this.uploadTransactionList = result.body;
-        this.loadingUploadTransactions = false;
-        console.log('this.uploadTransactionList', this.uploadTransactionList);
-      });
-  }
-
-  openFile(contentType, field): any {
-    return this.dataUtils.openFile(contentType, field);
+  protected subscribeToUpdateStockItemActiveResponse(result: Observable<HttpResponse<any>>): void {
+    result.subscribe(
+      (res: HttpResponse<any>) => this.onUpdateStockItemActiveSuccess(res),
+      (err: HttpErrorResponse) => this.onUpdateStockItemActiveError(err)
+    );
   }
 
   protected paginateStockItems(data: IStockItems[], headers: HttpHeaders): void {
@@ -340,64 +279,115 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     this.loading = false;
     this.errorMessage = errorMessage;
     this.jhiAlertService.error(errorMessage, null, null);
-  }
+  }  
 
-  protected subscribeToUpdateStockItemActiveResponse(result: Observable<HttpResponse<any>>): void {
-    result.subscribe(
-      (res: HttpResponse<any>) => this.onUpdateStockItemActiveSuccess(res),
-      (err: HttpErrorResponse) => this.onUpdateStockItemActiveError(err)
-    );
-  }
+  // onUpload(event: any): void {
+  //   for (const file of event.target.files) {
+  //     this.uploadedFiles.push(file);
+  //   }
+    
+  //   this.documentProcessService.parseExcelFile(this.uploadedFiles[0]);
+  //   this.loadingUploadExcel = false;
+  // }
 
-  protected subscribeToUploadResponse(result: Observable<HttpResponse<any>>): void {
-    result.subscribe(
-      (res: HttpResponse<any>) => this.onUploadSuccess(res),
-      (err: HttpErrorResponse) => this.onUploadError(err)
-    );
-  }
+  // onImportToSystem(event: any): void {
+  //   this.subscribeToImportResponse(this.productsService.importToSystem(this.uploadedTransactionid));
+  // }
 
-  protected subscribeToImportResponse(result: Observable<HttpResponse<any>>): void {
-    result.subscribe(
-      (res: HttpResponse<any>) => this.onImportSuccess(res),
-      (err: HttpErrorResponse) => this.onImportError(err)
-    );
-  }
+  // onLoadStockItemTemp(state: ClrDatagridStateInterface): void {
+  //   this.loadingUploadExcel = true;
 
-  protected onUploadSuccess(res): void {
-    console.log('upload success', res);
-    this.uploadedTransactionid = res ? res.id : null;
+  //   if (!this.uploadedTransactionid) {
+  //     this.stockItemTempList = [];
+  //     this.total = 0;
+  //     this.loadingUploadExcel = false;
+  //     return;
+  //   }
 
-    this.onLoadStockItemTemp({
-      page: {
-        from: 0,
-        current: 0,
-        size: 5,
-      },
-    });
-    this.isUploaded = true;
-    this.rootAlertService.setMessage('File uploaded successfully', 'success');
-  }
+  //   this.stockItemTempService
+  //     .getAllByTransactionId(state.page.current, state.page.size, this.uploadedTransactionid)
+  //     .pipe(
+  //       filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
+  //       map((res: HttpResponse<IStockItemTemp[]>) => res)
+  //     )
+  //     .subscribe(result => {
+  //       this.stockItemTempList = result.body;
+  //       this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
+  //       this.total = parseInt(result.headers.get('X-Total-Count'), 10);
+  //       this.loadingUploadExcel = false;
+  //     });
+  // }
 
-  protected onUploadError(err): void {
-    this.loadingUploadExcel = false;
-    this.isUploaded = false;
-    this.rootAlertService.setMessage('File upload failed', 'danger');
-  }
+  // refreshOnUpload(event): void {}
 
-  protected onImportSuccess(res): void {
-    this.onLoadStockItemTemp({
-      page: {
-        from: 0,
-        current: 0,
-        size: 5,
-      },
-    });
-    this.isImported = true;
-    this.rootAlertService.setMessage('File imported successfully', 'success');
-  }
+  // onLoadUploadTransactions(state: ClrDatagridStateInterface): void {
+  //   this.loadingUploadTransactions = true;
+  //   this.uploadTransactionsService
+  //     .findAll()
+  //     .pipe(
+  //       filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
+  //       map((res: HttpResponse<IStockItemTemp[]>) => res)
+  //     )
+  //     .subscribe(result => {
+  //       this.uploadTransactionList = result.body;
+  //       this.loadingUploadTransactions = false;
+  //       console.log('this.uploadTransactionList', this.uploadTransactionList);
+  //     });
+  // }
 
-  protected onImportError(err): void {
-    this.isImported = false;
-    this.rootAlertService.setMessage('File import failed', 'danger');
-  }
+  // openFile(contentType, field): any {
+  //   return this.dataUtils.openFile(contentType, field);
+  // }    
+
+  // protected subscribeToUploadResponse(result: Observable<HttpResponse<any>>): void {
+  //   result.subscribe(
+  //     (res: HttpResponse<any>) => this.onUploadSuccess(res),
+  //     (err: HttpErrorResponse) => this.onUploadError(err)
+  //   );
+  // }
+
+  // protected subscribeToImportResponse(result: Observable<HttpResponse<any>>): void {
+  //   result.subscribe(
+  //     (res: HttpResponse<any>) => this.onImportSuccess(res),
+  //     (err: HttpErrorResponse) => this.onImportError(err)
+  //   );
+  // }
+
+  // protected onUploadSuccess(res): void {
+  //   console.log('upload success', res);
+  //   this.uploadedTransactionid = res ? res.id : null;
+
+  //   this.onLoadStockItemTemp({
+  //     page: {
+  //       from: 0,
+  //       current: 0,
+  //       size: 5,
+  //     },
+  //   });
+  //   this.isUploaded = true;
+  //   this.rootAlertService.setMessage('File uploaded successfully', 'success');
+  // }
+
+  // protected onUploadError(err): void {
+  //   this.loadingUploadExcel = false;
+  //   this.isUploaded = false;
+  //   this.rootAlertService.setMessage('File upload failed', 'danger');
+  // }
+
+  // protected onImportSuccess(res): void {
+  //   this.onLoadStockItemTemp({
+  //     page: {
+  //       from: 0,
+  //       current: 0,
+  //       size: 5,
+  //     },
+  //   });
+  //   this.isImported = true;
+  //   this.rootAlertService.setMessage('File imported successfully', 'success');
+  // }
+
+  // protected onImportError(err): void {
+  //   this.isImported = false;
+  //   this.rootAlertService.setMessage('File import failed', 'danger');
+  // }
 }
