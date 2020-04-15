@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { IPhotos } from '@eps/models';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
@@ -16,6 +16,8 @@ import { Observable } from 'rxjs';
 })
 export class PhotoItemComponent implements OnInit {
   @Input() photos: IPhotos;
+  @Output() error = new EventEmitter<{}>();
+
   isSaving: boolean;
   viewOriginal = false;
   constructor(
@@ -49,7 +51,9 @@ export class PhotoItemComponent implements OnInit {
         this.dataUtils.clearInputImage(entity, this.elementRef, 'thumbnailPhotoBlob', 'thumbnailPhotoBlobContentType', 'fileImage'),
         this.dataUtils.clearInputImage(entity, this.elementRef, 'originalPhotoBlob', 'originalPhotoBlobContentType', 'fileImage'),
       ]).then(() => {
-        this.confirmDelete(entity.id);
+        if (entity.id) {
+          this.photosService.deleteExtend(entity.id).subscribe();
+        }
         resolve();
       }, reject);
     });
@@ -59,17 +63,17 @@ export class PhotoItemComponent implements OnInit {
     this.isSaving = true;
     // const photos = this.createFromForm();
     if (photos.id !== undefined) {
-      this.subscribeToSaveResponse(this.stockItemsService.updatePhoto(photos));
+      this.subscribeToSaveResponse(this.photosService.update(photos));
     } else {
-      this.subscribeToSaveResponse(this.stockItemsService.addPhoto(photos));
+      this.subscribeToSaveResponse(this.photosService.create(photos));
     }
   }
 
-  confirmDelete(id: number): void {
-    this.photosService.deleteExtend(id).subscribe(response => {
+  setDefault(photos): void {
+    this.photosService.setDefault(photos).subscribe(() => {
       this.eventManager.broadcast({
         name: 'photosListModification',
-        content: 'Deleted an photos',
+        content: 'Updated an photos',
       });
     });
   }
@@ -77,16 +81,17 @@ export class PhotoItemComponent implements OnInit {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IPhotos>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),
-      () => this.onSaveError()
+      (error: HttpErrorResponse) => this.onSaveError(error)
     );
   }
 
   protected onSaveSuccess(): void {
-    this.isSaving = false;
-    // this.previousState();
+    this.isSaving = true;
   }
 
-  protected onSaveError(): void {
+  protected onSaveError(error: HttpErrorResponse): void {
     this.isSaving = false;
+    this.clearInputImage(this.photos);
+    this.error.emit(error.message);
   }
 }

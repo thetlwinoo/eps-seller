@@ -1,6 +1,13 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel, Products, StockItems } from '@eps/models';
-import { StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService, DocumentProcessService } from '@eps/services';
+import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel, Products, StockItems, ProductDocument } from '@eps/models';
+import {
+  StockItemsService,
+  ProductsService,
+  StockItemTempService,
+  UploadTransactionsService,
+  DocumentProcessService,
+  ProductDocumentService,
+} from '@eps/services';
 import { RootAlertService } from '@eps/components/alert/alert.service';
 import { Observable, Subject } from 'rxjs';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
@@ -15,6 +22,7 @@ import { CURRENCY_FORMAT } from '@eps/constants';
 import { select, Store } from '@ngrx/store';
 import * as fromProducts from 'app/ngrx/products/reducers';
 import { ProductActions } from 'app/ngrx/products/actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-batch-upload',
@@ -39,6 +47,10 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
   errorMessage = '';
   errorVisible = false;
   uploadedFiles: any[] = [];
+  importCount = 0;
+  importTotalCount = 0;
+  importPercentage = 0.0;
+  showImportCompleted = false;
 
   filterType = 0;
   uploadExcelArray: string[];
@@ -49,7 +61,20 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll: Subject<any>;
 
-  constructor(protected rootAlertService: RootAlertService, protected productsService: ProductsService, protected stockItemTempService: StockItemTempService, protected parseLinks: JhiParseLinks, protected uploadTransactionsService: UploadTransactionsService, protected dataUtils: JhiDataUtils, protected jhiAlertService: JhiAlertService, protected documentProcessService: DocumentProcessService, protected stockItemsService: StockItemsService, private store: Store<fromProducts.State>, ) {
+  constructor(
+    protected router: Router,
+    protected rootAlertService: RootAlertService,
+    protected productsService: ProductsService,
+    protected productDocumentService: ProductDocumentService,
+    protected stockItemTempService: StockItemTempService,
+    protected parseLinks: JhiParseLinks,
+    protected uploadTransactionsService: UploadTransactionsService,
+    protected dataUtils: JhiDataUtils,
+    protected jhiAlertService: JhiAlertService,
+    protected documentProcessService: DocumentProcessService,
+    protected stockItemsService: StockItemsService,
+    private store: Store<fromProducts.State>
+  ) {
     this.unsubscribeAll = new Subject();
   }
 
@@ -61,6 +86,7 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
     );
 
     this.uploadData$.subscribe(data => {
+      this.importTotalCount = data.length;
       this.uploadData = data;
 
       this.productList = [];
@@ -68,17 +94,38 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
       _.entries(grouped).map(mapArray => {
         const key = mapArray[0];
         const values: UploadExcel[] = mapArray[1];
-
-        let product: Products = new Products();
+        const product: Products = new Products();
         product.name = key;
         product.handle = RootUtils.handleize(key);
         product.productCategoryName = values[0].productSubCategory;
         product.productBrandName = values[0].brandName;
         product.stockItemLists = [];
 
-        let searchDetails = "";
+        const productDocument: ProductDocument = new ProductDocument();
+        productDocument.videoUrl = values[0].videoUrl || '';
+        productDocument.highlights = values[0].highlights || '';
+        productDocument.longDescription = values[0].longDescription || '';
+        productDocument.shortDescription = values[0].shortDescription || '';
+        productDocument.careInstructions = values[0].careInstruction || '';
+        productDocument.productType = values[0].productType || '';
+        productDocument.modelName = values[0].modelName || '';
+        productDocument.modelNumber = values[0].modelNumber || '';
+        productDocument.whatInTheBox = values[0].whatInTheBox || '';
+        productDocument.specialFeatures = values[0].specialFeatures || '';
+        productDocument.productComplianceCertificate = values[0].productComplianceCertificate || '';
+        productDocument.genuineAndLegal = values[0].genuineAndLegal || false;
+        productDocument.countryOfOrigin = values[0].countryOfOrigin || '';
+        productDocument.usageAndSideEffects = values[0].instructionsForUsageAndSideEffects || '';
+        productDocument.safetyWarnning = values[0].safetyWarnning || '';
+        productDocument.warrantyPeriod = values[0].warrentyPeriod || '';
+        productDocument.warrantyTypeName = values[0].warrantyType || '';
+        productDocument.dangeroudGoods = values[0].dangerousGoodsRegulations || '';
+        // productDocument.warrantyType = warrantyTypes;
+
+        product.productDocument = productDocument;
+        let searchDetails = '';
         values.map(item => {
-          let stockItem: StockItems = new StockItems();
+          const stockItem: StockItems = new StockItems();
           stockItem.name = item.itemName;
           stockItem.vendorCode = item.vendorCode;
           stockItem.vendorSKU = item.vendorSKU;
@@ -114,7 +161,7 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
           stockItem.productOptionValue = item.productOption;
           stockItem.materialName = item.productMaterial;
           stockItem.barcodeTypeName = item.barcodeType;
-          stockItem.currencyCode = CURRENCY_FORMAT;
+          stockItem.currencyCode = item.currencyCode;
 
           product.stockItemLists.push(stockItem);
           searchDetails = searchDetails + item.searchKeywords + ';';
@@ -123,14 +170,7 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
         product.searchDetails = [...new Set(searchDetails.split(';'))].join(';').slice(0, -1);
         this.productList.push(product);
       });
-    })
-  }
-
-  protected subscribeToImportResponse(result: Observable<HttpResponse<any>>): void {
-    result.subscribe(
-      (res: HttpResponse<any>) => this.onImportSuccess(res),
-      (err: HttpErrorResponse) => this.onImportError(err)
-    );
+    });
   }
 
   onUpload(event: any): void {
@@ -158,42 +198,34 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
     this.rootAlertService.setMessage('Clear successfully', 'success');
   }
 
-  clearUploadedRecords() {
+  clearUploadedRecords(): void {
     this.documentProcessService.clearData();
     this.selectedRows = [];
     this.file.nativeElement.value = '';
   }
 
-  protected onImportSuccess(res): void {
-    this.onLoadStockItemTemp({
-      page: {
-        from: 0,
-        current: 0,
-        size: 5,
-      },
-    });
-    this.isImported = true;
-    this.rootAlertService.setMessage('File imported successfully', 'success');
-  }
-
-  protected onImportError(err): void {
-    this.isImported = false;
-    this.rootAlertService.setMessage('File import failed', 'danger');
-  }
-
   onImportToSystem(event: any): void {
     // this.subscribeToImportResponse(this.productsService.importToSystem(this.uploadedTransactionid));
     // const list = this.productList.slice(0, 1);
-
+    this.importCount = 0;
     this.productList.map(product => {
-      // this.store.dispatch(ProductActions.importProduct({ product: product }));
-      this.productsService.importProduct(product).subscribe((productResource) => {
-        product.stockItemLists.map(stockItem => {
-          stockItem.productId = productResource.id;
-          this.stockItemsService.importStockItem(stockItem).subscribe((res) => console.log('success', res));
-        })
+      // this.store.dispatch(ProductActions.createProduct({ product }));
+      this.productDocumentService.importProductDocument(product.productDocument).subscribe(productDocumentRes => {
+        product.productDocumentId = productDocumentRes.id;
+        this.productsService.importProduct(product).subscribe(productResource => {
+          product.stockItemLists.map(stockItem => {
+            stockItem.productId = productResource.id;
+            this.stockItemsService.importStockItem(stockItem).subscribe(() => {
+              this.importCount++;
+              this.importPercentage = (this.importCount * 100) / this.importTotalCount;
+              if (this.importPercentage === 100) {
+                this.showImportCompleted = true;
+              }
+            });
+          });
+        });
       });
-    })
+    });
   }
 
   onLoadStockItemTemp(state: ClrDatagridStateInterface): void {
@@ -220,7 +252,7 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
       });
   }
 
-  refreshOnUpload(event): void { }
+  refreshOnUpload(event): void {}
 
   onLoadUploadTransactions(state: ClrDatagridStateInterface): void {
     this.loadingUploadTransactions = true;
@@ -241,17 +273,46 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
     return this.dataUtils.openFile(contentType, field);
   }
 
-  protected onError(errorMessage: string): void {
-    console.log('errorMessage', errorMessage);
-    this.errorVisible = true;
-    this.loading = false;
-    this.errorMessage = errorMessage;
-    this.jhiAlertService.error(errorMessage, null, null);
+  onCompletedImport(): void {
+    this.showImportCompleted = false;
+    this.router.navigate(['/products/manage-products']);
   }
 
   ngOnDestroy(): void {
     this.clearUploadedRecords();
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
+  }
+
+  protected subscribeToImportResponse(result: Observable<HttpResponse<any>>): void {
+    result.subscribe(
+      (res: HttpResponse<any>) => this.onImportSuccess(res),
+      (err: HttpErrorResponse) => this.onImportError(err)
+    );
+  }
+
+  protected onImportSuccess(res): void {
+    this.onLoadStockItemTemp({
+      page: {
+        from: 0,
+        current: 0,
+        size: 5,
+      },
+    });
+    this.isImported = true;
+    this.rootAlertService.setMessage('File imported successfully', 'success');
+  }
+
+  protected onImportError(err): void {
+    this.isImported = false;
+    this.rootAlertService.setMessage('File import failed', 'danger');
+  }
+
+  protected onError(errorMessage: string): void {
+    console.log('errorMessage', errorMessage);
+    this.errorVisible = true;
+    this.loading = false;
+    this.errorMessage = errorMessage;
+    this.jhiAlertService.error(errorMessage, null, null);
   }
 }

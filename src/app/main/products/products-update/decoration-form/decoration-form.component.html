@@ -1,133 +1,135 @@
-<form name="productDecorationForm" id="product-decoration" [formGroup]="productDecorationForm"
-    class="product-decoration-form w-100-p">
-    <div class="inner-section">
-        <h6 class="first mt-4">Long Description</h6>
-        <p-editor formControlName="longDescription" [style]="{'height':'400px'}">
-            <p-header>
-                <span class="ql-formats">
-                    <select class="ql-size">
-                        <option value="small"></option>
-                        <option selected></option>
-                        <option value="large"></option>
-                        <option value="huge"></option>
-                    </select>
-                    <select class="ql-font">
-                        <option selected></option>
-                        <option value="serif"></option>
-                        <option value="monospace"></option>
-                    </select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-bold" aria-label="Bold"></button>
-                    <button class="ql-italic" aria-label="Italic"></button>
-                    <button class="ql-underline" aria-label="Underline"></button>
-                    <button class="ql-script" value="sub"></button>
-                    <button class="ql-script" value="super"></button>
-                </span>
-                <span class="ql-formats">
-                    <select class="ql-color"></select>
-                    <select class="ql-background"></select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-header" value="1"></button>
-                    <button class="ql-header" value="2"></button>
-                    <button class="ql-blockquote"></button>
-                    <button class="ql-code-block"></button>
-                    <button class="ql-direction" value="rtl"></button>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-list" value="ordered"></button>
-                    <button class="ql-list" value="bullet"></button>
-                    <select class="ql-align">
-                        <option selected></option>
-                        <option value="center"></option>
-                        <option value="right"></option>
-                        <option value="justify"></option>
-                    </select>
-                    <button class="ql-indent" value="-1"></button>
-                    <button class="ql-indent" value="+1"></button>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-link"></button>
-                    <button class="ql-image"></button>
-                </span>
+<div *ngIf="productDecorationForm">
+    <form name="productDecorationForm" id="product-decoration" [formGroup]="productDecorationForm"
+        class="product-decoration-form w-100-p">
+        <div class="inner-section">
+            <h6 class="first mt-4">Long Description</h6>
+            <p-editor formControlName="longDescription" [style]="{'height':'400px'}">
+                <p-header>
+                    <span class="ql-formats">
+                        <select class="ql-size">
+                            <option value="small"></option>
+                            <option selected></option>
+                            <option value="large"></option>
+                            <option value="huge"></option>
+                        </select>
+                        <select class="ql-font">
+                            <option selected></option>
+                            <option value="serif"></option>
+                            <option value="monospace"></option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold" aria-label="Bold"></button>
+                        <button class="ql-italic" aria-label="Italic"></button>
+                        <button class="ql-underline" aria-label="Underline"></button>
+                        <button class="ql-script" value="sub"></button>
+                        <button class="ql-script" value="super"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-header" value="1"></button>
+                        <button class="ql-header" value="2"></button>
+                        <button class="ql-blockquote"></button>
+                        <button class="ql-code-block"></button>
+                        <button class="ql-direction" value="rtl"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                        <button class="ql-indent" value="-1"></button>
+                        <button class="ql-indent" value="+1"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                        <button class="ql-image"></button>
+                    </span>
 
-                <span class="ql-formats">
-                    <button type="button" id="clear-button" (click)="onClearLongDescription($event)" aria-haspopup="true"
-                        class="tooltip tooltip-xs">
-                        <i class="pi pi-trash" style="font-size: 1.5em"></i>
-                        <span class="tooltip-content">Clear</span>
-                    </button>
-                </span>
+                    <span class="ql-formats">
+                        <button type="button" id="clear-button" (click)="onClearLongDescription($event)"
+                            aria-haspopup="true" class="tooltip tooltip-xs">
+                            <i class="pi pi-trash" style="font-size: 1.5em"></i>
+                            <span class="tooltip-content">Clear</span>
+                        </button>
+                    </span>
 
-            </p-header>
-        </p-editor>
-    </div>
-    <div class="inner-section">
-        <h6 class="first">Video URL</h6>
-        <input id="input" type="text" formControlName="videoUrl">
-    </div>
-    <div class="inner-section">
-        <h6 class="first">Highlights</h6>
-        <p-editor formControlName="highlights" [style]="{'height':'300px'}">
-            <p-header>
-                <span class="ql-formats">
-                    <select class="ql-size">
-                        <option value="small"></option>
-                        <option selected></option>
-                        <option value="large"></option>
-                        <option value="huge"></option>
-                    </select>
-                    <select class="ql-font">
-                        <option selected></option>
-                        <option value="serif"></option>
-                        <option value="monospace"></option>
-                    </select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-bold" aria-label="Bold"></button>
-                    <button class="ql-italic" aria-label="Italic"></button>
-                    <button class="ql-underline" aria-label="Underline"></button>
-                    <button class="ql-script" value="sub"></button>
-                    <button class="ql-script" value="super"></button>
-                </span>
-                <span class="ql-formats">
-                    <select class="ql-color"></select>
-                    <select class="ql-background"></select>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-header" value="1"></button>
-                    <button class="ql-header" value="2"></button>
-                    <button class="ql-blockquote"></button>
-                    <button class="ql-code-block"></button>
-                    <button class="ql-direction" value="rtl"></button>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-list" value="ordered"></button>
-                    <button class="ql-list" value="bullet"></button>
-                    <select class="ql-align">
-                        <option selected></option>
-                        <option value="center"></option>
-                        <option value="right"></option>
-                        <option value="justify"></option>
-                    </select>
-                    <button class="ql-indent" value="-1"></button>
-                    <button class="ql-indent" value="+1"></button>
-                </span>
-                <span class="ql-formats">
-                    <button class="ql-link"></button>
-                    <!-- <button class="ql-image"></button> -->
-                </span>
+                </p-header>
+            </p-editor>
+        </div>
+        <div class="inner-section">
+            <h6 class="first">Video URL</h6>
+            <input id="input" type="text" formControlName="videoUrl">
+        </div>
+        <div class="inner-section">
+            <h6 class="first">Highlights</h6>
+            <p-editor formControlName="highlights" [style]="{'height':'300px'}">
+                <p-header>
+                    <span class="ql-formats">
+                        <select class="ql-size">
+                            <option value="small"></option>
+                            <option selected></option>
+                            <option value="large"></option>
+                            <option value="huge"></option>
+                        </select>
+                        <select class="ql-font">
+                            <option selected></option>
+                            <option value="serif"></option>
+                            <option value="monospace"></option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold" aria-label="Bold"></button>
+                        <button class="ql-italic" aria-label="Italic"></button>
+                        <button class="ql-underline" aria-label="Underline"></button>
+                        <button class="ql-script" value="sub"></button>
+                        <button class="ql-script" value="super"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-header" value="1"></button>
+                        <button class="ql-header" value="2"></button>
+                        <button class="ql-blockquote"></button>
+                        <button class="ql-code-block"></button>
+                        <button class="ql-direction" value="rtl"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                        <select class="ql-align">
+                            <option selected></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                        <button class="ql-indent" value="-1"></button>
+                        <button class="ql-indent" value="+1"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                        <!-- <button class="ql-image"></button> -->
+                    </span>
 
-                <span class="ql-formats">
-                    <button type="button" id="clear-button" (click)="onClearHighlights($event)" aria-haspopup="true"
-                        class="tooltip tooltip-xs">
-                        <i class="pi pi-trash" style="font-size: 1.5em"></i>
-                        <span class="tooltip-content">Clear</span>
-                    </button>
-                </span>
+                    <span class="ql-formats">
+                        <button type="button" id="clear-button" (click)="onClearHighlights($event)" aria-haspopup="true"
+                            class="tooltip tooltip-xs">
+                            <i class="pi pi-trash" style="font-size: 1.5em"></i>
+                            <span class="tooltip-content">Clear</span>
+                        </button>
+                    </span>
 
-            </p-header>
-        </p-editor>
-    </div>
-</form>
+                </p-header>
+            </p-editor>
+        </div>
+    </form>
+</div>

@@ -1,5 +1,12 @@
 <div>
   <h6>Manage Images</h6>
+  <clr-alert [clrAlertType]="alertType" [(clrAlertClosed)]="closeAlertInd" [clrOff]="true">
+    <clr-alert-item>
+      <span class="alert-text">
+        {{ alertMessage }}
+      </span>
+    </clr-alert-item>
+  </clr-alert>
   <div class="images-controller">
     <div class="btn-group">
       <clr-dropdown>
@@ -18,28 +25,28 @@
     <nav class="subnav">
       <ul class="nav">
         <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link active"
-            ><span class="nav-text">All({{ totalItems }})</span></a
-          >
+          <a href="javascript:void(0)" class="nav-link active"><span class="nav-text"
+              (click)="missingImageInd = false">All({{ totalItems }})</span></a>
         </li>
-        <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link"><span class="nav-text">Image Missing</span></a>
-        </li>
+        <!-- <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link" (click)="missingImageInd = true"><span class="nav-text">Image
+              Missing</span></a>
+        </li> -->
       </ul>
     </nav>
   </div>
   <div>
-    <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading">
+    <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" class="datagrid-compact">
       <clr-dg-column class="product-col">Product</clr-dg-column>
       <clr-dg-column class="sku-col">SKU</clr-dg-column>
       <clr-dg-column>All Images</clr-dg-column>
 
-      <clr-dg-row *ngFor="let stockItem of stockItems" [clrDgItem]="stockItem">
+      <clr-dg-row *ngFor="let stockItem of stockItems | orderBy: 'id'" [clrDgItem]="stockItem">
         <clr-dg-cell>{{ stockItem.name }}</clr-dg-cell>
         <clr-dg-cell>{{ stockItem.vendorSKU }}</clr-dg-cell>
         <clr-dg-cell>
           <div class="upload-wrapper">
-            <div class="upload-item" *ngFor="let photo of stockItem.photoLists; let i = index">
+            <div class="upload-item" *ngFor="let photo of stockItem.photoLists | orderBy: 'id'; let i = index">
               <!-- <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob
                                 [style.display]="'none'"
                                 (change)="setFileData($event, photo, 'originalPhotoBlob', true);" />
@@ -65,7 +72,7 @@
                                         (mouseenter)="op.toggle($event)" (mouseleave)="op.toggle($event)" />
                                 </div>
                             </ng-template> -->
-              <photo-item [photos]="photo"></photo-item>
+              <photo-item [photos]="photo" (error)="onError($event)"></photo-item>
             </div>
           </div>
         </clr-dg-cell>

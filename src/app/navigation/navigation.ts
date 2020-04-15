@@ -5,7 +5,7 @@ export const navigation: RootNavigation[] = [
     id: 'inventory',
     title: 'Inventory',
     translate: 'NAV.INVENTORY',
-    type: 'group',    
+    type: 'group',
     children: [
       {
         id: 'products',
@@ -21,19 +21,19 @@ export const navigation: RootNavigation[] = [
             url: '/products/manage-products',
             exactMatch: false,
           },
-          {
-            id: 'add-product',
-            title: 'Add Product',
-            type: 'item',
-            url: '/products/manage-products/new',
-            exactMatch: true,
-          },
+          // {
+          //   id: 'add-product',
+          //   title: 'Add Product',
+          //   type: 'item',
+          //   url: '/products/manage-products/new',
+          //   exactMatch: true,
+          // },
           {
             id: 'manage-images',
             title: 'Manage Images',
             type: 'item',
             url: '/products/manage-images',
-            exactMatch: true,
+            exactMatch: false,
           },
         ],
       },

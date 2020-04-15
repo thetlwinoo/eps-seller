@@ -88,7 +88,7 @@ export class ProductEffects {
         this.productsService.createProducts(product).pipe(
           filter((res: HttpResponse<IProducts>) => res.ok),
           switchMap((res: HttpResponse<IProducts>) => [ProductActions.saveProductSuccess({ product: res.body })]),
-          tap(() => this.router.navigate(['/products/manage-products'])),
+          // tap(() => this.router.navigate(['/products/manage-products'])),
           catchError(err => of(ProductActions.productFailure({ errorMsg: err.message })))
         )
       )
@@ -102,7 +102,7 @@ export class ProductEffects {
         this.productsService.updateProducts(product).pipe(
           filter((res: HttpResponse<IProducts>) => res.ok),
           switchMap((res: HttpResponse<IProducts>) => [ProductActions.saveProductSuccess({ product: res.body })]),
-          tap(() => this.router.navigate(['/products/manage-products'])),
+          // tap(() => this.router.navigate(['/products/manage-products'])),
           catchError(err => of(ProductActions.productFailure({ errorMsg: err.message })))
         )
       )
@@ -299,5 +299,5 @@ export class ProductEffects {
     private photosService: PhotosService,
     protected parseLinks: JhiParseLinks,
     private router: Router
-  ) { }
+  ) {}
 }

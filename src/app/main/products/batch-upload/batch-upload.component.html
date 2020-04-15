@@ -8,9 +8,18 @@
 
 
 <div class="batch-upload-wrapper">
-    <h6 class="title"><a href [routerLink]="'/products/manage-products'">Manage Products</a>
+    <h6 class="title"><span class="route-item" [routerLink]="'/products/manage-products'">Manage Products</span>
         &nbsp;<clr-icon shape="caret" dir="right"></clr-icon>&nbsp;Batch Upload
     </h6>
+    <div class="progress-wrapper">
+        <div class="progress-message">
+            <p *ngIf="importPercentage<100">{{importCount}} of {{importTotalCount}} uploaded
+                ({{importPercentage | number: '1.0-0'}}%)</p>
+            <p *ngIf="importPercentage===100">Total {{importTotalCount}} have been uploaded to system</p>
+        </div>
+        <clr-progress-bar [clrValue]="importPercentage" clrMax="100"></clr-progress-bar>
+    </div>
+
     <input #file [style.display]="'none'" type="file" id="file" accept=".xls,.xlsx,.csv,.json"
         (change)="onUpload($event)" hidden />
     <clr-tabs>
@@ -125,3 +134,16 @@
         </clr-tab>
     </clr-tabs>
 </div>
+
+<clr-modal [(clrModalOpen)]="showImportCompleted" [clrModalSize]="'sm'" [clrModalStaticBackdrop]="false"
+    [clrModalClosable]="false">
+    <h3 class="modal-title">Import To System</h3>
+    <div class="modal-body">
+        <p>Total {{importCount}} imported</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="onCompletedImport()">
+            Done
+        </button>
+    </div>
+</clr-modal>

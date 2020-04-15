@@ -7,25 +7,30 @@ import { rootAnimations } from '@eps/animations';
   templateUrl: './decoration-form.component.html',
   styleUrls: ['./decoration-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: rootAnimations
+  animations: rootAnimations,
 })
 export class DecorationFormComponent implements OnInit {
-  @Input() productDecorationForm: FormGroup;
+  @Input() productsForm: FormGroup;
 
-  constructor() { }
-
-  ngOnInit() {
+  get productDecorationForm(): FormGroup {
+    if (this.productsForm) {
+      return this.productsForm.get('productDocument') as FormGroup;
+    }
   }
 
-  onClearLongDescription(event) {
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  onClearLongDescription(event): void {
     this.productDecorationForm.patchValue({
-      longDescription: null
+      longDescription: null,
     });
   }
-  
-  onClearHighlights(event) {
+
+  onClearHighlights(event): void {
     this.productDecorationForm.patchValue({
-      highlights: null
+      highlights: null,
     });
   }
 }

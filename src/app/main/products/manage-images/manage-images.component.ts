@@ -10,11 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IStockItems, IPhotos, Photos } from '@eps/models';
+import { IStockItems, IPhotos, Photos, AlertType } from '@eps/models';
 import { StockItemsService, PhotosService } from '@eps/services';
 import { AccountService } from '@eps/core';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { ImageUtils } from '@eps/services';
+import { ImagesMissingFilterPipe } from '../filters/manage-images-missing.pipe';
 
 @Component({
   selector: 'app-manage-images',
@@ -40,6 +41,11 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
   loading = true;
   selectedRows: any;
 
+  closeAlertInd = true;
+  alertMessage: string;
+  alertType: AlertType;
+  missingImageInd = false;
+
   constructor(
     private _rootTranslationLoaderService: RootTranslationLoaderService,
     protected stockItemsService: StockItemsService,
@@ -52,7 +58,8 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     protected eventManager: JhiEventManager,
     protected elementRef: ElementRef,
     protected dataUtils: JhiDataUtils,
-    protected imageUtils: ImageUtils
+    protected imageUtils: ImageUtils,
+    private imageMissingFilterPipe: ImagesMissingFilterPipe
   ) {
     this.itemsPerPage = 10;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -71,7 +78,7 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.registerChangeInStockItems();
+    this.registerChanged();
     this._rootTranslationLoaderService.loadTranslations(english, myanmar);
   }
 
@@ -134,8 +141,9 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  registerChangeInStockItems(): void {
-    this.eventSubscriber = this.eventManager.subscribe('stockItemsListModification', response => this.loadAll());
+  registerChanged(): void {
+    this.eventSubscriber = this.eventManager.subscribe('stockItemsListModification', () => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe('photosListModification', () => this.loadAll());
   }
 
   sort(): any {
@@ -168,6 +176,12 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     });
   }
 
+  showAlert(alertType: AlertType, alertMessage: string): void {
+    this.alertMessage = alertMessage;
+    this.alertType = alertType;
+    this.closeAlertInd = false;
+  }
+
   protected paginateStockItems(data: IStockItems[], headers: HttpHeaders): void {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
@@ -182,8 +196,10 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
           map((res: HttpResponse<IPhotos[]>) => res.body)
         )
         .subscribe((res: IPhotos[]) => {
+          let photosCount = 0;
           if (res.length) {
             const _length = res.length;
+            photosCount = _length;
             for (let _i = 0; _i < 8 - _length; _i++) {
               const newPhoto = new Photos();
               newPhoto.stockItemId = stockItem.id;
@@ -198,6 +214,7 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
           }
 
           stockItem.photoLists = res;
+          stockItem.photosCount = photosCount;
         });
     });
 
@@ -207,6 +224,8 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
   }
 
   protected onError(errorMessage: string): void {
-    this.jhiAlertService.error(errorMessage, null, null);
+    this.loading = false;
+    this.showAlert(AlertType.Danger, errorMessage);
+    // this.jhiAlertService.error(errorMessage, null, null);
   }
 }

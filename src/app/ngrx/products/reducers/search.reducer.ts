@@ -4,77 +4,77 @@ import { createReducer, on } from '@ngrx/store';
 export const searchFeatureKey = 'search';
 
 export interface State {
-    ids: number[];
-    loading: boolean;
-    error: string;
-    keyword: string;
-    links: any;
-    totalItems: any;
+  ids: number[];
+  loading: boolean;
+  error: string;
+  keyword: string;
+  links: any;
+  totalItems: any;
 }
 
 const initialState: State = {
-    ids: [],
-    loading: false,
-    error: '',
-    keyword: '',
-    links: null,
-    totalItems: null
+  ids: [],
+  loading: false,
+  error: '',
+  keyword: '',
+  links: null,
+  totalItems: null,
 };
 
 export const reducer = createReducer(
-    initialState,
-    on(ProductActions.searchProductsWithNoPaging, (state, { keyword }) => {
-        return keyword === ''
-            ? {
-                ...state,
-                ids: [],
-                loading: false,
-                error: '',
-                keyword
-            }
-            : {
-                ...state,
-                loading: true,
-                error: '',
-                keyword
-            };
-    }),
-    on(ProductActions.searchProductsWithPaging, (state, { query }) => {
-        return !query
-            ? {
-                ...state,
-                ids: [],
-                loading: false,
-                error: '',
-                keyword: ''
-            }
-            : {
-                ...state,
-                loading: true,
-                error: '',
-                keyword: query.keyword
-            };
-    }),
-    on(ProductActions.searchWithNoPagingSuccess, (state, { products }) => ({
-        ...state,
-        ids: products.map(product => product.id),
-        loading: false,
-        error: '',
-        keyword: state.keyword
-    })),
-    on(ProductActions.searchWithPagingSuccess, (state, { payload }) => ({
-        ids: payload.products.map(product => product.id),
-        loading: false,
-        error: '',
-        keyword: state.keyword,
-        links: payload.links,
-        totalItems: payload.totalItems
-    })),
-    on(ProductActions.searchFailure, (state, { errorMsg }) => ({
-        ...state,
-        loading: false,
-        error: errorMsg,
-    }))
+  initialState,
+  on(ProductActions.searchProductsWithNoPaging, (state, { keyword }) =>
+    keyword === ''
+      ? {
+          ...state,
+          ids: [],
+          loading: false,
+          error: '',
+          keyword,
+        }
+      : {
+          ...state,
+          loading: true,
+          error: '',
+          keyword,
+        }
+  ),
+  on(ProductActions.searchProductsWithPaging, (state, { query }) =>
+    !query
+      ? {
+          ...state,
+          ids: [],
+          loading: false,
+          error: '',
+          keyword: '',
+        }
+      : {
+          ...state,
+          loading: true,
+          error: '',
+          keyword: query.keyword,
+        }
+  ),
+  on(ProductActions.searchWithNoPagingSuccess, (state, { products }) => ({
+    ...state,
+    ids: products.map(product => product.id),
+    loading: false,
+    error: '',
+    keyword: state.keyword,
+  })),
+  on(ProductActions.searchWithPagingSuccess, (state, { payload }) => ({
+    ids: payload.products.map(product => product.id),
+    loading: false,
+    error: '',
+    keyword: state.keyword,
+    links: payload.links,
+    totalItems: payload.totalItems,
+  })),
+  on(ProductActions.searchFailure, (state, { errorMsg }) => ({
+    ...state,
+    loading: false,
+    error: errorMsg,
+  }))
 );
 
 export const getIds = (state: State) => state.ids;

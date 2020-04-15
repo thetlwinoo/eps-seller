@@ -1,17 +1,19 @@
 export interface IProductOption {
-    id?: number;
-    productOptionValue?: string;
-    productOptionSetProductOptionSetValue?: string;
-    productOptionSetId?: number;
-    supplierId?: number;
+  id?: number;
+  value?: string;
+  productOptionSetValue?: string;
+  productOptionSetId?: number;
+  supplierName?: string;
+  supplierId?: number;
 }
 
 export class ProductOption implements IProductOption {
-    constructor(
-        public id?: number,
-        public productOptionValue?: string,
-        public productOptionSetProductOptionSetValue?: string,
-        public productOptionSetId?: number,
-        public supplierId?: number
-    ) {}
+  constructor(
+    public id?: number,
+    public value?: string,
+    public productOptionSetValue?: string,
+    public productOptionSetId?: number,
+    public supplierName?: string,
+    public supplierId?: number
+  ) {}
 }

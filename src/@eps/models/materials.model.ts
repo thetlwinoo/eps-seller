@@ -1,8 +1,8 @@
-export interface IBarcodeTypes {
+export interface IMaterials {
   id?: number;
   name?: string;
 }
 
-export class BarcodeTypes implements IBarcodeTypes {
+export class Materials implements IMaterials {
   constructor(public id?: number, public name?: string) {}
 }

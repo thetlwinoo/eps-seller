@@ -1,5 +1,5 @@
 import { ISuppliers } from '@eps/models';
-import { createSelector, createFeatureSelector, combineReducers, Action } from '@ngrx/store';
+import { createSelector, createFeatureSelector, combineReducers, Action, ActionReducer } from '@ngrx/store';
 
 import * as fromSupplier from 'app/ngrx/auth/reducers/supplier.reducer';
 import * as fromRoot from 'app/ngrx';

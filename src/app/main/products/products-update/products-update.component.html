@@ -1,5 +1,7 @@
-<div>
-    <h6>Products Update</h6>
+<div *ngIf="!productsForm?.pending">
+    <h6 class="title"><span class="route-item" [routerLink]="'/products/manage-products'">Manage Products</span>
+        &nbsp;<clr-icon shape="caret" dir="right"></clr-icon>&nbsp;Product
+    </h6>
     <div class="clr-row">
         <div class="clr-col-12">
             <div class="card">
@@ -19,7 +21,7 @@
                     SKU Information
                 </div>
                 <div class="card-block">
-                    <sku-form [productsForm]="productsForm" [products]="products"></sku-form>
+                    <sku-form [productsForm]="productsForm"></sku-form>
                 </div>
             </div>
         </div>
@@ -31,7 +33,7 @@
                     Product Information
                 </div>
                 <div class="card-block">
-                    <information-form [productInformationForm]="productsForm.get('document')"></information-form>
+                    <information-form [productsForm]="productsForm"></information-form>
                 </div>
             </div>
         </div>
@@ -43,15 +45,30 @@
                     Product Decoration
                 </div>
                 <div class="card-block">
-                    <decoration-form [productDecorationForm]="productsForm.get('document')"></decoration-form>
+                    <decoration-form [productsForm]="productsForm"></decoration-form>
                 </div>
             </div>
         </div>
     </div>
     <div class="actions-wrapper sticky-bottom">
         <button class="btn btn-primary" (click)="saveProduct()">Publish</button>
+        <button class="btn btn-secondary" [routerLink]="'/products/manage-products'">Cancel</button>
     </div>
 </div>
+
+<clr-modal [(clrModalOpen)]="showImportCompleted" [clrModalSize]="'sm'" [clrModalStaticBackdrop]="false"
+    [clrModalClosable]="false">
+    <h3 class="modal-title">Update Product</h3>
+    <div class="modal-body">
+        <p>Product has been sucessfully updated.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" [routerLink]="'/products/manage-products'"
+            (click)="showImportCompleted = false">
+            Done
+        </button>
+    </div>
+</clr-modal>
 
 <!-- <clr-tabs>
     <clr-tab>

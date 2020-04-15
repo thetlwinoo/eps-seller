@@ -18,7 +18,7 @@ export const createProduct = createAction('[Products/API] Create Product', props
 
 export const updateProduct = createAction('[Products/API] Update Product', props<{ product: Products }>());
 
-export const saveProduct = createAction('[Products/API] Save Product', props<{ product: IProducts }>());
+export const saveProduct = createAction('[Products/API] Save Product', props<{ product: Products }>());
 
 export const saveProductSuccess = createAction('[Products/API] Save Product Success', props<{ product: IProducts }>());
 
@@ -26,7 +26,7 @@ export const saveStockItem = createAction('[Products/API] Save StockItem', props
 
 export const saveStockItemSuccess = createAction('[Products/API] Save StockItem Success', props<{ stockItem: IStockItems }>());
 
-export const importProduct = createAction('[Products/API] Import Product', props<{ product: IProducts }>());
+export const importProduct = createAction('[Products/API] Import Product', props<{ product: Products }>());
 
 export const importProductSuccess = createAction('[Products/API] Import Product Success', props<{ product: IProducts }>());
 

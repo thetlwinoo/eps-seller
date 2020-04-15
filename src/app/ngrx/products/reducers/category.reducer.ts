@@ -5,19 +5,19 @@ import { IProductCategory } from '@eps/models';
 export const categoryFeatureKey = 'category';
 
 export interface State {
-    selectedCategoryId: number | null;
+  selectedCategoryId: number | null;
 }
 
 export const initialState: State = {
-    selectedCategoryId: null
-}
+  selectedCategoryId: null,
+};
 
 export const reducer = createReducer(
-    initialState,
-    on(CategoryActions.selectCategory, (state, { id }) => ({
-        ...state,
-        selectedCategoryId: id,
-    }))
+  initialState,
+  on(CategoryActions.selectCategory, (state, { id }) => ({
+    ...state,
+    selectedCategoryId: id,
+  }))
 );
 
 export const getSelectedId = (state: State) => state.selectedCategoryId;

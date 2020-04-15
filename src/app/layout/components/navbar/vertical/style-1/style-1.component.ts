@@ -27,13 +27,10 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
       this.rootConfig = config;
     });
 
-    this.accountService.identity().pipe(
-      map(account => {
-        this.account = account;
-        console.log('accountttt', account);
-        this.store.dispatch(SupplierActions.getLoginSupplier());
-      })
-    );
+    this.accountService.identity().subscribe(account => {
+      this.account = account;
+      this.store.dispatch(SupplierActions.getLoginSupplier());
+    });
   }
 
   ngOnDestroy(): void {

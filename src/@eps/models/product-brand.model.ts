@@ -1,19 +1,9 @@
 export interface IProductBrand {
-    id?: number;
-    productBrandName?: string;
-    photoContentType?: string;
-    photo?: any;
-    merchantMerchantName?: string;
-    merchantId?: number;
+  id?: number;
+  name?: string;
+  thumbnailUrl?: string;
 }
 
 export class ProductBrand implements IProductBrand {
-    constructor(
-        public id?: number,
-        public productBrandName?: string,
-        public photoContentType?: string,
-        public photo?: any,
-        public merchantMerchantName?: string,
-        public merchantId?: number
-    ) {}
+  constructor(public id?: number, public name?: string, public thumbnailUrl?: string) {}
 }

@@ -1,70 +1,131 @@
-[type='file']::-webkit-file-upload-button {
+photo-item {
+  [type='file']::-webkit-file-upload-button {
     -webkit-appearance: button;
-}
+  }
 
-.upload-control {
+  .default-badge-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+
+    .default-badge {
+      position: relative;
+      left: -0.3rem;
+      margin-bottom: 0.5rem;
+
+      &.horizontal-badge:before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        border: 0.21rem solid transparent;
+        border-bottom-color: #a92d05;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        left: 0.1rem;
+        bottom: -0.2rem;
+      }
+
+      &.horizontal-badge {
+        display: inline-block;
+        background-color: #ff5722;
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+        padding: 0.1rem 0.5rem;
+        text-transform: capitalize;
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.5rem;
+        line-height: 1;
+        white-space: nowrap;
+
+        svg:not(:root) {
+          overflow: hidden;
+        }
+
+        .icon {
+          margin-right: 0.3rem;
+          font-size: 0.85rem;
+        }
+
+        fa-icon {
+          font-size: 8px !important;
+          width: 8px !important;
+          height: 8px !important;
+          min-width: 8px !important;
+          min-height: 8px !important;
+          line-height: 8px !important;
+        }
+      }
+    }
+  }
+
+  .upload-control {
     width: 97px;
     height: 97px;
     position: relative;
     cursor: cell;
 
     .image-upload-btn {
-        width: 100%;
-        height: 100%;
-        border: 1px dashed #c4c6cf;
-        text-align: left;
+      width: 100%;
+      height: 100%;
+      border: 1px dashed #c4c6cf;
+      text-align: left;
     }
 
     .image-upload-btn .upload-btn-icon.next-icon {
-        margin: 18px 0 0 30px;
-        font-size: 2.5em;
-        color: #c4c6cf;
+      margin: 18px 0 0 30px;
+      font-size: 2.5em;
+      color: #c4c6cf;
     }
 
     .next-icon {
-        position: relative;
-        display: inline-block;
-        font-weight: 400;
-        width: 32px;
-        height: 32px;
+      position: relative;
+      display: inline-block;
+      font-weight: 400;
+      width: 32px;
+      height: 32px;
     }
 
     .image-upload-btn .upload-text {
-        font-size: 12px;
-        text-align: center;
-        margin: 6px 0;
-        color: #c4c6cf;
-        padding: 0;
+      font-size: 12px;
+      text-align: center;
+      margin: 6px 0;
+      color: #c4c6cf;
+      padding: 0;
     }
-}
+  }
 
-.upload-container {
+  .upload-container {
     width: 97px;
     height: 97px;
     position: relative;
     cursor: cell;
-}
+  }
 
-.upload-container .image-upload-btn .upload-btn-icon.next-icon {
+  .upload-container .image-upload-btn .upload-btn-icon.next-icon {
     // margin: 30px 0 0 40px;
     top: 50%;
     // color: #1686cc;
-}
+  }
 
-.next-icon {
+  .next-icon {
     position: relative;
     display: inline-block;
     font-weight: 400;
-}
+  }
 
-.upload-container .image-upload-btn .upload-text {
+  .upload-container .image-upload-btn .upload-text {
     font-size: 12px;
     text-align: center;
     margin: 6px 0;
     padding: 0;
-}
+  }
 
-.upload-container .image-preview {
+  .upload-container .image-preview {
     display: block;
     position: absolute;
     left: 0;
@@ -74,19 +135,19 @@
     background-color: #f6f6f6;
     overflow: hidden;
     border: 1px dashed #c4c6cf;
-}
+  }
 
-img {
+  img {
     max-width: 100%;
     max-height: 100%;
-}
+  }
 
-.overlay-image {
+  .overlay-image {
     width: 256px;
     height: 256px;
-}
+  }
 
-.upload-container .image-preview .image-link {
+  .upload-container .image-preview .image-link {
     display: table-cell;
     width: 97px;
     height: 97px;
@@ -94,13 +155,13 @@ img {
     vertical-align: middle;
     cursor: default;
     //overflow: hidden;
-}
+  }
 
-.upload-container .image-preview:hover .image-tools {
+  .upload-container .image-preview:hover .image-tools {
     height: 28px;
-}
+  }
 
-.upload-container .image-preview:hover .image-tools .tools-icon {
+  .upload-container .image-preview:hover .image-tools .tools-icon {
     line-height: 28px;
     color: #fff;
     // padding: 0 5px;
@@ -108,9 +169,9 @@ img {
     cursor: pointer;
     float: left;
     width: 33.3%;
-}
+  }
 
-.upload-container .image-tools {
+  .upload-container .image-tools {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -120,37 +181,38 @@ img {
     background-color: rgba(0, 0, 0, 0.7);
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
-}
+  }
 
-a:visited {
+  a:visited {
     color: #199cb7;
-}
+  }
 
-a:visited {
+  a:visited {
     color: #d9e4f5;
-}
+  }
 
-a:link {
+  a:link {
     color: #4077cc;
-}
+  }
 
-.product-badge-wrapper {
+  .product-badge-wrapper {
     position: absolute;
     right: 3px;
     top: 3px;
 
     clr-icon {
-        color: #ff5722;
+      color: #ff5722;
     }
-}
+  }
 
-.view-original {
+  .view-original {
     .modal-body {
-        overflow-y: unset;
-        overflow-x: unset;
+      overflow-y: unset;
+      overflow-x: unset;
 
-        img{
-            max-height: 70vh;
-        }
+      img {
+        max-height: 70vh;
+      }
     }
+  }
 }

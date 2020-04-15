@@ -22,12 +22,13 @@ import { ProductListComponent } from './manage-images/product-list/product-list.
 
 import { select, Store } from '@ngrx/store';
 import * as fromProducts from 'app/ngrx/products/reducers';
-import { CategoryActions } from 'app/ngrx/products/actions';
+import { CategoryActions, FetchActions } from 'app/ngrx/products/actions';
 import { InformationFormComponent } from './products-update/information-form/information-form.component';
 import { StockItemsFilterPipe } from './filters/stock-items-filter.pipe';
 import { PhotoItemComponent } from './manage-images/photo-item/photo-item.component';
 import { DocumentProcessService } from '@eps/services';
 import { BatchUploadComponent } from './batch-upload/batch-upload.component';
+import { ImagesMissingFilterPipe } from './filters/manage-images-missing.pipe';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsResolve implements Resolve<IProducts> {
@@ -39,15 +40,16 @@ export class ProductsResolve implements Resolve<IProducts> {
       return this.service.getOne(id).pipe(
         filter((res: HttpResponse<Products>) => res.ok),
         map((res: HttpResponse<Products>) => {
-          console.log('product', res.body);
-          const products = new ProductsDTO(res.body);
-          this.store.dispatch(CategoryActions.selectCategory({ id: products.productCategory.id }));
-          console.log('converted product', res.body, products);
+          const products = res.body;
+          this.store.dispatch(CategoryActions.selectCategory({ id: products.productCategoryId }));
+          this.store.dispatch(FetchActions.fetchStockItems({ productId: products.id }));
+          this.store.dispatch(FetchActions.fetchProductDocument({ id: products.id }));
+          console.log('resolved', products);
           return products;
         })
       );
     }
-    return of(new ProductsDTO());
+    return of(new Products());
   }
 }
 
@@ -151,10 +153,11 @@ const routes = [
     ProductListComponent,
     InformationFormComponent,
     StockItemsFilterPipe,
+    ImagesMissingFilterPipe,
     PhotoItemComponent,
     BatchUploadComponent,
   ],
   imports: [CommonModule, RootSharedModule, RouterModule.forChild(routes)],
-  providers: [DocumentProcessService],
+  providers: [DocumentProcessService, ImagesMissingFilterPipe],
 })
 export class ProductsModule {}

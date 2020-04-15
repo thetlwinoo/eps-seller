@@ -17,7 +17,7 @@ export class StockItemsService {
 
   public extendUrl = SERVER_API_URL + 'services/zezawar/api/stock-items-extend';
 
-  constructor(protected http: HttpClient) { }
+  constructor(protected http: HttpClient) {}
 
   create(stockItems: IStockItems): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(stockItems);
@@ -72,7 +72,8 @@ export class StockItemsService {
 
   importStockItem(stockItems: IStockItems): Observable<IStockItems> {
     const copy = this.convertDateFromClient(stockItems);
-    return this.http.post<IStockItems>(this.extendUrl + '/import', copy, { observe: 'response' })
+    return this.http
+      .post<IStockItems>(this.extendUrl + '/import', copy, { observe: 'response' })
       .pipe(
         filter((res: HttpResponse<StockItems>) => res.ok),
         map((res: HttpResponse<StockItems>) => res.body)
@@ -83,7 +84,7 @@ export class StockItemsService {
     const copy: IStockItems = Object.assign({}, stockItems, {
       sellStartDate: stockItems.sellStartDate && stockItems.sellStartDate.isValid() ? stockItems.sellStartDate.toJSON() : undefined,
       sellEndDate: stockItems.sellEndDate && stockItems.sellEndDate.isValid() ? stockItems.sellEndDate.toJSON() : undefined,
-      lastEditedWhen: stockItems.lastEditedWhen && stockItems.lastEditedWhen.isValid() ? stockItems.lastEditedWhen.toJSON() : undefined
+      lastEditedWhen: stockItems.lastEditedWhen && stockItems.lastEditedWhen.isValid() ? stockItems.lastEditedWhen.toJSON() : undefined,
     });
     return copy;
   }

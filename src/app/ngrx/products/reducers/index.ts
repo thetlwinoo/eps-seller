@@ -1,5 +1,5 @@
-import { IProducts } from '@eps/models';
-import { createSelector, createFeatureSelector, combineReducers, Action } from '@ngrx/store';
+import { IProducts, IProductAttribute, IProductOption } from '@eps/models';
+import { createSelector, createFeatureSelector, combineReducers, Action, resultMemoize } from '@ngrx/store';
 import * as fromFetch from 'app/ngrx/products/reducers/fetch.reducer';
 import * as fromCategory from 'app/ngrx/products/reducers/category.reducer';
 import * as fromRoot from 'app/ngrx';
@@ -7,6 +7,7 @@ import * as fromSearch from 'app/ngrx/products/reducers/search.reducer';
 import * as fromProducts from 'app/ngrx/products/reducers/products.reducer';
 import { ITEMS_PER_PAGE } from '@eps/constants';
 import { TreeNode } from 'primeng/api';
+import { CommonUtils } from '@eps/utils/common.utils';
 
 export const productsFeatureKey = 'products';
 
@@ -43,7 +44,10 @@ export const {
   selectTotal: getTotalProducts,
 } = fromProducts.adapter.getSelectors(getProductEntitiesState);
 
-export const getSelectedProduct = createSelector(getProductEntities, getSelectedProductId, (entities, selectedId) => selectedId && entities[selectedId]
+export const getSelectedProduct = createSelector(
+  getProductEntities,
+  getSelectedProductId,
+  (entities, selectedId) => selectedId && entities[selectedId]
 );
 
 // Search State
@@ -54,9 +58,8 @@ export const getSearchLoading = createSelector(getSearchState, fromSearch.getLoa
 export const getSearchLinks = createSelector(getSearchState, fromSearch.getLinks);
 export const getSearchTotalItems = createSelector(getSearchState, fromSearch.getTotalItems);
 export const getSearchError = createSelector(getSearchState, fromSearch.getError);
-export const getSearchResults = createSelector(getProductEntities, getSearchProductIds, (products, searchIds) => searchIds
-            .map(id => products[id])
-            .filter((product): product is IProducts => product != null)
+export const getSearchResults = createSelector(getProductEntities, getSearchProductIds, (products, searchIds) =>
+  searchIds.map(id => products[id]).filter((product): product is IProducts => product != null)
 );
 
 // Fetch State
@@ -97,6 +100,8 @@ export const getFetchCategoriesTree = createSelector(getFetchCategories, entitie
   return treeModel;
 });
 export const getFetchModels = createSelector(getFetchState, fromFetch.getModels);
+export const getFetchStockItems = createSelector(getFetchState, fromFetch.getStockItems);
+export const getFetchProductDocument = createSelector(getFetchState, fromFetch.getProductDocument);
 export const getFetchBrands = createSelector(getFetchState, fromFetch.getBrands);
 export const getFetchProductChoice = createSelector(getFetchState, fromFetch.getProductChoice);
 export const getFetchIsProductChoiceFetched = createSelector(getFetchState, fromFetch.getIsProductChoiceFetched);
@@ -105,21 +110,31 @@ export const getFetchProductOptionList = createSelector(getFetchState, fromFetch
 export const getFetchWarrantyTypes = createSelector(getFetchState, fromFetch.getWarrantyTypes);
 export const getFetchBarcodeTypes = createSelector(getFetchState, fromFetch.getBarcodeTypes);
 
+export const getSelectedProductAttributeIds = createSelector(getFetchState, fromFetch.getProductAttributeIds);
+export const getSelectedProductAttribute = createSelector(
+  getFetchProductAttributeList,
+  getSelectedProductAttributeIds,
+  (entities, attributeIds) => {
+    const result = attributeIds
+      .map(id => entities.find(x => x.id === id))
+      .filter((attribute): attribute is IProductAttribute => attribute != null);
+
+    return result.filter((item, index) => result.indexOf(item) === index);
+  }
+);
+
+export const getSelectedProductOptionIds = createSelector(getFetchState, fromFetch.getProductOptionIds);
+export const getSelectedProductOption = createSelector(getFetchProductOptionList, getSelectedProductOptionIds, (entities, optionIds) => {
+  const result = optionIds.map(id => entities.find(x => x.id === id)).filter((option): option is IProductOption => option != null);
+
+  return result.filter((item, index) => result.indexOf(item) === index);
+});
+
 // Category State
 export const getCategoryState = createSelector(getProductsState, (state: ProductsState) => state.category);
 export const getSelectedCategoryId = createSelector(getCategoryState, fromCategory.getSelectedId);
 export const getSelectedCategory = createSelector(
   getFetchCategories,
   getSelectedCategoryId,
-  (entities, selectedId) => findById(entities, selectedId) || null
+  (entities, selectedId) => CommonUtils.findById(entities, selectedId) || null
 );
-function findById(data, id) {
-  if (!data || !id) {return null;}
-  for (const datum of data) {
-    if (datum.id == id) return datum;
-    if (datum.children) {
-      let result = findById(datum.children, id);
-      if (result) return result;
-    }
-  }
-}

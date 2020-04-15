@@ -49,4 +49,8 @@ export class PhotosService {
   updateExtend(photos: IPhotos): Observable<EntityResponseType> {
     return this.http.put<IPhotos>(this.extendUrl + '/photos', photos, { observe: 'response' });
   }
+
+  setDefault(photos: IPhotos): Observable<EntityResponseType> {
+    return this.http.put<IPhotos>(`${this.extendUrl}/default`, photos, { observe: 'response' });
+  }
 }

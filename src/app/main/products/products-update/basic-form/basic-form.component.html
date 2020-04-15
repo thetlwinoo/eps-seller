@@ -1,40 +1,41 @@
-<form id="products-form" clrForm clrLayout="horizontal" name="productsForm" [formGroup]="productsForm">
-    <div class="clr-form-control clr-row">
-        <label for="product-name" class="clr-control-label clr-col-12 clr-col-md-2">Product Name</label>
-        <div class="clr-control-container clr-col-12 clr-col-md-10">
-            <div class="clr-input-wrapper">
-                <input #productName type="text" id="product-name" placeholder="Product Name"
-                    class="clr-input full-width" formControlName="productName">
-                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
-            </div>
-            <span class="clr-subtext">{{productName.value?.length || 0}}/255</span>
-        </div>
-    </div>
-    <div class="clr-form-control clr-row">
-        <label for="product-category" class="clr-control-label clr-col-12 clr-col-md-2">Product Category</label>
-        <div class="clr-control-container clr-col-12 clr-col-md-10">
-            <div class="clr-input-wrapper">
-                <input #productCategory type="text" id="product-category" placeholder="Product Category"
-                    class="clr-input w-50-p" formControlName="productCategoryName" (focus)="showModel = true;">
-                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
-                <button class="btn btn-link" disabled>History</button>
+<div *ngIf="productsForm">
+    <form id="products-form" clrForm clrLayout="horizontal" name="productsForm" [formGroup]="productsForm">
+        <div class="clr-form-control clr-row">
+            <label for="product-name" class="clr-control-label clr-col-12 clr-col-md-2">Product Name</label>
+            <div class="clr-control-container clr-col-12 clr-col-md-10">
+                <div class="clr-input-wrapper">
+                    <input #productName type="text" id="product-name" placeholder="Product Name"
+                        class="clr-input full-width" formControlName="name">
+                    <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+                </div>
+                <span class="clr-subtext">{{productName.value?.length || 0}}/255</span>
             </div>
         </div>
-    </div>
-    <div class="clr-form-control clr-row">
-        <label for="product-brand" class="clr-control-label clr-col-12 clr-col-md-2">Product Brand</label>
-        <div class="clr-control-container clr-col-12 clr-col-md-10">
-            <div class="clr-select-wrapper full-width">
-                <select #brandSelect name="product-brand" formControlName="productBrand" class="w-100-p" [compareWith]="compareObjects" required>
-                    <option [ngValue]="null">No Brand</option>
-                    <option *ngFor="let brand of (productBrands$ | async)" [ngValue]="brand">{{brand.productBrandName}}
-                    </option>
-                </select>
-                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+        <div class="clr-form-control clr-row">
+            <label for="product-category" class="clr-control-label clr-col-12 clr-col-md-2">Product Category</label>
+            <div class="clr-control-container clr-col-12 clr-col-md-10">
+                <div class="clr-input-wrapper">
+                    <input #productCategory type="text" id="product-category" placeholder="Product Category"
+                        class="clr-input w-50-p" formControlName="productCategoryLabel" (focus)="showModel = true;">
+                    <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+                    <button class="btn btn-link" disabled>History</button>
+                </div>
             </div>
         </div>
-    </div>    
-    <!-- <div class="clr-form-control clr-row">
+        <div class="clr-form-control clr-row">
+            <label for="product-brand" class="clr-control-label clr-col-12 clr-col-md-2">Product Brand</label>
+            <div class="clr-control-container clr-col-12 clr-col-md-10">
+                <div class="clr-select-wrapper full-width">
+                    <select #brandSelect name="product-brand" formControlName="productBrandId" class="w-100-p" required>
+                        <option [ngValue]="null">No Brand</option>
+                        <option *ngFor="let brand of (productBrands$ | async)" [ngValue]="brand.id">{{brand.name}}
+                        </option>
+                    </select>
+                    <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="clr-form-control clr-row">
         <label for="product-model" class="clr-control-label clr-col-12 clr-col-md-2">Product Model</label>
         <div class="clr-control-container clr-col-12 clr-col-md-10">
             <div class="clr-select-wrapper full-width">
@@ -46,14 +47,16 @@
                 <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
             </div>
         </div>
-    </div> -->   
-</form>
+    </div> -->
+    </form>
+</div>
+
 <!-- <button class="btn btn-primary" (click)="basic = true">Show modal</button> -->
 <clr-modal [(clrModalOpen)]="showModel">
     <h3 class="modal-title">Select Category</h3>
     <div class="modal-body category-tree">
         <input clrInput [(ngModel)]="searchTerm" #category (keyup)='onkeyup(category.value)'
-            placeholder="Filter Categories" class="w-100-p"/>
+            placeholder="Filter Categories" class="w-100-p" />
         <clr-tree [clrLazy]="true">
             <clr-tree-node *ngFor="let directory of parsedData" [(clrExpanded)]="directory.expanded">
                 <clr-icon [attr.shape]="directory.expanded?directory.expandedIcon:directory.collapsedIcon"></clr-icon>

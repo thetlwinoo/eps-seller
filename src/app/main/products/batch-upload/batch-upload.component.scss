@@ -6,6 +6,14 @@ app-batch-upload {
       fa-icon {
         color: #333333;
       }
+
+      .route-item {
+        cursor: pointer;
+      }
+    }
+
+    .progress-message {
+      margin-bottom: 0.5rem;
     }
   }
 }

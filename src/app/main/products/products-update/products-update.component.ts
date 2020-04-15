@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { RootTranslationLoaderService } from '@eps/services';
+import { RootTranslationLoaderService, ProductsService, ProductDocumentService, StockItemsService } from '@eps/services';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -8,7 +8,16 @@ import { ActivatedRoute } from '@angular/router';
 import { rootAnimations } from '@eps/animations';
 import { RootUtils } from '@eps/utils';
 
-import { ISuppliers } from '@eps/models';
+import {
+  ISuppliers,
+  Products,
+  IProductCategory,
+  IProductDocument,
+  IStockItems,
+  IProductAttribute,
+  IProductOption,
+  StockItems,
+} from '@eps/models';
 
 import { locale as english } from './i18n/en';
 import { locale as myanmar } from './i18n/mm';
@@ -18,26 +27,42 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import * as fromProducts from 'app/ngrx/products/reducers';
 import * as fromAuth from 'app/ngrx/auth/reducers';
-import { ProductActions } from 'app/ngrx/products/actions';
+import { ProductActions, FetchActions } from 'app/ngrx/products/actions';
 import { ProductsDTO } from '@eps/dto';
 
 @Component({
-  selector: 'app-products-update',
+  selector: 'products-update',
   templateUrl: './products-update.component.html',
   styleUrls: ['./products-update.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: rootAnimations
+  animations: rootAnimations,
 })
 export class ProductsUpdateComponent implements OnInit {
-
   actionsSubscription: Subscription;
-  products: ProductsDTO;
+  products: Products;
   isSaving: boolean;
   pageType: string;
   productsForm: FormGroup;
-  selectedTab: number = 0;
+  selectedTab = 0;
   supplier$: Observable<ISuppliers>;
   supplier: ISuppliers;
+  stockItems$: Observable<IStockItems[]>;
+  stockItems: IStockItems[];
+  productDocument$: Observable<IProductDocument>;
+  productDocument: IProductDocument;
+  selectedCategory$: Observable<IProductCategory>;
+  selectedCategory: IProductCategory;
+
+  showImportCompleted = false;
+
+  // selectedProductAttributeList$: Observable<IProductAttribute[]>;
+  // selectedProductAttributeList: IProductAttribute[];
+  // selectedProductOptionList$: Observable<IProductOption[]>;
+  // selectedProductOptionList: IProductOption[];
+
+  categoryId$: Observable<number>;
+  categoryId: number;
+  loadingForm = true;
   // Private
   private _unsubscribeAll: Subject<any>;
 
@@ -48,100 +73,160 @@ export class ProductsUpdateComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _location: Location,
     private _rootTranslationLoaderService: RootTranslationLoaderService,
-    protected activatedRoute: ActivatedRoute
+    protected activatedRoute: ActivatedRoute,
+    protected productsService: ProductsService,
+    protected productDocumentService: ProductDocumentService,
+    protected stockItemsService: StockItemsService
   ) {
     // this.products = new Products();
     this._unsubscribeAll = new Subject();
-    this.supplier$ = this.storeAuth.pipe(select(fromAuth.getSupplierFetched)) as Observable<ISuppliers>;
-    this.supplier$.pipe(takeUntil(this._unsubscribeAll)).subscribe(supplier => this.supplier = supplier);
+    this.supplier$ = this.storeAuth.pipe(select(fromAuth.getSupplierFetched));
+    this.supplier$.pipe(takeUntil(this._unsubscribeAll)).subscribe(supplier => (this.supplier = supplier));
+    this.stockItems$ = this.store.pipe(select(fromProducts.getFetchStockItems));
+    this.supplier$.pipe(takeUntil(this._unsubscribeAll)).subscribe(supplier => (this.supplier = supplier));
+    this.productDocument$ = this.store.pipe(select(fromProducts.getFetchProductDocument));
+    // this.selectedProductAttributeList$ = this.store.pipe(select(fromProducts.getSelectedProductAttribute));
+    // this.selectedProductOptionList$ = this.store.pipe(select(fromProducts.getSelectedProductOption));
+    this.categoryId$ = this.store.pipe(select(fromProducts.getSelectedCategoryId));
+    this.selectedCategory$ = this.store.pipe(select(fromProducts.getSelectedCategory));
 
     this.actionsSubscription = route.params
       .pipe(map(params => ProductActions.selectProduct({ id: params.id })))
       .subscribe(action => store.dispatch(action));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isSaving = false;
-    this.activatedRoute.data
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(({ products }) => {
-        this.products = products;
-        if (products.id) {
-          this.pageType = 'edit';
-        } else {
-          this.pageType = 'new';
+    this.activatedRoute.data.pipe(takeUntil(this._unsubscribeAll)).subscribe(({ products }) => {
+      this.products = products;
+      if (products.id) {
+        this.pageType = 'edit';
+      } else {
+        this.pageType = 'new';
+      }
+
+      this.categoryId$.pipe(takeUntil(this._unsubscribeAll)).subscribe(categoryId => {
+        this.categoryId = categoryId;
+        if (categoryId) {
+          this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
         }
-        this.productsForm = this.createProductForm();
       });
+
+      this.selectedCategory$.pipe(takeUntil(this._unsubscribeAll)).subscribe(category => {
+        this.selectedCategory = category;
+
+        this.productDocument$.pipe(takeUntil(this._unsubscribeAll)).subscribe(res => {
+          this.productDocument = res;
+
+          this.stockItems$.pipe(takeUntil(this._unsubscribeAll)).subscribe(stockItemsRes => {
+            this.stockItems = stockItemsRes;
+            // this.selectedProductAttributeList$
+            //   .pipe(takeUntil(this._unsubscribeAll))
+            //   .subscribe(productAttributeListRes => (this.selectedProductAttributeList = productAttributeListRes));
+
+            // this.selectedProductOptionList$
+            //   .pipe(takeUntil(this._unsubscribeAll))
+            //   .subscribe(productOptionListRes => (this.selectedProductOptionList = productOptionListRes));
+            if (
+              this.selectedCategory &&
+              this.productDocument &&
+              this.stockItems
+              // this.selectedProductAttributeList &&
+              // this.selectedProductOptionList
+            ) {
+              this.productsForm = this.createProductForm();
+            }
+          });
+        });
+      });
+    });
 
     this._rootTranslationLoaderService.loadTranslations(english, myanmar);
   }
 
   createProductForm(): FormGroup {
+    // console.log('productDocument', this.productDocument, this.selectedCategory, this.stockItems);
     return this._formBuilder.group({
       id: [this.products.id],
-      supplierId: [this.products.supplier ? this.products.supplier.id : ''],
-      productName: [this.products.productName],
+      supplierId: [this.products.supplierId ? this.products.supplierId : ''],
+      name: [this.products.name],
       productNumber: [this.products.productNumber],
       searchDetails: [this.products.searchDetails],
-      stockItemLists: [this.products.stockItemLists],
-      productBrand: [this.products.productBrand],
-      productCategory: [this.products.productCategory],
-      productCategoryName: [this.products.productCategory ? this.products.productCategory.parent.name + " / " + this.products.productCategory.name : ''],
-      productAttributeList: [this.products.productAttributeList],
-      productOptionList: [this.products.productOptionList],
-      productAttribute: null,
-      productOption: null,
-      document: this._formBuilder.group({
-        videoUrl: [this.products.document ? this.products.document.videoUrl : ''],
-        highlights: [this.products.document ? this.products.document.highlights : ''],
-        longDescription: [this.products.document ? this.products.document.longDescription : ''],
-        shortDescription: [this.products.document ? this.products.document.shortDescription : ''],
-        description: [this.products.document ? this.products.document.description : ''],
-        careInstructions: [this.products.document ? this.products.document.careInstructions : ''],
-        productType: [this.products.document ? this.products.document.productType : ''],
-        modelName: [this.products.document ? this.products.document.modelName : ''],
-        modelNumber: [this.products.document ? this.products.document.modelNumber : ''],
-        fabricType: [this.products.document ? this.products.document.fabricType : ''],
-        specialFeatures: [this.products.document ? this.products.document.specialFeatures : ''],
-        productComplianceCertificate: [this.products.document ? this.products.document.productComplianceCertificate : ''],
-        genuineAndLegal: [this.products.document ? this.products.document.genuineAndLegal : false],
-        countryOfOrigin: [this.products.document ? this.products.document.countryOfOrigin : ''],
-        usageAndSideEffects: [this.products.document ? this.products.document.usageAndSideEffects : ''],
-        safetyWarnning: [this.products.document ? this.products.document.safetyWarnning : ''],
-        warrantyType: [this.products.document ? this.products.document.warrantyType : ''],
-        warrantyPeriod: [this.products.document ? this.products.document.warrantyPeriod : ''],
-        warrantyPolicy: [this.products.document ? this.products.document.warrantyPolicy : ''],
-      })
+      stockItemLists: this._formBuilder.array(this.createStockItemArrayForm(this.stockItems)),
+      productBrandId: [this.products.productBrandId],
+      productBrandName: [this.products.productBrandName],
+      // productAttributeList: this._formBuilder.array(this.createProductAttributeArrayForm(this.selectedProductAttributeList)),
+      // productOptionList: this._formBuilder.array(this.createProductOptionArrayForm(this.selectedProductOptionList)),
+      // productAttribute: null,
+      // productOption: null,
+      productCategoryId: [this.selectedCategory.id],
+      productCategoryName: [this.selectedCategory.name],
+      productCategoryLabel: [this.selectedCategory.parentName + ' / ' + this.selectedCategory.name],
+      productDocument: this._formBuilder.group(this.productDocument),
     });
   }
 
-  saveProduct(): void {
-    const data = this.productsForm.getRawValue();
-    data.stockItemLists = this.products.stockItemLists;
-    data.searchDetails = data.productName ? data.productName : '';
-    data.supplier = this.supplier ? this.supplier : null;
-    this.cleanAuditDate(data.productCategory);
-    this.cleanAuditDate(data.productBrand);
-    data.handle = data.productName ? RootUtils.handleize(data.productName) : null;
-    console.log('this.productsForm', this.productsForm.getRawValue())
-    if (this.pageType == 'new') {
-      this.store.dispatch(ProductActions.createProduct({ product: data }));
-    } else {
-      this.store.dispatch(ProductActions.updateProduct({ product: data }));
-    }
-
-    // this._matSnackBar.open('Product saved', 'OK', {
-    //   verticalPosition: 'top',
-    //   duration: 2000
-    // });
+  createStockItemArrayForm(stockItems: IStockItems[]): any[] {
+    const stockItemList: any[] = [];
+    stockItems.map(item => {
+      stockItemList.push(this._formBuilder.group(item));
+    });
+    return stockItemList;
   }
 
-  cleanAuditDate(object) {
-    object.createdBy = null;
-    object.createdDate = null;
-    object.lastModifiedBy = null;
-    object.lastModifiedDate = null;
+  onAddStockItem(event): void {
+    const stockItem = new StockItems();
+    this.stockItems.push(stockItem);
+    this.productsForm = this.createProductForm();
+  }
+  // createProductAttributeArrayForm(productAttributes): any[] {
+  //   const productAttributeList: any[] = [];
+  //   productAttributes.map(item => {
+  //     productAttributeList.push(this._formBuilder.group(item));
+  //   });
+
+  //   return productAttributeList;
+  // }
+
+  // createProductOptionArrayForm(productOptions): any[] {
+  //   const productOptionList: any[] = [];
+  //   productOptions.map(item => {
+  //     productOptionList.push(this._formBuilder.group(item));
+  //   });
+
+  //   return productOptionList;
+  // }
+
+  // createProductAttributeForm(stockItems): any[] {
+  //   const productAttributeList: IProductAttribute[] = [];
+  //   stockItems.map(stockItem => {
+  //     this.store.pipe(select(fromProducts.selectProductAttribute(stockItem.productAttributeId))).subscribe(res=> {
+
+  //     });
+  //   });
+
+  //   return stockItemList;
+  // }
+
+  saveProduct(): void {
+    const product = this.productsForm.getRawValue();
+    // if (this.pageType === 'new') {
+    //   this.store.dispatch(ProductActions.createProduct({ product: data }));
+    // } else {
+    //   this.store.dispatch(ProductActions.updateProduct({ product: data }));
+    // }
+    console.log('formdata', product);
+    this.productDocumentService.importProductDocument(product.productDocument).subscribe(productDocumentRes => {
+      product.productDocumentId = productDocumentRes.id;
+      this.productsService.importProduct(product).subscribe(productResource => {
+        product.stockItemLists.map(stockItem => {
+          stockItem.productId = productResource.id;
+          this.stockItemsService.importStockItem(stockItem).subscribe(() => {
+            this.showImportCompleted = true;
+          });
+        });
+      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -149,5 +234,4 @@ export class ProductsUpdateComponent implements OnInit {
     this._unsubscribeAll.complete();
     this.actionsSubscription.unsubscribe();
   }
-
 }

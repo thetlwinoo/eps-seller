@@ -8,11 +8,14 @@ import {
   IProductAttribute,
   IProductOption,
   IWarrantyTypes,
+  IProductDocument,
+  IProductCategory,
+  IStockItems,
 } from '@eps/models';
 
 export const fetchCategories = createAction('[Products/API] Fetch Categories');
 
-export const fetchCategoriesSuccess = createAction('[Products/API] Fetch Categories Success', props<{ categories: any[] }>());
+export const fetchCategoriesSuccess = createAction('[Products/API] Fetch Categories Success', props<{ categories: IProductCategory[] }>());
 
 export const fetchModels = createAction('[Products/API] Fetch Models', props<{ id: number }>());
 
@@ -53,5 +56,16 @@ export const fetchBarcodeTypeSuccess = createAction(
   '[Products/API] Fetch Barcode Type Success',
   props<{ barcodeTypes: IBarcodeTypes[] }>()
 );
+
+export const fetchProductDocument = createAction('[Products/API] Fetch Product Document', props<{ id: number }>());
+
+export const fetchProductDocumentSuccess = createAction(
+  '[Products/API] Fetch Product Document Success',
+  props<{ productDocument: IProductDocument }>()
+);
+
+export const fetchStockItems = createAction('[Products/API] Fetch Stock Items', props<{ productId: number }>());
+
+export const fetchStockItemsSuccess = createAction('[Products/API] Fetch Stock Items Success', props<{ stockItems: IStockItems[] }>());
 
 export const fetchFailure = createAction('[Products/API] Fetch Failure', props<{ errorMsg: string }>());

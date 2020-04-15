@@ -21,3 +21,4 @@ export * from './web-services/photos.service';
 export * from './web-services/stock-item-temp.service';
 export * from './web-services/upload-transactions.service';
 export * from './web-services/barcode-types.service';
+export * from './web-services/product-document.service';

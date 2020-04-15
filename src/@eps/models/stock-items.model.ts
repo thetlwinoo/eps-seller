@@ -1,7 +1,12 @@
 import { Moment } from 'moment';
-import { IPhotos, IDangerousGoods, ISpecialDeals } from '@eps/models';
+import { IPhotos, ISpecialDeals, IMaterials, ICurrency } from '@eps/models';
+import { RootUtils } from '@eps/utils';
+import { IProductAttribute } from './product-attribute.model';
+import { IProductOption } from './product-option.model';
+import { IBarcodeTypes } from './barcode-types.model';
 
 export interface IStockItems {
+  guid?: string;
   id?: number;
   name?: string;
   vendorCode?: string;
@@ -34,7 +39,7 @@ export interface IStockItems {
   lastEditedWhen?: Moment;
   stockItemOnReviewLineId?: number;
   photoLists?: IPhotos[];
-  dangerousGoodLists?: IDangerousGoods[];
+  photosCount?: number;
   specialDiscounts?: ISpecialDeals[];
   itemLengthUnitCode?: string;
   itemLengthUnitId?: number;
@@ -54,10 +59,13 @@ export interface IStockItems {
   productAttributeId?: number;
   productOptionValue?: string;
   productOptionId?: number;
+  material?: IMaterials;
   materialName?: string;
   materialId?: number;
+  currency?: ICurrency;
   currencyCode?: string;
   currencyId?: number;
+  barcodeType?: IBarcodeTypes;
   barcodeTypeName?: string;
   barcodeTypeId?: number;
   stockItemHoldingId?: number;
@@ -66,6 +74,7 @@ export interface IStockItems {
 
 export class StockItems implements IStockItems {
   constructor(
+    public guid?: string,
     public id?: number,
     public name?: string,
     public vendorCode?: string,
@@ -98,7 +107,7 @@ export class StockItems implements IStockItems {
     public lastEditedWhen?: Moment,
     public stockItemOnReviewLineId?: number,
     public photoLists?: IPhotos[],
-    public dangerousGoodLists?: IDangerousGoods[],
+    public photosCount?: number,
     public specialDiscounts?: ISpecialDeals[],
     public itemLengthUnitCode?: string,
     public itemLengthUnitId?: number,
@@ -114,19 +123,26 @@ export class StockItems implements IStockItems {
     public packageHeightUnitId?: number,
     public itemPackageWeightUnitCode?: string,
     public itemPackageWeightUnitId?: number,
+    public productAttribute?: IProductAttribute,
     public productAttributeValue?: string,
     public productAttributeId?: number,
+    public productOption?: IProductOption,
     public productOptionValue?: string,
     public productOptionId?: number,
+    public material?: IMaterials,
     public materialName?: string,
     public materialId?: number,
+    public currency?: ICurrency,
     public currencyCode?: string,
     public currencyId?: number,
+    public barcodeType?: IBarcodeTypes,
     public barcodeTypeName?: string,
     public barcodeTypeId?: number,
     public stockItemHoldingId?: number,
     public productId?: number
   ) {
     this.activeInd = this.activeInd || false;
+    this.guid = RootUtils.generateGUID();
+    this.photosCount = 0;
   }
 }

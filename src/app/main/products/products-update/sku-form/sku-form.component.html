@@ -1,124 +1,138 @@
-<form id="products-form" clrForm clrLayout="horizontal" name="productsForm" [formGroup]="productsForm">
-    <div class="clr-form-control clr-row" *ngIf="productChoice && (productAttributeList$ | async).length">
-        <label for="attribute-select"
-            class="clr-control-label clr-col-12 clr-col-md-2">{{productChoice.productAttributeSetProductAttributeSetName}}</label>
-        <div class="clr-control-container clr-col-12 clr-col-md-10">
-            <div class="clr-select-wrapper">
-                <select #attributeSelect name="attribute-select" formControlName="productAttribute"
-                    (change)="addAttribute($event)" [compareWith]="compareObjects" required>
-                    <option *ngFor="let attribute of (productAttributeList$ | async)" [ngValue]="attribute">
-                        {{attribute.productAttributeValue}}
-                    </option>
-                </select>
-                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
-            </div>
-            <a href="javascript:void(0)" class="label clickable" *ngFor="let attribute of products.productAttributeList"
-                (click)="products.removeAttribute(attribute)">
-                {{attribute.productAttributeValue}}
-                <clr-icon shape="close" role="none"></clr-icon>
-            </a>
-        </div>
-    </div>
-    <div class="clr-form-control clr-row" *ngIf="productChoice && (productOptionList$ | async).length">
-        <label for="option-select"
-            class="clr-control-label clr-col-12 clr-col-md-2">{{productChoice.productOptionSetProductOptionSetValue}}</label>
-        <div class="clr-control-container clr-col-12 clr-col-md-10">
-            <div class="clr-select-wrapper">
-                <select #optionSelect name="option-select" formControlName="productOption" (change)="addOption($event)"
-                    [compareWith]="compareObjects" required>
-                    <option *ngFor="let option of (productOptionList$ | async)" [ngValue]="option">
-                        {{option.productOptionValue}}
-                    </option>
-                </select>
-                <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
-            </div>
-            <a href="javascript:void(0)" class="label clickable" *ngFor="let option of products.productOptionList"
-                (click)="products.removeOption(option)">
-                {{option.productOptionValue}}
-                <clr-icon shape="close" role="none"></clr-icon>
-            </a>
-        </div>
-    </div>
-</form>
-<clr-datagrid class="stockitem-table">
-    <clr-dg-column *ngIf="attributeInd" class="min-col-width">Attribute</clr-dg-column>
-    <clr-dg-column *ngIf="optionInd">Option</clr-dg-column>
-    <clr-dg-column class="min-col-width">Vendor Code</clr-dg-column>
-    <clr-dg-column class="min-col-width">Vendor SKU</clr-dg-column>
-    <clr-dg-column class="min-col-width">Barcode</clr-dg-column>
-    <clr-dg-column class="min-col-width">Barcode Type</clr-dg-column>
-    <clr-dg-column>Quantity</clr-dg-column>
-    <clr-dg-column>RetailPrice</clr-dg-column>
-    <clr-dg-column>UnitPrice</clr-dg-column>
-    <clr-dg-column>Weight(kg)</clr-dg-column>
-    <clr-dg-column>Length(cm)</clr-dg-column>
-    <clr-dg-column>Width(cm)</clr-dg-column>
-    <clr-dg-column>Height(cm)</clr-dg-column>
+<div *ngIf="productsForm">
+    <form id="products-form" clrForm clrLayout="horizontal" name="productsForm" [formGroup]="productsForm">
+        <button class="btn btn-primary btn-sm" (click)="addStockItem()">Add SKU</button>
 
-    <clr-dg-row *ngFor="let stockItem of products.stockItemLists" [clrDgItem]="stockItem">
-        <clr-dg-cell *ngIf="attributeInd" class="min-col-width">
-            <select name="attribute-select" [(ngModel)]="stockItem.productAttribute" [compareWith]="compareObjects"
-                disabled>
-                <option *ngFor="let item of (productAttributeList$|async)" [ngValue]="item">
-                    {{item.productAttributeValue}}
-                </option>
-            </select>
-        </clr-dg-cell>
-        <clr-dg-cell *ngIf="optionInd">
-            <select name="option-select" [(ngModel)]="stockItem.productOption" [compareWith]="compareObjects" disabled>
-                <option *ngFor="let item of (productOptionList$|async)" [ngValue]="item">
-                    {{item.productOptionValue}}
-                </option>
-            </select>
-        </clr-dg-cell>
-        <clr-dg-cell class="min-col-width"><input type="text" [(ngModel)]="stockItem.vendorCode"></clr-dg-cell>
-        <clr-dg-cell class="min-col-width"><input type="text" [(ngModel)]="stockItem.vendorSKU"></clr-dg-cell>
-        <clr-dg-cell class="min-col-width"><input type="text" [(ngModel)]="stockItem.barcode"></clr-dg-cell>
-        <clr-dg-cell>
-            <select name="option-select" [(ngModel)]="stockItem.barcodeType" [compareWith]="compareObjects">
-                <option *ngFor="let item of (barcodeTypes$|async)" [ngValue]="item">
-                    {{item.barcodeTypeName}}
-                </option>
-            </select>
-        </clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.quantityOnHand"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.recommendedRetailPrice"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.unitPrice"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemWeight"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemLength"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemWidth"></clr-dg-cell>
-        <clr-dg-cell><input type="text" [(ngModel)]="stockItem.itemHeight"></clr-dg-cell>
-        <clr-dg-row-detail>
-            <div class="upload-wrapper">
-                <div class="upload-item" *ngFor="let photo of stockItem.photoLists; let i = index">
-                    <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob [style.display]="'none'"
-                        (change)="setFileData($event, photo, 'originalPhotoBlob', true)" />
+        <clr-datagrid class="stockitem-table">
+            <clr-dg-column *ngIf="attributeInd" class="min-col-width">Attribute</clr-dg-column>
+            <clr-dg-column *ngIf="optionInd">Option</clr-dg-column>
+            <clr-dg-column class="min-col-width">Vendor Code</clr-dg-column>
+            <clr-dg-column class="min-col-width">Vendor SKU</clr-dg-column>
+            <clr-dg-column class="min-col-width">Barcode</clr-dg-column>
+            <clr-dg-column class="min-col-width">Barcode Type</clr-dg-column>
+            <clr-dg-column>Quantity</clr-dg-column>
+            <clr-dg-column>RetailPrice</clr-dg-column>
+            <clr-dg-column>UnitPrice</clr-dg-column>
+            <clr-dg-column>Weight(kg)</clr-dg-column>
+            <clr-dg-column>Length(cm)</clr-dg-column>
+            <clr-dg-column>Width(cm)</clr-dg-column>
+            <clr-dg-column>Height(cm)</clr-dg-column>
 
-                    <div class="upload-control" *ngIf="!photo.thumbnailPhotoBlob;else preview">
-                        <span>
-                            <!--  -->
-                            <div class="image-upload-btn" (click)="originalBlob.click()">
-                                <clr-icon shape="image"
-                                    class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
-                                <!-- <mat-icon class="next-icon next-icon-add next-icon-medium upload-btn-icon">
-                                    add_a_photo</mat-icon> -->
-                                <p class="upload-text">Upload Image</p>
-                            </div>
-                        </span>
+            <clr-dg-row formArrayName="stockItemLists"
+                *ngFor="let stockItem of stockItemListsForm?.controls; let i = index;" [clrDgItem]="stockItem">
+                <clr-dg-action-overflow>
+                    <button class="action-item" (click)="removeStockItem(stockItem,i)">Delete</button>
+                </clr-dg-action-overflow>
+                <clr-dg-cell *ngIf="attributeInd" class="min-col-width">
+                    <div [formGroupName]="i">
+                        <select name="attribute-select" formControlName="productAttributeId">
+                            <option *ngFor="let item of (productAttributeList$|async)" [ngValue]="item.id">
+                                {{item.value}}
+                            </option>
+                        </select>
                     </div>
-                    <ng-template #preview>
-                        <div *ngIf="photo.thumbnailPhotoBlob">
-                            <a (click)="clearInputImage(photo)" class="close-image" matTooltip="Clear Image">
-                                <clr-icon shape="window-close"></clr-icon>
-                            </a>
+
+                </clr-dg-cell>
+                <clr-dg-cell *ngIf="optionInd">
+                    <div [formGroupName]="i">
+                        <select name="option-select" formControlName="productOptionId">
+                            <option *ngFor="let item of (productOptionList$|async)" [ngValue]="item.id">
+                                {{item.value}}
+                            </option>
+                        </select>
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell class="min-col-width">
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="vendorCode">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell class="min-col-width">
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="vendorSKU">
+                    </div>
+
+                </clr-dg-cell>
+                <clr-dg-cell class="min-col-width">
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="barcode">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <select name="option-select" formControlName="barcodeTypeId">
+                            <option *ngFor="let item of (barcodeTypes$|async)" [ngValue]="item.id">
+                                {{item.name}}
+                            </option>
+                        </select>
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="quantityOnHand">
+                    </div>
+
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="recommendedRetailPrice">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="unitPrice">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="itemWeight">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="itemLength">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="itemWidth">
+                    </div>
+                </clr-dg-cell>
+                <clr-dg-cell>
+                    <div [formGroupName]="i">
+                        <input type="text" formControlName="itemHeight">
+                    </div>
+                </clr-dg-cell>
+                <!-- <clr-dg-row-detail>
+                <div class="upload-wrapper">
+                    <div class="upload-item" *ngFor="let photo of stockItem.photoLists; let i = index">
+                        <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob
+                            [style.display]="'none'" (change)="setFileData($event, photo, 'originalPhotoBlob', true)" />
+
+                        <div class="upload-control" *ngIf="!photo.thumbnailPhotoBlob;else preview">
+                            <span>
+                                <div class="image-upload-btn" (click)="originalBlob.click()">
+                                    <clr-icon shape="image"
+                                        class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
+                                    <p class="upload-text">Upload Image</p>
+                                </div>
+                            </span>
                         </div>
-                        <div class="image-preview" *ngIf="photo.thumbnailPhotoBlob">
-                            <img [src]="'data:' + photo.thumbnailPhotoBlobContentType + ';base64,' + photo.thumbnailPhotoBlob"
-                                style="max-height: 100px;" alt="stock item image" draggable="false" />
-                        </div>
-                    </ng-template>
+                        <ng-template #preview>
+                            <div *ngIf="photo.thumbnailPhotoBlob">
+                                <a (click)="clearInputImage(photo)" class="close-image" matTooltip="Clear Image">
+                                    <clr-icon shape="window-close"></clr-icon>
+                                </a>
+                            </div>
+                            <div class="image-preview" *ngIf="photo.thumbnailPhotoBlob">
+                                <img [src]="'data:' + photo.thumbnailPhotoBlobContentType + ';base64,' + photo.thumbnailPhotoBlob"
+                                    style="max-height: 100px;" alt="stock item image" draggable="false" />
+                            </div>
+                        </ng-template>
+                    </div>
                 </div>
-            </div>
-        </clr-dg-row-detail>
-    </clr-dg-row>
-</clr-datagrid>
+            </clr-dg-row-detail> -->
+            </clr-dg-row>
+        </clr-datagrid>
+
+    </form>
+</div>

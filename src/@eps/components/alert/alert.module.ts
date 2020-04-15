@@ -4,16 +4,8 @@ import { RootAlertComponent } from './alert.component';
 import { ClarityModule } from '@clr/angular';
 
 @NgModule({
-    imports: [
-        ClarityModule,
-        CommonModule
-    ],
-    declarations: [
-        RootAlertComponent
-    ],
-    exports: [
-        RootAlertComponent
-    ]
+  imports: [ClarityModule, CommonModule],
+  declarations: [RootAlertComponent],
+  exports: [RootAlertComponent],
 })
-export class RootAlertModule {
-}
+export class RootAlertModule {}

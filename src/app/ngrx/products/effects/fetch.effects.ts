@@ -12,6 +12,8 @@ import {
   IProductOption,
   IWarrantyTypes,
   IBarcodeTypes,
+  IProductDocument,
+  IStockItems,
 } from '@eps/models';
 import { FetchActions } from '../actions';
 import {
@@ -23,6 +25,8 @@ import {
   ProductOptionService,
   WarrantyTypesService,
   BarcodeTypesService,
+  ProductDocumentService,
+  StockItemsService,
 } from '@eps/services';
 import { select, Store } from '@ngrx/store';
 import * as fromProducts from 'app/ngrx/products/reducers';
@@ -59,17 +63,54 @@ export class FetchEffects {
     )
   );
 
+  fetchStockItems$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FetchActions.fetchStockItems),
+      mergeMap(({ productId }) =>
+        this.stockItemsService
+          .query({
+            'productId.equals': productId,
+          })
+          .pipe(
+            filter((res: HttpResponse<IStockItems[]>) => res.ok),
+            map((res: HttpResponse<IStockItems[]>) => FetchActions.fetchStockItemsSuccess({ stockItems: res.body })),
+            catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
+          )
+      )
+    )
+  );
+
+  fetchProductDocument$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FetchActions.fetchProductDocument),
+      mergeMap(({ id }) =>
+        this.productDocumentService
+          .query({
+            'productId.equals': id,
+          })
+          .pipe(
+            filter((res: HttpResponse<IProductDocument[]>) => res.ok),
+            map((res: HttpResponse<IProductDocument[]>) => FetchActions.fetchProductDocumentSuccess({ productDocument: res.body[0] })),
+            catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
+          )
+      )
+    )
+  );
+
   fetchBrands$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FetchActions.fetchBrands),
       mergeMap(({ id }) =>
         this.productBrandService
           .query({
-            'merchantId.equals': id,
+            'supplierId.equals': id,
           })
           .pipe(
             filter((res: HttpResponse<IProductBrand[]>) => res.ok),
-            map((res: HttpResponse<IProductBrand[]>) => FetchActions.fetchBrandsSuccess({ brands: res.body })),
+            map((res: HttpResponse<IProductBrand[]>) => {
+              console.log('success', res.body);
+              return FetchActions.fetchBrandsSuccess({ brands: res.body });
+            }),
             catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
           )
       )
@@ -79,18 +120,24 @@ export class FetchEffects {
   fetchProductChoice$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FetchActions.fetchProductChoice),
-      mergeMap(({ id }) => {
-        console.log('fetch id', id);
-        return this.productChoiceService.getAllProductChoice(id).pipe(
-          filter((res: HttpResponse<IProductChoice[]>) => res.ok),
-          switchMap((res: HttpResponse<IProductChoice[]>) => [
-            FetchActions.fetchProductAttribute({ id: res.body.length ? res.body[0].productAttributeSetId : null }),
-            FetchActions.fetchProductOption({ id: res.body.length ? res.body[0].productOptionSetId : null }),
-            FetchActions.fetchProductChoiceSuccess({ choice: res.body }),
-          ]),
-          catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
-        );
-      })
+      mergeMap(({ id }) =>
+        this.productChoiceService
+          .query({
+            'productCategoryId.equals': id,
+          })
+          .pipe(
+            filter((res: HttpResponse<IProductChoice[]>) => res.ok),
+            switchMap((res: HttpResponse<IProductChoice[]>) => {
+              console.log('product choice res', res);
+              return [
+                FetchActions.fetchProductAttribute({ id: res.body.length ? res.body[0].productAttributeSetId : null }),
+                FetchActions.fetchProductOption({ id: res.body.length ? res.body[0].productOptionSetId : null }),
+                FetchActions.fetchProductChoiceSuccess({ choice: res.body }),
+              ];
+            }),
+            catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
+          )
+      )
     )
   );
 
@@ -98,11 +145,15 @@ export class FetchEffects {
     this.actions$.pipe(
       ofType(FetchActions.fetchProductAttribute),
       mergeMap(({ id }) =>
-        this.productAttributeService.getAllProductAttributes(id).pipe(
-          filter((res: HttpResponse<IProductAttribute[]>) => res.ok),
-          map((res: HttpResponse<IProductAttribute[]>) => FetchActions.fetchProductAttributeSuccess({ productAttributeList: res.body })),
-          catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
-        )
+        this.productAttributeService
+          .query({
+            'productAttributeSetId.equals': id,
+          })
+          .pipe(
+            filter((res: HttpResponse<IProductAttribute[]>) => res.ok),
+            map((res: HttpResponse<IProductAttribute[]>) => FetchActions.fetchProductAttributeSuccess({ productAttributeList: res.body })),
+            catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
+          )
       )
     )
   );
@@ -111,11 +162,15 @@ export class FetchEffects {
     this.actions$.pipe(
       ofType(FetchActions.fetchProductOption),
       mergeMap(({ id }) =>
-        this.productOptionService.getAllProductOptions(id).pipe(
-          filter((res: HttpResponse<IProductOption[]>) => res.ok),
-          map((res: HttpResponse<IProductOption[]>) => FetchActions.fetchProductOptionSuccess({ productOptionList: res.body })),
-          catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
-        )
+        this.productOptionService
+          .query({
+            'productOptionSetId.equals': id,
+          })
+          .pipe(
+            filter((res: HttpResponse<IProductOption[]>) => res.ok),
+            map((res: HttpResponse<IProductOption[]>) => FetchActions.fetchProductOptionSuccess({ productOptionList: res.body })),
+            catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
+          )
       )
     )
   );
@@ -156,6 +211,8 @@ export class FetchEffects {
     private productAttributeService: ProductAttributeService,
     private productOptionService: ProductOptionService,
     private warrantyTypesService: WarrantyTypesService,
-    private barcodeTypesService: BarcodeTypesService
+    private barcodeTypesService: BarcodeTypesService,
+    private productDocumentService: ProductDocumentService,
+    private stockItemsService: StockItemsService
   ) {}
 }

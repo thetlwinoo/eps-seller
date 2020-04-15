@@ -21,7 +21,7 @@
 
         <div class="header-actions" *ngSwitchCase="true">
             <clr-dropdown>
-                <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
+                <button class="nav-text" clrDropdownTrigger aria-label="open user profile" *ngIf="account">
                     <!-- <clr-icon shape="user"></clr-icon> -->
                     {{account.login | titlecase}}
                     <clr-icon shape="caret down"></clr-icon>

@@ -1,8 +1,8 @@
 export interface IWarrantyTypes {
-    id?: number;
-    warrantyTypeName?: string;
+  id?: number;
+  name?: string;
 }
 
 export class WarrantyTypes implements IWarrantyTypes {
-    constructor(public id?: number, public warrantyTypeName?: string) {}
+  constructor(public id?: number, public name?: string) {}
 }

@@ -11,40 +11,39 @@ type EntityArrayResponseType = HttpResponse<IProductOption[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProductOptionService {
-    public resourceUrl = SERVER_API_URL + 'services/zezawar/api/product-options';
-    public extendUrl = SERVER_API_URL + 'services/zezawar/api/product-option-extend';
+  public resourceUrl = SERVER_API_URL + 'services/zezawar/api/product-options';
+  // public extendUrl = SERVER_API_URL + 'services/zezawar/api/product-option-extend';
 
-    constructor(protected http: HttpClient) { }
+  constructor(protected http: HttpClient) {}
 
-    create(productOption: IProductOption): Observable<EntityResponseType> {
-        return this.http.post<IProductOption>(this.resourceUrl, productOption, { observe: 'response' });
-    }
+  create(productOption: IProductOption): Observable<EntityResponseType> {
+    return this.http.post<IProductOption>(this.resourceUrl, productOption, { observe: 'response' });
+  }
 
-    update(productOption: IProductOption): Observable<EntityResponseType> {
-        return this.http.put<IProductOption>(this.resourceUrl, productOption, { observe: 'response' });
-    }
+  update(productOption: IProductOption): Observable<EntityResponseType> {
+    return this.http.put<IProductOption>(this.resourceUrl, productOption, { observe: 'response' });
+  }
 
-    find(id: number): Observable<EntityResponseType> {
-        return this.http.get<IProductOption>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-    }
+  find(id: number): Observable<EntityResponseType> {
+    return this.http.get<IProductOption>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
 
-    query(req?: any): Observable<EntityArrayResponseType> {
-        const options = createRequestOption(req);
-        return this.http.get<IProductOption[]>(this.resourceUrl, { params: options, observe: 'response' });
-    }
+  query(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<IProductOption[]>(this.resourceUrl, { params: options, observe: 'response' });
+  }
 
-    delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
-    }
+  delete(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
 
-    getAllProductOptions(optionSetId): Observable<EntityArrayResponseType> {
-        let params = new HttpParams();
+  //   getAllProductOptions(optionSetId): Observable<EntityArrayResponseType> {
+  //     let params = new HttpParams();
 
-        if (optionSetId) {
-            params = params.append('optionSetId', optionSetId);
-        }
+  //     if (optionSetId) {
+  //       params = params.append('optionSetId', optionSetId);
+  //     }
 
-
-        return this.http.get<IProductOption[]>(this.extendUrl, { params: params, observe: 'response' });
-    }
+  //     return this.http.get<IProductOption[]>(this.extendUrl, { params, observe: 'response' });
+  //   }
 }

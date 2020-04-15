@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { filter, map, debounceTime, tap } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
-import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel } from '@eps/models';
+import { IStockItems, AlertType } from '@eps/models';
 import { StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@eps/services';
 import { AccountService } from '@eps/core';
 import { ITEMS_PER_PAGE } from '@eps/constants';
@@ -18,8 +18,6 @@ import { ClrDatagridStateInterface } from '@clr/angular';
   styleUrls: ['./manage-products.component.scss'],
 })
 export class ManageProductsComponent implements OnInit, OnDestroy {
-  errorVisible = false;
-  errorMessage = '';
   currentAccount: any;
   stockItems: IStockItems[];
   error: any;
@@ -43,7 +41,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   // isUploaded = false;
   // isImported = false;
   // total = 0;
-  // stockItemTempLinks: any;  
+  // stockItemTempLinks: any;
   // loadingUploadExcel = false;
   // loadingUploadTransactions = true;
 
@@ -54,6 +52,9 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   // uploadData$: Observable<IUploadExcel[]>;
   // uploadData: IUploadExcel[];
   // selectedRows: UploadExcel[] = [];
+  closeAlertInd = true;
+  alertMessage: string;
+  alertType: AlertType;
 
   constructor(
     protected stockItemsService: StockItemsService,
@@ -65,10 +66,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     // protected uploadTransactionsService: UploadTransactionsService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected eventManager: JhiEventManager,
-    // protected rootAlertService: RootAlertService,
-    // protected dataUtils: JhiDataUtils,
-    // protected documentProcessService: DocumentProcessService
+    protected eventManager: JhiEventManager
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -195,6 +193,12 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     // });
   }
 
+  showAlert(alertType: AlertType, alertMessage: string): void {
+    this.alertMessage = alertMessage;
+    this.alertType = alertType;
+    this.closeAlertInd = false;
+  }
+
   clear(): void {
     this.page = 0;
     this.router.navigate([
@@ -226,11 +230,12 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
 
   updateStockItemActive(event): void {
     console.log('update', event);
-    this.subscribeToUpdateStockItemActiveResponse(this.productsService.updateStockItemActive(event.id, event.activeInd));
+    // this.subscribeToUpdateStockItemActiveResponse(this.productsService.updateStockItemActive(event.id, event.activeInd));
+    this.subscribeToUpdateStockItemActiveResponse(this.stockItemsService.update(event));
   }
 
   onUpdateStockItemActiveSuccess(res): void {
-    console.log('success active', res);
+    this.showAlert(AlertType.Success, res.body.name + ' has been sucessfully ' + (res.body.activeInd ? 'active' : 'inactive'));
     this.loadCount();
     // this.loadAll();
   }
@@ -274,120 +279,8 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   }
 
   protected onError(errorMessage: string): void {
-    console.log('errorMessage', errorMessage);
-    this.errorVisible = true;
     this.loading = false;
-    this.errorMessage = errorMessage;
-    this.jhiAlertService.error(errorMessage, null, null);
-  }  
-
-  // onUpload(event: any): void {
-  //   for (const file of event.target.files) {
-  //     this.uploadedFiles.push(file);
-  //   }
-    
-  //   this.documentProcessService.parseExcelFile(this.uploadedFiles[0]);
-  //   this.loadingUploadExcel = false;
-  // }
-
-  // onImportToSystem(event: any): void {
-  //   this.subscribeToImportResponse(this.productsService.importToSystem(this.uploadedTransactionid));
-  // }
-
-  // onLoadStockItemTemp(state: ClrDatagridStateInterface): void {
-  //   this.loadingUploadExcel = true;
-
-  //   if (!this.uploadedTransactionid) {
-  //     this.stockItemTempList = [];
-  //     this.total = 0;
-  //     this.loadingUploadExcel = false;
-  //     return;
-  //   }
-
-  //   this.stockItemTempService
-  //     .getAllByTransactionId(state.page.current, state.page.size, this.uploadedTransactionid)
-  //     .pipe(
-  //       filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
-  //       map((res: HttpResponse<IStockItemTemp[]>) => res)
-  //     )
-  //     .subscribe(result => {
-  //       this.stockItemTempList = result.body;
-  //       this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
-  //       this.total = parseInt(result.headers.get('X-Total-Count'), 10);
-  //       this.loadingUploadExcel = false;
-  //     });
-  // }
-
-  // refreshOnUpload(event): void {}
-
-  // onLoadUploadTransactions(state: ClrDatagridStateInterface): void {
-  //   this.loadingUploadTransactions = true;
-  //   this.uploadTransactionsService
-  //     .findAll()
-  //     .pipe(
-  //       filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
-  //       map((res: HttpResponse<IStockItemTemp[]>) => res)
-  //     )
-  //     .subscribe(result => {
-  //       this.uploadTransactionList = result.body;
-  //       this.loadingUploadTransactions = false;
-  //       console.log('this.uploadTransactionList', this.uploadTransactionList);
-  //     });
-  // }
-
-  // openFile(contentType, field): any {
-  //   return this.dataUtils.openFile(contentType, field);
-  // }    
-
-  // protected subscribeToUploadResponse(result: Observable<HttpResponse<any>>): void {
-  //   result.subscribe(
-  //     (res: HttpResponse<any>) => this.onUploadSuccess(res),
-  //     (err: HttpErrorResponse) => this.onUploadError(err)
-  //   );
-  // }
-
-  // protected subscribeToImportResponse(result: Observable<HttpResponse<any>>): void {
-  //   result.subscribe(
-  //     (res: HttpResponse<any>) => this.onImportSuccess(res),
-  //     (err: HttpErrorResponse) => this.onImportError(err)
-  //   );
-  // }
-
-  // protected onUploadSuccess(res): void {
-  //   console.log('upload success', res);
-  //   this.uploadedTransactionid = res ? res.id : null;
-
-  //   this.onLoadStockItemTemp({
-  //     page: {
-  //       from: 0,
-  //       current: 0,
-  //       size: 5,
-  //     },
-  //   });
-  //   this.isUploaded = true;
-  //   this.rootAlertService.setMessage('File uploaded successfully', 'success');
-  // }
-
-  // protected onUploadError(err): void {
-  //   this.loadingUploadExcel = false;
-  //   this.isUploaded = false;
-  //   this.rootAlertService.setMessage('File upload failed', 'danger');
-  // }
-
-  // protected onImportSuccess(res): void {
-  //   this.onLoadStockItemTemp({
-  //     page: {
-  //       from: 0,
-  //       current: 0,
-  //       size: 5,
-  //     },
-  //   });
-  //   this.isImported = true;
-  //   this.rootAlertService.setMessage('File imported successfully', 'success');
-  // }
-
-  // protected onImportError(err): void {
-  //   this.isImported = false;
-  //   this.rootAlertService.setMessage('File import failed', 'danger');
-  // }
+    this.showAlert(AlertType.Danger, errorMessage);
+    // this.jhiAlertService.error(errorMessage, null, null);
+  }
 }
