@@ -28,10 +28,6 @@
           <a href="javascript:void(0)" class="nav-link active"><span class="nav-text"
               (click)="missingImageInd = false">All({{ totalItems }})</span></a>
         </li>
-        <!-- <li class="nav-item">
-          <a href="javascript:void(0)" class="nav-link" (click)="missingImageInd = true"><span class="nav-text">Image
-              Missing</span></a>
-        </li> -->
       </ul>
     </nav>
   </div>
@@ -47,32 +43,8 @@
         <clr-dg-cell>
           <div class="upload-wrapper">
             <div class="upload-item" *ngFor="let photo of stockItem.photoLists | orderBy: 'id'; let i = index">
-              <!-- <input hidden type="file" accept="image/*" [id]="photo.id" #originalBlob
-                                [style.display]="'none'"
-                                (change)="setFileData($event, photo, 'originalPhotoBlob', true);" />
-
-                            <div class="upload-control" *ngIf="!photo.originalPhotoBlob;else preview">
-                                <span>
-                                    <div class="image-upload-btn" (click)="originalBlob.click()">
-                                        <clr-icon shape="image"
-                                            class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
-                                        <p class="upload-text">Upload Image</p>
-                                    </div>
-                                </span>
-                            </div>
-                            <ng-template #preview>
-                                <div *ngIf="photo.thumbnailPhotoBlob">
-                                    <a (click)="clearInputImage(photo)" class="close-image" matTooltip="Clear Image">
-                                        <clr-icon shape="window-close"></clr-icon>
-                                    </a>
-                                </div>
-                                <div class="image-preview" *ngIf="photo.thumbnailPhotoBlob">
-                                    <img [src]="'data:' + photo.thumbnailPhotoBlobContentType + ';base64,' + photo.thumbnailPhotoBlob"
-                                        style="max-height: 100px;" alt="stock item image" draggable="false"
-                                        (mouseenter)="op.toggle($event)" (mouseleave)="op.toggle($event)" />
-                                </div>
-                            </ng-template> -->
-              <photo-item [photos]="photo" (error)="onError($event)"></photo-item>
+              <photo-item [photos]="photo" [stockItems]="stockItem" (error)="onError($event)" (alert)="onAlert($event)">
+              </photo-item>
             </div>
           </div>
         </clr-dg-cell>
@@ -85,12 +57,5 @@
         </clr-dg-pagination>
       </clr-dg-footer>
     </clr-datagrid>
-    <!-- <p-paginator [rows]="itemsPerPage" [totalRecords]="totalItems" (onPageChange)="loadPage(page)"></p-paginator> -->
   </div>
 </div>
-<!-- <p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'"
-                                    [dismissable]="true" [appendTo]="'body'">
-                                    <img class="overlay-image"
-                                        [src]="'data:' + photo.originalPhotoBlobContentType + ';base64,' + photo.originalPhotoBlob"
-                                        alt="original image" draggable="false" *ngIf="photo.originalPhotoBlob" />
-                                </p-overlayPanel> -->

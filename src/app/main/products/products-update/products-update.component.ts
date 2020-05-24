@@ -63,8 +63,9 @@ export class ProductsUpdateComponent implements OnInit {
   categoryId$: Observable<number>;
   categoryId: number;
   loadingForm = true;
+  dangerousGoods: any;
   // Private
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any> = new Subject();
 
   constructor(
     private store: Store<fromProducts.State>,
@@ -79,7 +80,6 @@ export class ProductsUpdateComponent implements OnInit {
     protected stockItemsService: StockItemsService
   ) {
     // this.products = new Products();
-    this._unsubscribeAll = new Subject();
     this.supplier$ = this.storeAuth.pipe(select(fromAuth.getSupplierFetched));
     this.supplier$.pipe(takeUntil(this._unsubscribeAll)).subscribe(supplier => (this.supplier = supplier));
     this.stockItems$ = this.store.pipe(select(fromProducts.getFetchStockItems));
@@ -87,7 +87,7 @@ export class ProductsUpdateComponent implements OnInit {
     this.productDocument$ = this.store.pipe(select(fromProducts.getFetchProductDocument));
     // this.selectedProductAttributeList$ = this.store.pipe(select(fromProducts.getSelectedProductAttribute));
     // this.selectedProductOptionList$ = this.store.pipe(select(fromProducts.getSelectedProductOption));
-    this.categoryId$ = this.store.pipe(select(fromProducts.getSelectedCategoryId));
+    // this.categoryId$ = this.store.pipe(select(fromProducts.getSelectedCategoryId));
     this.selectedCategory$ = this.store.pipe(select(fromProducts.getSelectedCategory));
 
     this.actionsSubscription = route.params
@@ -105,18 +105,44 @@ export class ProductsUpdateComponent implements OnInit {
         this.pageType = 'new';
       }
 
-      this.categoryId$.pipe(takeUntil(this._unsubscribeAll)).subscribe(categoryId => {
-        this.categoryId = categoryId;
-        if (categoryId) {
-          this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
-        }
-      });
+      // this.categoryId$.pipe(takeUntil(this._unsubscribeAll)).subscribe(categoryId => {
+      //   this.categoryId = categoryId;
+      //   if (categoryId) {
+      //     this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
+      //   }
+      // });
 
       this.selectedCategory$.pipe(takeUntil(this._unsubscribeAll)).subscribe(category => {
         this.selectedCategory = category;
 
         this.productDocument$.pipe(takeUntil(this._unsubscribeAll)).subscribe(res => {
           this.productDocument = res;
+
+          if (res.dangerousGoods) {
+            this.dangerousGoods = {
+              battery: false,
+              liquid: false,
+              none: false,
+              flammable: false,
+            };
+
+            res.dangerousGoods.split(',').map(item => {
+              switch (item.toLowerCase()) {
+                case 'battery':
+                  this.dangerousGoods.battery = true;
+                  break;
+                case 'liquid':
+                  this.dangerousGoods.liquid = true;
+                  break;
+                case 'none':
+                  this.dangerousGoods.none = true;
+                  break;
+                case 'flammable':
+                  this.dangerousGoods.flammable = true;
+                  break;
+              }
+            });
+          }
 
           this.stockItems$.pipe(takeUntil(this._unsubscribeAll)).subscribe(stockItemsRes => {
             this.stockItems = stockItemsRes;

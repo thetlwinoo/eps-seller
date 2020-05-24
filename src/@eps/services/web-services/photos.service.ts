@@ -43,11 +43,11 @@ export class PhotosService {
 
   createExtend(photos: IPhotos): Observable<EntityResponseType> {
     console.log('create photo', photos);
-    return this.http.post<IPhotos>(this.extendUrl + '/photos', photos, { observe: 'response' });
+    return this.http.post<IPhotos>(this.extendUrl, photos, { observe: 'response' });
   }
 
   updateExtend(photos: IPhotos): Observable<EntityResponseType> {
-    return this.http.put<IPhotos>(this.extendUrl + '/photos', photos, { observe: 'response' });
+    return this.http.put<IPhotos>(this.extendUrl, photos, { observe: 'response' });
   }
 
   setDefault(photos: IPhotos): Observable<EntityResponseType> {

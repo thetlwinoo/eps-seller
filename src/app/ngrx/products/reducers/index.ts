@@ -99,7 +99,7 @@ export const getFetchCategoriesTree = createSelector(getFetchCategories, entitie
 
   return treeModel;
 });
-export const getFetchModels = createSelector(getFetchState, fromFetch.getModels);
+// export const getFetchModels = createSelector(getFetchState, fromFetch.getModels);
 export const getFetchStockItems = createSelector(getFetchState, fromFetch.getStockItems);
 export const getFetchProductDocument = createSelector(getFetchState, fromFetch.getProductDocument);
 export const getFetchBrands = createSelector(getFetchState, fromFetch.getBrands);

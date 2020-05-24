@@ -52,7 +52,7 @@ export class ProductDocument implements IProductDocument {
     public cultureName?: string,
     public cultureId?: number,
     public productId?: number,
-    public dangeroudGoods?: string
+    public dangerousGoods?: string
   ) {
     this.genuineAndLegal = this.genuineAndLegal || false;
   }

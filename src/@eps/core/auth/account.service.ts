@@ -11,6 +11,10 @@ import { SERVER_API_URL } from '@eps/constants/app.constants';
 import { Account } from '@eps/core/user/account.model';
 import { TrackerService } from '../tracker/tracker.service';
 
+import { Store } from '@ngrx/store';
+import * as fromAuth from 'app/ngrx/auth/reducers';
+import { SupplierActions } from 'app/ngrx/auth/actions';
+
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private userIdentity: Account | null = null;
@@ -23,7 +27,8 @@ export class AccountService {
     private http: HttpClient,
     private trackerService: TrackerService,
     private stateStorageService: StateStorageService,
-    private router: Router
+    private router: Router,
+    private store: Store<fromAuth.State>
   ) {}
 
   authenticate(identity: Account | null): void {
@@ -61,6 +66,7 @@ export class AccountService {
           }
 
           if (account) {
+            this.store.dispatch(SupplierActions.getLoginSupplier());
             this.navigateToStoredUrl();
           }
         }),

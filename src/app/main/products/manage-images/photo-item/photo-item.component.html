@@ -1,8 +1,8 @@
-<input hidden type="file" accept="image/*" [id]="photos.id" #originalBlob [style.display]="'none'"
-  (change)="setFileData($event, photos, 'originalPhotoBlob', true)" />
+<input hidden type="file" accept="image/*" [id]="photoExtend.id" #originalBlob [style.display]="'none'"
+  (change)="setFileData($event, photoExtend, 'original', true)" />
 
 <div class="upload-container">
-  <div class="upload-control" *ngIf="!photos.originalPhotoBlob; else preview">
+  <div class="upload-control" *ngIf="!photoExtend.thumbnailUrl; else preview">
     <span>
       <div class="image-upload-btn" (click)="originalBlob.click()">
         <clr-icon shape="image" class="next-icon next-icon-add next-icon-medium upload-btn-icon"></clr-icon>
@@ -11,10 +11,10 @@
     </span>
   </div>
   <ng-template #preview>
-    <div class="image-preview" @slideInOut *ngIf="photos.thumbnailPhotoBlob">
-      <img [src]="'data:' + photos.thumbnailPhotoBlobContentType + ';base64,' + photos.thumbnailPhotoBlob"
-        style="max-height: 100px;" alt="stock item image" draggable="false" />
-      <!-- <div class="product-badge-wrapper" *ngIf="photos.defaultInd">
+    <div class="image-preview" @slideInOut *ngIf="photoExtend.thumbnailUrl">
+      <img [src]="imageBlobUrl + '/' + photoExtend.thumbnailUrl" style="max-height: 100px;" alt="stock item image"
+        draggable="false" />
+      <!-- <div class="product-badge-wrapper" *ngIf="photoExtend.defaultInd">
         <clr-icon shape="star" class="is-solid"></clr-icon>
       </div> -->
       <div class="default-badge-wrapper" *ngIf="photos.defaultInd">
@@ -24,26 +24,25 @@
       </div>
       <div class="image-tools">
         <clr-icon shape="star" [class.is-solid]="photos.defaultInd" class="tools-icon" pTooltip="Set Default"
-          tooltipPosition="bottom" (click)="setDefault(photos)"></clr-icon>
+          tooltipPosition="bottom" (click)="setDefault(photoExtend)"></clr-icon>
         <clr-icon shape="search" class="tools-icon" pTooltip="View" tooltipPosition="bottom"
           (click)="viewOriginal = true"></clr-icon>
         <clr-icon shape="trash" class="tools-icon" pTooltip="Delete" tooltipPosition="bottom"
-          (click)="clearInputImage(photos)"></clr-icon>
+          (click)="deletePhoto(photoExtend)"></clr-icon>
       </div>
     </div>
   </ng-template>
 </div>
 
-<p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" [dismissable]="true"
+<!-- <p-overlayPanel #op [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" [dismissable]="true"
   [appendTo]="'body'">
-  <img class="overlay-image"
-    [src]="'data:' + photos.originalPhotoBlobContentType + ';base64,' + photos.originalPhotoBlob" alt="original image"
-    draggable="false" *ngIf="photos.originalPhotoBlob" />
-</p-overlayPanel>
+  <img class="overlay-image" [src]="'data:' + photoExtend.originalContentType + ';base64,' + photoExtend.original"
+    alt="original image" draggable="false" *ngIf="photoExtend.original" />
+</p-overlayPanel> -->
 
 <clr-modal class="view-original" [(clrModalOpen)]="viewOriginal">
   <div class="modal-body">
-    <img [src]="'data:' + photos.originalPhotoBlobContentType + ';base64,' + photos.originalPhotoBlob"
-      alt="original image" draggable="false" *ngIf="photos.originalPhotoBlob" />
+    <img [src]="imageBlobUrl + '/' + photoExtend.originalUrl" alt="original image" draggable="false"
+      *ngIf="photoExtend.originalUrl" />
   </div>
 </clr-modal>

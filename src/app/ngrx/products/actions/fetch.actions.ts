@@ -17,9 +17,9 @@ export const fetchCategories = createAction('[Products/API] Fetch Categories');
 
 export const fetchCategoriesSuccess = createAction('[Products/API] Fetch Categories Success', props<{ categories: IProductCategory[] }>());
 
-export const fetchModels = createAction('[Products/API] Fetch Models', props<{ id: number }>());
+// export const fetchModels = createAction('[Products/API] Fetch Models', props<{ id: number }>());
 
-export const fetchModelsSuccess = createAction('[Products/API] Fetch Models Success', props<{ models: IProductModel[] }>());
+// export const fetchModelsSuccess = createAction('[Products/API] Fetch Models Success', props<{ models: IProductModel[] }>());
 
 export const fetchBrands = createAction('[Products/API] Fetch Brands', props<{ id: number }>());
 

@@ -73,27 +73,27 @@
             </div>
         </div>
     </form>
-    <form clrForm>
+    <form clrForm *ngIf="dangerousGoods">
         <clr-checkbox-container clrInline>
             <label>Dangerous Goods</label>
             <clr-checkbox-wrapper>
-                <input type="checkbox" clrCheckbox name="options" value="battery" [(ngModel)]="dangerousGoods.battery"
-                    (ngModelChange)="onDangerousGoodsChanged($event)" />
+                <input type="checkbox" clrCheckbox name="options" [(ngModel)]="dangerousGoods.battery"
+                    (ngModelChange)="onDangerousGoodsChanged($event)" [ngModelOptions]="{standalone: true}" />
                 <label>Battery</label>
             </clr-checkbox-wrapper>
             <clr-checkbox-wrapper>
-                <input type="checkbox" clrCheckbox name="options" value="liquid" [(ngModel)]="dangerousGoods.liquid"
-                    (ngModelChange)="onDangerousGoodsChanged($event)" />
+                <input type="checkbox" clrCheckbox name="options" [(ngModel)]="dangerousGoods.liquid"
+                    (ngModelChange)="onDangerousGoodsChanged($event)" [ngModelOptions]="{standalone: true}" />
                 <label>Liquid</label>
             </clr-checkbox-wrapper>
             <clr-checkbox-wrapper>
-                <input type="checkbox" clrCheckbox name="options" value="none" [(ngModel)]="dangerousGoods.none"
-                    (ngModelChange)="onDangerousGoodsChanged($event)" />
+                <input type="checkbox" clrCheckbox name="options" [(ngModel)]="dangerousGoods.none"
+                    (ngModelChange)="onDangerousGoodsChanged($event)" [ngModelOptions]="{standalone: true}" />
                 <label>None</label>
             </clr-checkbox-wrapper>
             <clr-checkbox-wrapper>
-                <input type="checkbox" clrCheckbox name="options" value="flammable"
-                    [(ngModel)]="dangerousGoods.flammable" (ngModelChange)="onDangerousGoodsChanged($event)" />
+                <input type="checkbox" clrCheckbox name="options" [(ngModel)]="dangerousGoods.flammable"
+                    (ngModelChange)="onDangerousGoodsChanged($event)" [ngModelOptions]="{standalone: true}" />
                 <label>Flammable</label>
             </clr-checkbox-wrapper>
         </clr-checkbox-container>

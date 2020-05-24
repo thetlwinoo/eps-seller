@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, DoBootstrap, ApplicationRef, APP_INITIALIZER } from '@angular/core';
+import { NgModule, DoBootstrap, ApplicationRef } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -80,14 +80,14 @@ const keycloakService: KeycloakService = new KeycloakService();
   entryComponents: [AppComponent],
 })
 export class AppModule implements DoBootstrap {
-  async ngDoBootstrap(appRef: ApplicationRef) {
+  async ngDoBootstrap(appRef: ApplicationRef): Promise<void> {
     const { keycloak } = environment;
 
     await keycloakService
       .init({
         config: keycloak,
         initOptions: {
-          // onLoad: 'login-required',
+          onLoad: 'check-sso',
           checkLoginIframe: false,
         },
         enableBearerInterceptor: true,

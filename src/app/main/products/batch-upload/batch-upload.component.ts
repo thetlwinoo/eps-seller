@@ -1,28 +1,20 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { IStockItems, IStockItemTemp, IUploadTransactions, UploadExcel, Products, StockItems, ProductDocument } from '@eps/models';
-import {
-  StockItemsService,
-  ProductsService,
-  StockItemTempService,
-  UploadTransactionsService,
-  DocumentProcessService,
-  ProductDocumentService,
-} from '@eps/services';
+import { IStockItems, UploadExcel, Products, StockItems, ProductDocument, IProductTags, ProductTags } from '@eps/models';
+import { StockItemsService, ProductsService, DocumentProcessService, ProductDocumentService, ProductTagsService } from '@eps/services';
 import { RootAlertService } from '@eps/components/alert/alert.service';
 import { Observable, Subject } from 'rxjs';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { ClrDatagridStateInterface } from '@clr/angular';
-import { filter, map, debounceTime, tap } from 'rxjs/operators';
+import { map, debounceTime, tap } from 'rxjs/operators';
 import { JhiParseLinks, JhiDataUtils, JhiAlertService } from 'ng-jhipster';
 import * as _ from 'lodash';
 import { RootUtils } from '@eps/utils';
 import * as moment from 'moment';
-import { CURRENCY_FORMAT } from '@eps/constants';
 
 import { select, Store } from '@ngrx/store';
 import * as fromProducts from 'app/ngrx/products/reducers';
 import { ProductActions } from 'app/ngrx/products/actions';
 import { Router } from '@angular/router';
+import { Account } from '@eps/core/user/account.model';
+import { AccountService } from '@eps/core';
 
 @Component({
   selector: 'app-batch-upload',
@@ -33,7 +25,7 @@ import { Router } from '@angular/router';
 export class BatchUploadComponent implements OnInit, OnDestroy {
   @ViewChild('file', { static: true }) file: ElementRef;
 
-  uploadTransactionList: IUploadTransactions[] = [];
+  account: Account;
   isUploaded = false;
   isImported = false;
   selectedMode = 0;
@@ -42,8 +34,6 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
   loading = true;
   loadingUploadExcel = false;
   loadingUploadTransactions = true;
-  stockItemTempList: IStockItemTemp[] = [];
-  stockItemTempLinks: any;
   errorMessage = '';
   errorVisible = false;
   uploadedFiles: any[] = [];
@@ -58,6 +48,7 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
   uploadData: UploadExcel[];
   selectedRows: UploadExcel[] = [];
   productList: Products[] = [];
+  tagList: string[] = [];
 
   private unsubscribeAll: Subject<any>;
 
@@ -66,13 +57,13 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
     protected rootAlertService: RootAlertService,
     protected productsService: ProductsService,
     protected productDocumentService: ProductDocumentService,
-    protected stockItemTempService: StockItemTempService,
     protected parseLinks: JhiParseLinks,
-    protected uploadTransactionsService: UploadTransactionsService,
     protected dataUtils: JhiDataUtils,
     protected jhiAlertService: JhiAlertService,
     protected documentProcessService: DocumentProcessService,
     protected stockItemsService: StockItemsService,
+    private accountService: AccountService,
+    private productTagsService: ProductTagsService,
     private store: Store<fromProducts.State>
   ) {
     this.unsubscribeAll = new Subject();
@@ -85,7 +76,13 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
       tap((data: UploadExcel[]) => data.splice(0, 1))
     );
 
+    this.accountService.identity().subscribe(account => {
+      this.account = account;
+    });
+
     this.uploadData$.subscribe(data => {
+      this.tagList = [];
+      console.log('upload data', data);
       this.importTotalCount = data.length;
       this.uploadData = data;
 
@@ -99,8 +96,14 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
         product.handle = RootUtils.handleize(key);
         product.productCategoryName = values[0].productSubCategory;
         product.productBrandName = values[0].brandName;
-        product.stockItemLists = [];
+        product.releaseDate = values[0].releaseDate;
+        product.availableDate = values[0].availableDate;
+        product.lastEditedBy = this.account.id;
+        product.lastEditedWhen = moment();
+        // product.defaultUnitPrice = values[0].sellingPrice;
+        // product.defaultRecommendedRetailPrice = values[0].retailPrice;
 
+        product.stockItemLists = [];
         const productDocument: ProductDocument = new ProductDocument();
         productDocument.videoUrl = values[0].videoUrl || '';
         productDocument.highlights = values[0].highlights || '';
@@ -119,7 +122,7 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
         productDocument.safetyWarnning = values[0].safetyWarnning || '';
         productDocument.warrantyPeriod = values[0].warrentyPeriod || '';
         productDocument.warrantyTypeName = values[0].warrantyType || '';
-        productDocument.dangeroudGoods = values[0].dangerousGoodsRegulations || '';
+        productDocument.dangerousGoods = values[0].dangerousGoodsRegulations || '';
         // productDocument.warrantyType = warrantyTypes;
 
         product.productDocument = productDocument;
@@ -149,7 +152,6 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
           stockItem.customFields = '';
           stockItem.thumbnailUrl = '';
           stockItem.activeInd = false;
-          stockItem.lastEditedBy = '';
           stockItem.itemLengthUnitCode = item.itemLengthUnit;
           stockItem.itemWidthUnitCode = item.itemWidthUnit;
           stockItem.itemHeightUnitCode = item.itemHeightUnit;
@@ -162,14 +164,24 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
           stockItem.materialName = item.productMaterial;
           stockItem.barcodeTypeName = item.barcodeType;
           stockItem.currencyCode = item.currencyCode;
+          stockItem.lastEditedBy = this.account.id;
+          stockItem.lastEditedWhen = moment();
 
           product.stockItemLists.push(stockItem);
           searchDetails = searchDetails + item.searchKeywords + ';';
+
+          item.searchKeywords.split(';').map(keyword => {
+            if (!this.tagList.includes(keyword)) {
+              this.tagList.push(keyword);
+            }
+          });
         });
 
         product.searchDetails = [...new Set(searchDetails.split(';'))].join(';').slice(0, -1);
+
         this.productList.push(product);
       });
+      console.log(this.tagList, this.tagList.length);
     });
   }
 
@@ -205,11 +217,9 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
   }
 
   onImportToSystem(event: any): void {
-    // this.subscribeToImportResponse(this.productsService.importToSystem(this.uploadedTransactionid));
-    // const list = this.productList.slice(0, 1);
     this.importCount = 0;
     this.productList.map(product => {
-      // this.store.dispatch(ProductActions.createProduct({ product }));
+      console.log('product.productDocument', product.productDocument);
       this.productDocumentService.importProductDocument(product.productDocument).subscribe(productDocumentRes => {
         product.productDocumentId = productDocumentRes.id;
         this.productsService.importProduct(product).subscribe(productResource => {
@@ -226,47 +236,14 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
         });
       });
     });
-  }
 
-  onLoadStockItemTemp(state: ClrDatagridStateInterface): void {
-    this.loadingUploadExcel = true;
-
-    if (!this.uploadedTransactionid) {
-      this.stockItemTempList = [];
-      this.total = 0;
-      this.loadingUploadExcel = false;
-      return;
-    }
-
-    this.stockItemTempService
-      .getAllByTransactionId(state.page.current, state.page.size, this.uploadedTransactionid)
-      .pipe(
-        filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
-        map((res: HttpResponse<IStockItemTemp[]>) => res)
-      )
-      .subscribe(result => {
-        this.stockItemTempList = result.body;
-        this.stockItemTempLinks = this.parseLinks.parse(result.headers.get('link'));
-        this.total = parseInt(result.headers.get('X-Total-Count'), 10);
-        this.loadingUploadExcel = false;
-      });
-  }
-
-  refreshOnUpload(event): void {}
-
-  onLoadUploadTransactions(state: ClrDatagridStateInterface): void {
-    this.loadingUploadTransactions = true;
-    this.uploadTransactionsService
-      .findAll()
-      .pipe(
-        filter((res: HttpResponse<IStockItemTemp[]>) => res.ok),
-        map((res: HttpResponse<IStockItemTemp[]>) => res)
-      )
-      .subscribe(result => {
-        this.uploadTransactionList = result.body;
-        this.loadingUploadTransactions = false;
-        console.log('this.uploadTransactionList', this.uploadTransactionList);
-      });
+    this.tagList.map(tag => {
+      if (tag.length > 0) {
+        const productTag: ProductTags = new ProductTags();
+        productTag.name = tag;
+        this.productTagsService.create(productTag).subscribe();
+      }
+    });
   }
 
   openFile(contentType, field): any {
@@ -282,25 +259,6 @@ export class BatchUploadComponent implements OnInit, OnDestroy {
     this.clearUploadedRecords();
     this.unsubscribeAll.next();
     this.unsubscribeAll.complete();
-  }
-
-  protected subscribeToImportResponse(result: Observable<HttpResponse<any>>): void {
-    result.subscribe(
-      (res: HttpResponse<any>) => this.onImportSuccess(res),
-      (err: HttpErrorResponse) => this.onImportError(err)
-    );
-  }
-
-  protected onImportSuccess(res): void {
-    this.onLoadStockItemTemp({
-      page: {
-        from: 0,
-        current: 0,
-        size: 5,
-      },
-    });
-    this.isImported = true;
-    this.rootAlertService.setMessage('File imported successfully', 'success');
   }
 
   protected onImportError(err): void {

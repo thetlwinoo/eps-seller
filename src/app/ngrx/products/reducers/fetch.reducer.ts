@@ -17,7 +17,7 @@ export const fetchFeatureKey = 'fetch';
 
 export interface State {
   categories: any[];
-  models: IProductModel[];
+  // models: IProductModel[];
   stockItems: IStockItems[];
   productAttributeIds: number[];
   productOptionIds: number[];
@@ -37,7 +37,7 @@ export interface State {
 
 const initialState: State = {
   categories: [],
-  models: [],
+  // models: [],
   stockItems: [],
   productAttributeIds: [],
   productOptionIds: [],
@@ -57,7 +57,7 @@ const initialState: State = {
 
 export const reducer = createReducer(
   initialState,
-  on(FetchActions.fetchCategories, FetchActions.fetchModels, state => ({
+  on(FetchActions.fetchCategories, state => ({
     ...state,
     isProductChoiceFetched: false,
     loading: true,
@@ -69,12 +69,12 @@ export const reducer = createReducer(
     loading: false,
     error: '',
   })),
-  on(FetchActions.fetchModelsSuccess, (state, { models }) => ({
-    ...state,
-    models,
-    loading: false,
-    error: '',
-  })),
+  // on(FetchActions.fetchModelsSuccess, (state, { models }) => ({
+  //   ...state,
+  //   models,
+  //   loading: false,
+  //   error: '',
+  // })),
   on(FetchActions.fetchStockItemsSuccess, (state, { stockItems }) => ({
     ...state,
     stockItems,
@@ -130,7 +130,7 @@ export const reducer = createReducer(
 
 export const getCategories = (state: State) => state.categories;
 
-export const getModels = (state: State) => state.models;
+// export const getModels = (state: State) => state.models;
 
 export const getStockItems = (state: State) => state.stockItems;
 

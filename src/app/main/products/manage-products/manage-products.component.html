@@ -37,19 +37,19 @@
       <ul class="nav">
         <li class="nav-item">
           <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 0"
-            (click)="filterType = 0; loadAll()"><span class="nav-text">All({{ countObj?.all }})</span></a>
+            (click)="filterType = 0; loadAll()"><span class="nav-text">All({{ statistics?.all }})</span></a>
         </li>
         <li class="nav-item">
           <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 1"
-            (click)="filterType = 1; loadAll()"><span class="nav-text">Live({{ countObj?.active }})</span></a>
+            (click)="filterType = 1; loadAll()"><span class="nav-text">Live({{ statistics?.active }})</span></a>
         </li>
         <li class="nav-item">
           <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 2"
-            (click)="filterType = 2; loadAll()"><span class="nav-text">Sold Out({{ countObj?.soldout }})</span></a>
+            (click)="filterType = 2; loadAll()"><span class="nav-text">Sold Out({{ statistics?.soldout }})</span></a>
         </li>
         <li class="nav-item">
           <a href="javascript:void(0)" class="nav-link" [class.active]="filterType == 3"
-            (click)="filterType = 3; loadAll()"><span class="nav-text">Inactive({{ countObj?.inactive }})</span></a>
+            (click)="filterType = 3; loadAll()"><span class="nav-text">Inactive({{ statistics?.inactive }})</span></a>
         </li>
       </ul>
     </nav>

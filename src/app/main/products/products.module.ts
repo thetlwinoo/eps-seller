@@ -1,4 +1,4 @@
-import { NgModule, Injectable } from '@angular/core';
+import { NgModule, Injectable, OnDestroy } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RootSharedModule } from '@eps/shared.module';
@@ -8,8 +8,8 @@ import { ManageProductsComponent } from './manage-products/manage-products.compo
 import { StockItemsService } from '@eps/services';
 import { UserRouteAccessService } from '@eps/core';
 import { IStockItems, StockItems } from '@eps/models';
-import { Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { ProductsUpdateComponent } from './products-update/products-update.component';
 import { ManageImagesComponent } from './manage-images/manage-images.component';
 import { BasicFormComponent } from './products-update/basic-form/basic-form.component';
@@ -31,25 +31,37 @@ import { BatchUploadComponent } from './batch-upload/batch-upload.component';
 import { ImagesMissingFilterPipe } from './filters/manage-images-missing.pipe';
 
 @Injectable({ providedIn: 'root' })
-export class ProductsResolve implements Resolve<IProducts> {
-  constructor(private service: ProductsService, private store: Store<fromProducts.State>) {}
+export class ProductsResolve implements Resolve<IProducts>, OnDestroy {
+  categoryId$: Observable<number>;
+  private unsubscribeAll: Subject<any> = new Subject();
+  constructor(private service: ProductsService, private store: Store<fromProducts.State>) {
+    this.categoryId$ = this.store.pipe(select(fromProducts.getSelectedCategoryId));
+
+    this.categoryId$.pipe(takeUntil(this.unsubscribeAll)).subscribe(categoryId => {
+      this.store.dispatch(FetchActions.fetchProductChoice({ id: categoryId }));
+    });
+  }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProducts> {
     const id = route.params.id ? route.params.id : null;
     if (id) {
-      return this.service.getOne(id).pipe(
+      return this.service.find(id).pipe(
         filter((res: HttpResponse<Products>) => res.ok),
         map((res: HttpResponse<Products>) => {
           const products = res.body;
           this.store.dispatch(CategoryActions.selectCategory({ id: products.productCategoryId }));
           this.store.dispatch(FetchActions.fetchStockItems({ productId: products.id }));
           this.store.dispatch(FetchActions.fetchProductDocument({ id: products.id }));
-          console.log('resolved', products);
           return products;
         })
       );
     }
     return of(new Products());
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll.next();
+    this.unsubscribeAll.complete();
   }
 }
 

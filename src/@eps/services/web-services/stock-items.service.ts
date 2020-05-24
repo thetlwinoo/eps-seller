@@ -59,11 +59,11 @@ export class StockItemsService {
     return this.http.put<IPhotos>(this.extendUrl + '/photos', photos, { observe: 'response' });
   }
 
-  findAll(req?: any): Observable<EntityArrayResponseType> {
+  findAll(req?: any): Observable<any> {
     const options = createRequestOption(req);
     return this.http
-      .get<IStockItems[]>(this.extendUrl + '/filter/vendor', { params: options, observe: 'response' })
-      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+      .get<any>(this.extendUrl + '/filter/vendor', { params: options, observe: 'response' })
+      .pipe(map((res: any) => this.convertDateArrayFromServer(res)));
   }
 
   loadCount(): Observable<HttpResponse<any>> {
@@ -75,6 +75,7 @@ export class StockItemsService {
     return this.http
       .post<IStockItems>(this.extendUrl + '/import', copy, { observe: 'response' })
       .pipe(
+        map((res: EntityResponseType) => this.convertDateFromServer(res)),
         filter((res: HttpResponse<StockItems>) => res.ok),
         map((res: HttpResponse<StockItems>) => res.body)
       );

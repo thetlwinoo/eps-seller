@@ -9,7 +9,6 @@ import { createRequestOption } from '@eps/utils';
 import { IProducts, Products, IStockItems, IPhotos } from '@eps/models';
 import { StockItemsService, PhotosService } from '@eps/services';
 import { filter } from 'rxjs/operators';
-import { RootUtils } from '@eps/utils';
 
 type EntityResponseType = HttpResponse<IProducts>;
 type EntityArrayResponseType = HttpResponse<IProducts[]>;
@@ -24,24 +23,34 @@ export class ProductsService {
   constructor(protected http: HttpClient, private stockItemsService: StockItemsService, private photosService: PhotosService) {}
 
   create(products: IProducts): Observable<EntityResponseType> {
-    return this.http.post<IProducts>(this.resourceUrl, products, { observe: 'response' });
+    const copy = this.convertDateFromClient(products);
+    return this.http
+      .post<IProducts>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   update(products: IProducts): Observable<EntityResponseType> {
-    return this.http.put<IProducts>(this.resourceUrl, products, { observe: 'response' });
+    const copy = this.convertDateFromClient(products);
+    return this.http
+      .put<IProducts>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IProducts>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<IProducts>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IProducts[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<IProducts[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
-  delete(id: number): Observable<HttpResponse<any>> {
-    return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<HttpResponse<{}>> {
+    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
   search(req?: any): Observable<EntityArrayResponseType> {
@@ -60,13 +69,17 @@ export class ProductsService {
   }
 
   createProducts(products: Products): Observable<EntityResponseType> {
-    console.log('post products', products);
-    return this.http.post<Products>(this.extendUrl, products, { observe: 'response' });
+    const copy = this.convertDateFromClient(products);
+    return this.http
+      .post<IProducts>(this.extendUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   updateProducts(products: Products): Observable<EntityResponseType> {
-    console.log('update products', products);
-    return this.http.put<Products>(this.extendUrl, products, { observe: 'response' });
+    const copy = this.convertDateFromClient(products);
+    return this.http
+      .put<IProducts>(this.extendUrl, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   upload(file: any): Observable<any> {
@@ -81,19 +94,12 @@ export class ProductsService {
       );
   }
 
-  // importToSystem(transactionId): Observable<any> {
-  //     let params = new HttpParams();
-  //     params = params.append('id', transactionId);
-  //     return this.http.post<any>(this.importUrl, params, { observe: 'response' }).pipe(
-  //         filter((res: HttpResponse<any>) => res.ok),
-  //         map((res: HttpResponse<any>) => res.body)
-  //     );
-  // }
-
   importProduct(products: IProducts): Observable<IProducts> {
+    const copy = this.convertDateFromClient(products);
     return this.http
-      .post<IProducts>(this.extendUrl + '/import', products, { observe: 'response' })
+      .post<IProducts>(this.extendUrl + '/import', copy, { observe: 'response' })
       .pipe(
+        map((res: EntityResponseType) => this.convertDateFromServer(res)),
         filter((res: HttpResponse<Products>) => res.ok),
         map((res: HttpResponse<Products>) => res.body)
       );
@@ -103,47 +109,37 @@ export class ProductsService {
     let params = new HttpParams();
     params = params.append('stockItemId', stockItemId);
     params = params.append('isActive', isActive);
-    return this.http.put<Products>(this.extendUrl + '/products/stock-item', params, { observe: 'response' });
+    return this.http
+      .put<Products>(this.extendUrl + '/products/stock-item', params, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
-  // saveProduct(product: IProducts): void {
-  //     this.create(product)
-  //         .pipe(
-  //             filter((res: HttpResponse<IProducts>) => res.ok),
-  //             map((res: HttpResponse<IProducts>) => res.body)
-  //         )
-  //         .subscribe(productSuccess => {
-  //             console.log('product done', productSuccess);
-  //             productSuccess.stockItemLists.map(stockItem => {
 
-  //                 stockItem.productId = productSuccess.id;
-  //                 stockItem.stockItemName = productSuccess.productName;
+  protected convertDateFromClient(products: IProducts): IProducts {
+    const copy: IProducts = Object.assign({}, products, {
+      lastEditedWhen: products.lastEditedWhen && products.lastEditedWhen.isValid() ? products.lastEditedWhen.toJSON() : undefined,
+      releaseDate: products.releaseDate && products.releaseDate.isValid() ? products.releaseDate.toJSON() : undefined,
+      availableDate: products.availableDate && products.availableDate.isValid() ? products.availableDate.toJSON() : undefined,
+    });
+    return copy;
+  }
 
-  //                 this.stockItemsService.create(stockItem)
-  //                     .pipe(
-  //                         filter((res: HttpResponse<IStockItems>) => res.ok),
-  //                         map((res: HttpResponse<IStockItems>) => res.body)
-  //                     )
-  //                     .subscribe(stockItemSuccess => {
-  //                         stockItemSuccess.thumbnailUrl = SERVER_API_URL + 'services/zezawar/api/photos-extend?stockitem=' + stockItemSuccess.id;
-  //                         console.log('stockItem done', stockItemSuccess);
-  //                         this.stockItemsService.update(stockItemSuccess).pipe(
-  //                             filter((res: HttpResponse<IStockItems>) => res.ok),
-  //                             map((res: HttpResponse<IStockItems>) => res.body)
-  //                         ).subscribe(result => {
-  //                             console.log('update result', result);
+  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
+    if (res.body) {
+      res.body.lastEditedWhen = res.body.lastEditedWhen ? moment(res.body.lastEditedWhen) : undefined;
+      res.body.releaseDate = res.body.releaseDate ? moment(res.body.releaseDate) : undefined;
+      res.body.availableDate = res.body.availableDate ? moment(res.body.availableDate) : undefined;
+    }
+    return res;
+  }
 
-  //                             stockItem.photoLists.filter(x => RootUtils.notEmpty(x.originalPhotoBlob)).map(photo => {
-  //                                 photo.stockItemId = stockItemSuccess.id;
-  //                                 this.photosService.create(photo)
-  //                                     .pipe(
-  //                                         filter((res: HttpResponse<IPhotos>) => res.ok),
-  //                                         map((res: HttpResponse<IPhotos>) => res.body)
-  //                                     ).subscribe(photoSuccess => console.log('photo done', photoSuccess))
-  //                             })
-  //                         })
-
-  //                     })
-  //             })
-  //         })
-  // }
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach((products: IProducts) => {
+        products.lastEditedWhen = products.lastEditedWhen ? moment(products.lastEditedWhen) : undefined;
+        products.releaseDate = products.releaseDate ? moment(products.releaseDate) : undefined;
+        products.availableDate = products.availableDate ? moment(products.availableDate) : undefined;
+      });
+    }
+    return res;
+  }
 }

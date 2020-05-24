@@ -24,11 +24,13 @@ import { ClarityModule } from '@clr/angular';
 import { RootPipesModule } from '@eps/pipes';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgPipesModule } from 'ngx-pipes';
+import { NgZorroAntdModule } from '@eps/modules';
 
 @NgModule({
   exports: [
     FormsModule,
     ReactiveFormsModule,
+    NgZorroAntdModule,
     CommonModule,
     RootPipesModule,
     NgbModule,

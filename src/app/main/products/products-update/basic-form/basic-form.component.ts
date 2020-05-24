@@ -44,7 +44,7 @@ export class BasicFormComponent implements OnInit {
 
   public parsedData: any[];
   public searchTerm = '';
-  private _unsubscribeAll: Subject<any>;
+  private _unsubscribeAll: Subject<any> = new Subject();
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -52,19 +52,18 @@ export class BasicFormComponent implements OnInit {
     private store: Store<fromProducts.State>,
     private authStore: Store<fromAuth.State>
   ) {
-    this.productModels$ = store.pipe(select(fromProducts.getFetchModels));
+    // this.productModels$ = store.pipe(select(fromProducts.getFetchModels));
     this.productBrands$ = store.pipe(select(fromProducts.getFetchBrands));
     this.supplier$ = this.authStore.pipe(select(fromAuth.getSupplierFetched));
     this.categories$ = store.pipe(select(fromProducts.getFetchCategoriesTree));
-    this.productModels$.subscribe(models => (this.productModelsFiltered = models.slice()));
-    this._unsubscribeAll = new Subject();
+    // this.productModels$.subscribe(models => (this.productModelsFiltered = models.slice()));
   }
 
   ngOnInit(): void {
     this.supplier$.pipe(takeUntil(this._unsubscribeAll)).subscribe(supplier => {
       console.log('supplier', supplier);
       if (supplier) {
-        this.store.dispatch(FetchActions.fetchModels({ id: supplier.id }));
+        // this.store.dispatch(FetchActions.fetchModels({ id: supplier.id }));
         this.store.dispatch(FetchActions.fetchBrands({ id: supplier.id }));
         this.store.dispatch(FetchActions.fetchWarrantyType());
       }

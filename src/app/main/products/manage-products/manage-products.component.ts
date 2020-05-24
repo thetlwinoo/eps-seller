@@ -5,10 +5,11 @@ import { Subscription, Observable } from 'rxjs';
 import { filter, map, debounceTime, tap } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService, JhiDataUtils } from 'ng-jhipster';
 import { IStockItems, AlertType } from '@eps/models';
-import { StockItemsService, ProductsService, StockItemTempService, UploadTransactionsService } from '@eps/services';
+import { StockItemsService, ProductsService } from '@eps/services';
 import { AccountService } from '@eps/core';
 import { ITEMS_PER_PAGE } from '@eps/constants';
 import { ClrDatagridStateInterface } from '@clr/angular';
+import { EpsErrorHandler } from '@eps/utils/error.handler';
 // import { RootAlertService } from '@eps/components/alert/alert.service';
 // import { DocumentProcessService } from '@eps/services';
 
@@ -45,7 +46,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
   // loadingUploadExcel = false;
   // loadingUploadTransactions = true;
 
-  countObj: any;
+  statistics: any;
 
   filterType = 0;
   // uploadExcelArray: string[];
@@ -82,7 +83,7 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAll();
-    this.loadCount();
+    // this.loadCount();
     this.accountService.identity().pipe(
       map(account => {
         this.currentAccount = account;
@@ -128,8 +129,12 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
 
     console.log('options', options);
     this.stockItemsService.findAll(options).subscribe(
-      (res: HttpResponse<IStockItems[]>) => this.paginateStockItems(res.body, res.headers),
-      (res: HttpErrorResponse) => this.onError(res.message)
+      (res: any) => {
+        this.statistics = JSON.parse(res.headers.get('Extra'));
+        console.log('stock items', res, this.statistics);
+        return this.paginateStockItems(res.body, res.headers);
+      },
+      (res: HttpErrorResponse) => this.onError(res)
     );
   }
 
@@ -164,17 +169,17 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadCount(): void {
-    this.stockItemsService
-      .loadCount()
-      .pipe(
-        filter((res: HttpResponse<number>) => res.ok),
-        map((res: HttpResponse<number>) => res.body)
-      )
-      .subscribe(res => {
-        this.countObj = res;
-      });
-  }
+  // loadCount(): void {
+  //   this.stockItemsService
+  //     .loadCount()
+  //     .pipe(
+  //       filter((res: HttpResponse<number>) => res.ok),
+  //       map((res: HttpResponse<number>) => res.body)
+  //     )
+  //     .subscribe(res => {
+  //       this.countObj = res;
+  //     });
+  // }
 
   transition(): void {
     this.router.navigate(['/products/manage-products'], {
@@ -236,8 +241,8 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
 
   onUpdateStockItemActiveSuccess(res): void {
     this.showAlert(AlertType.Success, res.body.name + ' has been sucessfully ' + (res.body.activeInd ? 'active' : 'inactive'));
-    this.loadCount();
-    // this.loadAll();
+    // this.loadCount();
+    this.loadAll();
   }
 
   onUpdateStockItemActiveError(res): void {
@@ -278,9 +283,9 @@ export class ManageProductsComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
-  protected onError(errorMessage: string): void {
+  protected onError(error: HttpErrorResponse): void {
     this.loading = false;
-    this.showAlert(AlertType.Danger, errorMessage);
+    this.showAlert(AlertType.Danger, EpsErrorHandler.getErrorMessage(error));
     // this.jhiAlertService.error(errorMessage, null, null);
   }
 }

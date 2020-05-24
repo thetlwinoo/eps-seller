@@ -18,14 +18,9 @@ import { CommonUtils } from '@eps/utils/common.utils';
 })
 export class InformationFormComponent implements OnInit {
   @Input() productsForm: FormGroup;
+  @Input() dangerousGoods: any;
 
   warrantyTypes$: Observable<IWarrantyTypes[]>;
-  dangerousGoods: any = {
-    battery: false,
-    liquid: false,
-    none: false,
-    flammable: false,
-  };
 
   constructor(private store: Store<fromProducts.State>) {
     this.warrantyTypes$ = this.store.pipe(select(fromProducts.getFetchWarrantyTypes));
@@ -43,7 +38,8 @@ export class InformationFormComponent implements OnInit {
     return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
-  onDangerousGoodsChanged(): void {
+  onDangerousGoodsChanged(event): void {
+    console.log('event', event);
     if (this.productInformationForm) {
       this.productInformationForm.patchValue({
         dangerousGoods: CommonUtils.ObjectToString(this.dangerousGoods),

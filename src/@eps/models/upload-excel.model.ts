@@ -1,3 +1,6 @@
+import { Moment } from 'moment';
+import * as moment from 'moment';
+
 export class UploadExcel {
   vendorCode?: string;
   vendorSKU?: string;
@@ -10,6 +13,8 @@ export class UploadExcel {
   productSubCategory?: string;
   productAttribute?: string;
   productOption?: string;
+  releaseDate?: Moment;
+  availableDate?: Moment;
   productType?: string;
   longDescription?: string;
   shortDescription?: string;
@@ -68,6 +73,8 @@ export class UploadExcel {
       this.productSubCategory = data['Product Sub Category'] || '';
       this.productAttribute = data['Product Attribute'] || '';
       this.productOption = data['Product Option'] || '';
+      this.releaseDate = moment(data['Release Date'], 'YYYY-MM-DD') || moment();
+      this.availableDate = moment(data['Available Date'], 'YYYY-MM-DD') || moment();
       this.longDescription = data['Long Descriptions'] || '';
       this.shortDescription = data['Short Descriptions'] || '';
       this.modelName = data['Model Name'] || '';

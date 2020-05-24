@@ -16,7 +16,7 @@ import { AccountService } from '@eps/core';
 import { ClrDatagridStateInterface } from '@clr/angular';
 import { ImageUtils } from '@eps/services';
 import { ImagesMissingFilterPipe } from '../filters/manage-images-missing.pipe';
-
+import { EpsErrorHandler } from '@eps/utils/error.handler';
 @Component({
   selector: 'app-manage-images',
   templateUrl: './manage-images.component.html',
@@ -99,7 +99,7 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         (res: HttpResponse<IStockItems[]>) => this.paginateStockItems(res.body, res.headers),
-        (res: HttpErrorResponse) => this.onError(res.message)
+        (res: HttpErrorResponse) => this.onError(res)
       );
   }
 
@@ -223,9 +223,13 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
-  protected onError(errorMessage: string): void {
+  protected onError(error: HttpErrorResponse): void {
     this.loading = false;
-    this.showAlert(AlertType.Danger, errorMessage);
+    this.showAlert(AlertType.Danger, EpsErrorHandler.getErrorMessage(error));
     // this.jhiAlertService.error(errorMessage, null, null);
+  }
+
+  protected onAlert(message: string): void {
+    this.showAlert(AlertType.Info, message);
   }
 }

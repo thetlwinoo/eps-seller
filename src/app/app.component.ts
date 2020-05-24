@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
 import { RootConfigService, RootTranslationLoaderService } from '@eps/services';
 import { RootNavigationService } from '@eps/components/navigation/navigation.service';
 import { navigation } from 'app/navigation/navigation';
@@ -28,8 +27,7 @@ export class AppComponent {
     private _rootNavigationService: RootNavigationService,
     private _translateService: TranslateService,
     private _rootTranslationLoaderService: RootTranslationLoaderService,
-    private _platform: Platform,
-    private router: Router,
+    private _platform: Platform
   ) {
     this.navigation = navigation;
     this._rootNavigationService.register('main', this.navigation);

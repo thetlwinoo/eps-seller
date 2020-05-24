@@ -46,22 +46,22 @@ export class FetchEffects {
     )
   );
 
-  fetchModels$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(FetchActions.fetchModels),
-      mergeMap(({ id }) =>
-        this.productModelService
-          .query({
-            'merchantId.equals': id,
-          })
-          .pipe(
-            filter((res: HttpResponse<IProductModel[]>) => res.ok),
-            map((res: HttpResponse<IProductModel[]>) => FetchActions.fetchModelsSuccess({ models: res.body })),
-            catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
-          )
-      )
-    )
-  );
+  // fetchModels$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(FetchActions.fetchModels),
+  //     mergeMap(({ id }) =>
+  //       this.productModelService
+  //         .query({
+  //           'merchantId.equals': id,
+  //         })
+  //         .pipe(
+  //           filter((res: HttpResponse<IProductModel[]>) => res.ok),
+  //           map((res: HttpResponse<IProductModel[]>) => FetchActions.fetchModelsSuccess({ models: res.body })),
+  //           catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
+  //         )
+  //     )
+  //   )
+  // );
 
   fetchStockItems$ = createEffect(() =>
     this.actions$.pipe(
@@ -107,10 +107,7 @@ export class FetchEffects {
           })
           .pipe(
             filter((res: HttpResponse<IProductBrand[]>) => res.ok),
-            map((res: HttpResponse<IProductBrand[]>) => {
-              console.log('success', res.body);
-              return FetchActions.fetchBrandsSuccess({ brands: res.body });
-            }),
+            map((res: HttpResponse<IProductBrand[]>) => FetchActions.fetchBrandsSuccess({ brands: res.body })),
             catchError(err => of(FetchActions.fetchFailure({ errorMsg: err.message })))
           )
       )
