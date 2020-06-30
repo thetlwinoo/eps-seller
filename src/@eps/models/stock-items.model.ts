@@ -38,7 +38,7 @@ export interface IStockItems {
   lastEditedBy?: string;
   lastEditedWhen?: Moment;
   stockItemOnReviewLineId?: number;
-  photoLists?: IPhotos[];
+  photoLists?: any[];
   photosCount?: number;
   specialDiscounts?: ISpecialDeals[];
   itemLengthUnitCode?: string;
@@ -106,7 +106,7 @@ export class StockItems implements IStockItems {
     public lastEditedBy?: string,
     public lastEditedWhen?: Moment,
     public stockItemOnReviewLineId?: number,
-    public photoLists?: IPhotos[],
+    public photoLists?: any[],
     public photosCount?: number,
     public specialDiscounts?: ISpecialDeals[],
     public itemLengthUnitCode?: string,

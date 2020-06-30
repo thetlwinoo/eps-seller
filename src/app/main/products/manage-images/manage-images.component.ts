@@ -17,6 +17,9 @@ import { ClrDatagridStateInterface } from '@clr/angular';
 import { ImageUtils } from '@eps/services';
 import { ImagesMissingFilterPipe } from '../filters/manage-images-missing.pipe';
 import { EpsErrorHandler } from '@eps/utils/error.handler';
+import { UploadFile } from 'ng-zorro-antd/upload';
+import { SERVER_API_URL } from '@eps/constants';
+
 @Component({
   selector: 'app-manage-images',
   templateUrl: './manage-images.component.html',
@@ -25,6 +28,7 @@ import { EpsErrorHandler } from '@eps/utils/error.handler';
   animations: rootAnimations,
 })
 export class ManageImagesComponent implements OnInit, OnDestroy {
+  public imageBlobUrl = SERVER_API_URL + 'services/cloudblob/api/images-extend';
   currentAccount: any;
   stockItems: IStockItems[];
   error: any;
@@ -45,6 +49,9 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
   alertMessage: string;
   alertType: AlertType;
   missingImageInd = false;
+
+  previewImage: string | undefined = '';
+  previewVisible = false;
 
   constructor(
     private _rootTranslationLoaderService: RootTranslationLoaderService,
@@ -182,6 +189,23 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
     this.closeAlertInd = false;
   }
 
+  handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await this.getBase64(file.originFileObj);
+    }
+    this.previewImage = file.url || file.preview;
+    this.previewVisible = true;
+  };
+
+  getBase64(file: File): Promise<string | ArrayBuffer | null> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
   protected paginateStockItems(data: IStockItems[], headers: HttpHeaders): void {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
@@ -196,25 +220,35 @@ export class ManageImagesComponent implements OnInit, OnDestroy {
           map((res: HttpResponse<IPhotos[]>) => res.body)
         )
         .subscribe((res: IPhotos[]) => {
-          let photosCount = 0;
-          if (res.length) {
-            const _length = res.length;
-            photosCount = _length;
-            for (let _i = 0; _i < 8 - _length; _i++) {
-              const newPhoto = new Photos();
-              newPhoto.stockItemId = stockItem.id;
-              res.push(newPhoto);
-            }
-          } else {
-            for (let _i = 0; _i < 8; _i++) {
-              const newPhoto = new Photos();
-              newPhoto.stockItemId = stockItem.id;
-              res.push(newPhoto);
-            }
-          }
-
-          stockItem.photoLists = res;
-          stockItem.photosCount = photosCount;
+          // let photosCount = 0;
+          // if (res.length) {
+          //   const _length = res.length;
+          //   photosCount = _length;
+          //   for (let _i = 0; _i < 8 - _length; _i++) {
+          //     const newPhoto = new Photos();
+          //     newPhoto.stockItemId = stockItem.id;
+          //     res.push(newPhoto);
+          //   }
+          // }
+          // else {
+          //   for (let _i = 0; _i < 8; _i++) {
+          //     const newPhoto = new Photos();
+          //     newPhoto.stockItemId = stockItem.id;
+          //     res.push(newPhoto);
+          //   }
+          // }
+          stockItem.photoLists = [];
+          res.map(item => {
+            stockItem.photoLists.push({
+              uid: item.id.toString(),
+              name: item.blobId,
+              status: 'done',
+              thumbUrl: `${this.imageBlobUrl}/${item.thumbnailUrl}`,
+              url: `${this.imageBlobUrl}/${item.originalUrl}`,
+            });
+          });
+          // stockItem.photoLists = res;
+          // stockItem.photosCount = photosCount;
         });
     });
 

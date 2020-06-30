@@ -41,11 +41,19 @@
         <clr-dg-cell>{{ stockItem.name }}</clr-dg-cell>
         <clr-dg-cell>{{ stockItem.vendorSKU }}</clr-dg-cell>
         <clr-dg-cell>
-          <div class="upload-wrapper">
+          <!-- <div class="upload-wrapper">
             <div class="upload-item" *ngFor="let photo of stockItem.photoLists | orderBy: 'id'; let i = index">
               <photo-item [photos]="photo" [stockItems]="stockItem" (error)="onError($event)" (alert)="onAlert($event)">
               </photo-item>
             </div>
+          </div> -->
+          <div class="clearfix">
+            <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" nzListType="picture-card"
+              [(nzFileList)]="stockItem.photoLists" [nzShowButton]="stockItem.photoLists?.length < 8"
+              [nzPreview]="handlePreview">
+              <i nz-icon nzType="plus"></i>
+              <div class="ant-upload-text">Upload</div>
+            </nz-upload>
           </div>
         </clr-dg-cell>
       </clr-dg-row>
@@ -59,3 +67,10 @@
     </clr-datagrid>
   </div>
 </div>
+
+<nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+  (nzOnCancel)="previewVisible = false">
+  <ng-template #modalContent>
+    <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+  </ng-template>
+</nz-modal>

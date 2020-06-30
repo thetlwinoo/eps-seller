@@ -36,6 +36,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 import {
   UserOutline,
@@ -74,6 +75,8 @@ import {
   PlusSquareFill,
   MinusSquareFill,
   EditOutline,
+  FileTwoTone,
+  DownloadOutline,
 } from '@ant-design/icons-angular/icons';
 
 const icons: IconDefinition[] = [
@@ -113,6 +116,8 @@ const icons: IconDefinition[] = [
   PlusSquareFill,
   MinusSquareFill,
   EditOutline,
+  FileTwoTone,
+  DownloadOutline,
 ];
 
 @NgModule({
@@ -154,6 +159,7 @@ const icons: IconDefinition[] = [
     NzPopoverModule,
     NzSkeletonModule,
     NzSwitchModule,
+    NzModalModule,
   ],
 })
 export class NgZorroAntdModule {}
