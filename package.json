@@ -51,7 +51,7 @@
     "angular-oauth2-oidc-jwks": "^9.0.0",
     "exif-js": "^2.3.0",
     "exifr": "^5.0.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "file-saver": "^2.0.2",
     "keycloak-angular": "^7.2.0",
     "keycloak-js": "^9.0.3",
